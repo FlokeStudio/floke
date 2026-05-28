@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floke — Software that lives on your machine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+ 
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #181818;
+    --border: #222222;
+    --text: #e8e8e8;
+    --muted: #555555;
+    --accent: #c8a96e;
+    --accent2: #4a7c59;
+    --dim: #333333;
+  }
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+ 
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+ 
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+ 
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(8px);
+  }
+ 
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+  }
+ 
+  .nav-logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    text-decoration: none;
+  }
+ 
+  .nav-logo span {
+    color: var(--accent);
+  }
+ 
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+ 
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+ 
+  .nav-links a:hover { color: var(--text); }
+ 
+  /* ── HERO ── */
+  .hero {
+    padding: 140px 0 80px;
+    position: relative;
+  }
+ 
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+ 
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+ 
+  .hero-title {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+ 
+  .hero-title .line2 {
+    color: var(--muted);
+  }
+ 
+  .hero-sub {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.9;
+    margin-bottom: 48px;
+  }
+ 
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+ 
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+ 
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0a0a0a;
+  }
+ 
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+ 
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--dim);
+    color: var(--muted);
+  }
+ 
+  .btn-ghost:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+ 
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 64px 0;
+  }
+ 
+  /* ── SECTION ── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+ 
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+ 
+  /* ── PRODUCTS GRID ── */
+  .products {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 1px;
+  }
+ 
+  .product-card {
+    background: var(--bg);
+    padding: 28px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .product-card:hover {
+    background: var(--bg3);
+  }
+ 
+  .product-card::after {
+    content: '↗';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 16px;
+    color: var(--dim);
+    transition: color 0.2s, transform 0.2s;
+  }
+ 
+  .product-card:hover::after {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+ 
+  .product-icon {
+    font-size: 22px;
+    margin-bottom: 14px;
+    display: block;
+  }
+ 
+  .product-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+ 
+  .product-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+ 
+  .product-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+ 
+  .tag {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--dim);
+  }
+ 
+  .tag-active {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+ 
+  .tag-soon {
+    border-color: var(--dim);
+    color: var(--muted);
+  }
+ 
+  .product-card-wide {
+    grid-column: 1 / -1;
+  }
+ 
+  /* ── RELEASE TICKER ── */
+  .releases {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+  }
+ 
+  .release-row {
+    display: grid;
+    grid-template-columns: 100px 80px 1fr auto;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 20px;
+    transition: background 0.15s;
+  }
+ 
+  .release-row:last-child { border-bottom: none; }
+  .release-row:hover { background: var(--bg3); }
+ 
+  .release-product {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+ 
+  .release-version {
+    font-size: 11px;
+    color: var(--accent);
+  }
+ 
+  .release-name {
+    font-size: 11px;
+    color: var(--muted);
+  }
+ 
+  .release-name em {
+    font-style: normal;
+    color: var(--text);
+  }
+ 
+  .release-status {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid;
+  }
+ 
+  .status-live {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+ 
+  .status-dev {
+    border-color: var(--dim);
+    color: var(--muted);
+  }
+ 
+  /* ── MANIFESTO ── */
+  .manifesto {
+    padding: 48px 0;
+  }
+ 
+  .manifesto-line {
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+ 
+  .manifesto-line:hover {
+    color: var(--text);
+  }
+ 
+  .manifesto-line.highlight {
+    color: var(--text);
+  }
+ 
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+  }
+ 
+  footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+ 
+  .footer-left {
+    font-size: 11px;
+    color: var(--muted);
+  }
+ 
+  .footer-left a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+ 
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+ 
+  .footer-links a {
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+ 
+  .footer-links a:hover { color: var(--text); }
+ 
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  .hero-eyebrow { animation: fadeUp 0.5s ease both; }
+  .hero-title   { animation: fadeUp 0.5s 0.1s ease both; }
+  .hero-sub     { animation: fadeUp 0.5s 0.2s ease both; }
+  .hero-actions { animation: fadeUp 0.5s 0.3s ease both; }
+ 
+  /* ── CURSOR ACCENT ── */
+  .cursor-dot {
+    display: inline-block;
+    width: 6px;
+    height: 13px;
+    background: var(--accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+  }
+ 
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+ 
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .products { grid-template-columns: 1fr; }
+    .product-card-wide { grid-column: 1; }
+    .release-row { grid-template-columns: 1fr 1fr; }
+    .release-name { display: none; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo">FL<span>O</span>KE</a>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#releases">Releases</a></li>
+      <li><a href="https://github.com/floke" target="_blank">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+ 
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Independent software studio</div>
+    <h1 class="hero-title">
+      Software that lives<br>
+      <span class="line2">on your machine.<span class="cursor-dot"></span></span>
+    </h1>
+    <p class="hero-sub">
+      Offline-first. No cloud. No tracking. No compromise.<br>
+      We build tools that work — with or without the internet.
+    </p>
+    <div class="hero-actions">
+      <a href="#products" class="btn btn-primary">Browse products</a>
+      <a href="https://github.com/floke" target="_blank" class="btn btn-ghost">GitHub →</a>
+    </div>
+  </div>
+</section>
+ 
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="container">
+    <hr class="divider" style="margin-top:0">
+    <div class="section-label">Products</div>
+ 
+    <div class="products">
+ 
+      <!-- Cultiva -->
+      <a href="https://github.com/krwg/Cultiva" target="_blank" class="product-card">
+        <span class="product-icon">🌱</span>
+        <div class="product-name">Cultiva</div>
+        <div class="product-desc">
+          Offline-first gamified habit tracker.<br>
+          Grow habits visually: seed → tree → legacy.<br>
+          Plugins, themes, no cloud.
+        </div>
+        <div class="product-meta">
+          <span class="tag tag-active">Windows</span>
+          <span class="tag tag-active">v0.3.5 Sequoia</span>
+          <span class="tag tag-active">Live</span>
+        </div>
+      </a>
+ 
+      <!-- BLIP -->
+      <a href="https://github.com/krwg/BLIP" target="_blank" class="product-card">
+        <span class="product-icon">📡</span>
+        <div class="product-name">BLIP</div>
+        <div class="product-desc">
+          P2P messenger for LAN, Hamachi & Radmin VPN.<br>
+          Text, voice, video. Identify by a number 1–64.<br>
+          No servers. No internet.
+        </div>
+        <div class="product-meta">
+          <span class="tag tag-active">Windows</span>
+          <span class="tag tag-active">Live</span>
+        </div>
+      </a>
+ 
+      <!-- Senza -->
+      <a href="https://github.com/krwg" target="_blank" class="product-card">
+        <span class="product-icon">🎵</span>
+        <div class="product-name">Senza</div>
+        <div class="product-desc">
+          Offline-first music player.<br>
+          Your library. Your device. Nothing else.
+        </div>
+        <div class="product-meta">
+          <span class="tag tag-active">Windows</span>
+          <span class="tag tag-active">iOS</span>
+          <span class="tag tag-soon">In development</span>
+        </div>
+      </a>
+ 
+      <!-- FileStorage -->
+      <a href="https://github.com/krwg" target="_blank" class="product-card">
+        <span class="product-icon">📁</span>
+        <div class="product-name">FileStorage</div>
+        <div class="product-desc">
+          Local file management,<br>done the right way.
+        </div>
+        <div class="product-meta">
+          <span class="tag tag-active">Windows</span>
+          <span class="tag tag-soon">Coming soon</span>
+        </div>
+      </a>
+ 
+      <!-- Tiver / Game -->
+      <a href="https://github.com/krwg" target="_blank" class="product-card product-card-wide">
+        <span class="product-icon">🎮</span>
+        <div class="product-name">Tiver &amp; [Game] <span style="color:var(--muted);font-weight:400;font-size:12px;">· Floke Engine</span></div>
+        <div class="product-desc">
+          Music tools and a collaborative game project — built with friends under Floke Engine.
+        </div>
+        <div class="product-meta">
+          <span class="tag tag-soon">Announced</span>
+        </div>
+      </a>
+ 
+    </div>
+ 
+    <hr class="divider">
+  </div>
+</section>
+ 
+<!-- RELEASES -->
+<section id="releases">
+  <div class="container">
+    <div class="section-label">Latest releases</div>
+    <div class="releases">
+      <div class="release-row">
+        <div class="release-product">Cultiva</div>
+        <div class="release-version">0.3.5</div>
+        <div class="release-name"><em>Sequoia</em> · Plugins, Themes & Auto-Updates</div>
+        <div class="release-status status-live">Live</div>
+      </div>
+      <div class="release-row">
+        <div class="release-product">BLIP</div>
+        <div class="release-version">—</div>
+        <div class="release-name"><em>—</em> · Pixel brutalism × liquid glass</div>
+        <div class="release-status status-live">Live</div>
+      </div>
+      <div class="release-row">
+        <div class="release-product">Senza</div>
+        <div class="release-version">—</div>
+        <div class="release-name"><em>—</em> · Offline music player, Win + iOS</div>
+        <div class="release-status status-dev">Dev</div>
+      </div>
+      <div class="release-row">
+        <div class="release-product">FileStorage</div>
+        <div class="release-version">—</div>
+        <div class="release-name"><em>—</em> · Local file management</div>
+        <div class="release-status status-dev">Planned</div>
+      </div>
+    </div>
+ 
+    <hr class="divider">
+  </div>
+</section>
+ 
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="container">
+    <div class="section-label">Why Floke</div>
+    <div class="manifesto-line highlight">Your software shouldn't need permission to work.</div>
+    <div class="manifesto-line">The cloud is someone else's computer.</div>
+    <div class="manifesto-line">Offline-first isn't a limitation — it's a statement.</div>
+    <div class="manifesto-line highlight">We build tools that trust you.</div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-left">
+      © 2026 Floke · built by <a href="https://github.com/krwg">krwg</a>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/floke" target="_blank">GitHub</a>
+      <a href="https://t.me/floke" target="_blank">Telegram</a>
+    </div>
+  </div>
+</footer>
+ 
+</body>
+</html>
