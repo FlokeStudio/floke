@@ -17,6 +17,22 @@
     --accent: #c8a96e;
     --accent2: #4a7c59;
     --dim: #333333;
+    --nav-bg: rgba(10,10,10,0.92);
+    --grain-opacity: 0.4;
+  }
+
+  [data-theme="light"] {
+    --bg: #f4f3ef;
+    --bg2: #ebeae5;
+    --bg3: #e2e1db;
+    --border: #d4d3cd;
+    --text: #1a1a1a;
+    --muted: #666660;
+    --accent: #9a7b42;
+    --accent2: #3d6b4a;
+    --dim: #b8b7b0;
+    --nav-bg: rgba(244,243,239,0.92);
+    --grain-opacity: 0.15;
   }
  
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,7 +57,7 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 999;
-    opacity: 0.4;
+    opacity: var(--grain-opacity);
   }
  
   /* ── LAYOUT ── */
@@ -50,6 +66,10 @@
     margin: 0 auto;
     padding: 0 24px;
   }
+
+  .hidden {
+    display: none !important;
+  }
  
   /* ── NAV ── */
   nav {
@@ -57,7 +77,7 @@
     top: 0; left: 0; right: 0;
     z-index: 100;
     border-bottom: 1px solid var(--border);
-    background: rgba(10,10,10,0.92);
+    background: var(--nav-bg);
     backdrop-filter: blur(8px);
   }
  
@@ -66,6 +86,37 @@
     align-items: center;
     justify-content: space-between;
     height: 48px;
+    gap: 12px;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-toggles {
+    display: flex;
+    gap: 6px;
+  }
+
+  .nav-toggle {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-toggle:hover,
+  .nav-toggle.active {
+    border-color: var(--accent);
+    color: var(--text);
   }
  
   .nav-logo {
@@ -101,6 +152,45 @@
   .hero {
     padding: 140px 0 80px;
     position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: min(520px, 70vw);
+    height: min(520px, 70vw);
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 70%);
+    pointer-events: none;
+    animation: heroGlow 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroGlow {
+    from { transform: translate(0, 0) scale(1); opacity: 0.55; }
+    to { transform: translate(-24px, 16px) scale(1.08); opacity: 0.9; }
+  }
+
+  .hero .container > * {
+    animation: fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .hero-eyebrow { animation-delay: 0.05s; }
+  .hero-title { animation-delay: 0.12s; }
+  .hero-sub { animation-delay: 0.2s; }
+  .hero-actions { animation-delay: 0.28s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  nav.nav-scrolled {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  [data-theme="light"] nav.nav-scrolled {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   }
  
   .hero-eyebrow {
@@ -203,6 +293,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    animation: fadeUp 0.6s ease backwards;
   }
  
   .section-label::after {
@@ -212,67 +303,143 @@
     background: var(--border);
   }
  
-  /* ── PRODUCTS GRID ── */
+  /* ── PRODUCTS ── */
   .products {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
     margin-bottom: 1px;
   }
- 
+
   .product-card {
     background: var(--bg);
-    padding: 28px;
+    padding: 32px 28px 28px;
     text-decoration: none;
     color: inherit;
-    transition: background 0.2s;
+    transition: background 0.25s, transform 0.25s;
     position: relative;
     overflow: hidden;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 8px 22px;
+    align-items: start;
   }
- 
+
+  .product-card.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease, transform 0.55s ease, background 0.25s;
+  }
+
+  .product-card.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .release-row.reveal {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.45s ease, transform 0.45s ease, background 0.15s;
+  }
+
+  .release-row.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .product-card:hover {
     background: var(--bg3);
+    transform: translateY(-2px);
   }
- 
+
   .product-card::after {
     content: '↗';
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 24px;
+    right: 24px;
     font-size: 16px;
     color: var(--dim);
     transition: color 0.2s, transform 0.2s;
   }
- 
+
   .product-card:hover::after {
     color: var(--accent);
     transform: translate(2px, -2px);
   }
- 
-  .product-icon {
-    font-size: 22px;
-    margin-bottom: 14px;
-    display: block;
+
+  .product-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    grid-row: 1 / span 3;
+    object-fit: cover;
   }
- 
+
   .product-name {
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
     color: var(--text);
+    grid-column: 2;
   }
- 
-  .product-desc {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.8;
+
+  .product-pitch {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.75;
+    margin-bottom: 14px;
+    grid-column: 2;
+    max-width: 52em;
+  }
+
+  .product-blocks {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
     margin-bottom: 16px;
   }
- 
+
+  .product-block-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .product-list {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+  }
+
+  .product-list li {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.55;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .product-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
   .product-meta {
+    grid-column: 2;
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
@@ -296,11 +463,22 @@
     border-color: var(--dim);
     color: var(--muted);
   }
- 
-  .product-card-wide {
-    grid-column: 1 / -1;
+
+  .tag-dev {
+    border-color: #7f6ab0;
+    color: #7f6ab0;
   }
  
+  @media (max-width: 640px) {
+    .product-card {
+      grid-template-columns: 56px 1fr;
+      padding: 24px 20px;
+    }
+    .product-blocks {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ── RELEASE TICKER ── */
   .releases {
     border: 1px solid var(--border);
@@ -314,7 +492,11 @@
     padding: 14px 20px;
     border-bottom: 1px solid var(--border);
     gap: 20px;
-    transition: background 0.15s;
+    transition: background 0.15s, transform 0.15s;
+  }
+
+  .release-row.reveal {
+    animation: fadeUp 0.5s ease backwards;
   }
  
   .release-row:last-child { border-bottom: none; }
@@ -359,6 +541,325 @@
     color: var(--muted);
   }
  
+  /* ── STORE VIEW (App Store style) ── */
+  .store-view {
+    padding: 100px 0 64px;
+  }
+
+  .store-back {
+    margin-bottom: 20px;
+  }
+
+  .store-shell {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    overflow: hidden;
+  }
+
+  .store-banner {
+    padding: 28px 24px;
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .store-banner-cultiva { background: radial-gradient(circle at 15% 20%, #3f4f38 0%, var(--bg2) 70%); }
+  .store-banner-blip { background: radial-gradient(circle at 15% 20%, #3b3563 0%, var(--bg2) 70%); }
+  .store-banner-senza { background: radial-gradient(circle at 15% 20%, #4e2f36 0%, var(--bg2) 70%); }
+
+  .store-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    border: 1px solid var(--border);
+    display: block;
+    background: var(--bg3);
+    object-fit: cover;
+  }
+
+  .store-title {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .store-tagline {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .store-platform-line {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .store-actions {
+    display: grid;
+    gap: 8px;
+    justify-items: end;
+  }
+
+  .btn-get {
+    padding: 8px 22px;
+    border-radius: 999px;
+    min-width: 88px;
+    justify-content: center;
+  }
+
+  .store-share {
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .store-meta {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .store-meta-item {
+    padding-right: 12px;
+    border-right: 1px solid var(--border);
+  }
+
+  .store-meta-item:last-child { border-right: none; }
+
+  .store-meta-label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .store-meta-value {
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .store-body {
+    padding: 24px;
+    display: grid;
+    gap: 28px;
+  }
+
+  .store-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .store-carousel-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .store-carousel {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) var(--bg3);
+  }
+
+  .store-carousel::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .store-carousel::-webkit-scrollbar-track {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+  }
+
+  .store-carousel::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 70%, var(--bg2)), var(--accent));
+    border-radius: 0;
+  }
+
+  .store-carousel::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+
+  .carousel-slide {
+    flex: 0 0 min(82%, 540px);
+    aspect-ratio: 16 / 10;
+    scroll-snap-align: start;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .carousel-slide video,
+  .carousel-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+  }
+
+  .carousel-slide img.is-missing {
+    object-fit: none;
+    background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
+  }
+
+  .carousel-slide--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.7;
+  }
+
+  .carousel-slide-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    background: color-mix(in srgb, var(--bg) 75%, transparent);
+    border: 1px solid var(--border);
+    color: var(--accent);
+  }
+
+  .carousel-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .carousel-dot:hover {
+    border-color: var(--accent);
+  }
+
+  .carousel-dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.15);
+  }
+
+  .store-desc {
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--text);
+    white-space: pre-line;
+  }
+
+  .store-features {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .store-features li {
+    margin-left: 16px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .store-whatsnew-list {
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .store-whatsnew-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .store-whatsnew-item:last-child { border-bottom: none; }
+
+  .store-whatsnew-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .store-whatsnew-ver {
+    color: var(--accent);
+    font-size: 11px;
+  }
+
+  .store-whatsnew-date {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .store-whatsnew-body {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-height: 4.5em;
+    overflow: hidden;
+  }
+
+  .store-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .store-info-item .store-meta-label { margin-bottom: 6px; }
+
+  .store-privacy {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 16px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .notice {
+    margin-top: 12px;
+    border: 1px solid #7f6ab0;
+    color: #b8ace6;
+    background: rgba(127,106,176,0.12);
+    padding: 10px 12px;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  [data-theme="light"] .notice {
+    color: #5a4f82;
+    background: rgba(127,106,176,0.08);
+  }
+
   /* ── MANIFESTO ── */
   .manifesto {
     padding: 48px 0;
@@ -449,12 +950,18 @@
   }
  
   /* ── RESPONSIVE ── */
+  @media (max-width: 760px) {
+    .store-banner { grid-template-columns: 1fr; }
+    .store-actions { justify-items: start; }
+    .store-meta { grid-template-columns: 1fr 1fr; }
+    .store-info-grid { grid-template-columns: 1fr; }
+  }
+
   @media (max-width: 600px) {
-    .products { grid-template-columns: 1fr; }
-    .product-card-wide { grid-column: 1; }
     .release-row { grid-template-columns: 1fr 1fr; }
     .release-name { display: none; }
     .nav-links { display: none; }
+    .nav-right { gap: 8px; }
   }
 </style>
 </head>
@@ -463,115 +970,51 @@
 <!-- NAV -->
 <nav>
   <div class="container">
-    <a href="#" class="nav-logo">FL<span>O</span>KE</a>
-    <ul class="nav-links">
-      <li><a href="#products">Products</a></li>
-      <li><a href="#releases">Releases</a></li>
-      <li><a href="https://github.com/floke" target="_blank">GitHub</a></li>
-    </ul>
+    <a href="#" class="nav-logo" id="navHome">FL<span>O</span>KE</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#products" data-i18n="nav.products">Products</a></li>
+        <li><a href="#releases" data-i18n="nav.releases">Releases</a></li>
+        <li><a href="https://github.com/FlokeStudio" target="_blank">GitHub</a></li>
+      </ul>
+      <div class="nav-toggles">
+        <button type="button" class="nav-toggle" id="themeToggle" title="Theme">◐</button>
+        <button type="button" class="nav-toggle active" id="langEn">EN</button>
+        <button type="button" class="nav-toggle" id="langRu">RU</button>
+      </div>
+    </div>
   </div>
 </nav>
- 
+
+<main id="mainView">
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-glow" aria-hidden="true"></div>
   <div class="container">
-    <div class="hero-eyebrow">Independent software studio</div>
+    <div class="hero-eyebrow" data-i18n="hero.eyebrow">Independent software studio</div>
     <h1 class="hero-title">
-      Software that lives<br>
-      <span class="line2">on your machine.<span class="cursor-dot"></span></span>
+      <span data-i18n="hero.titleLine1">Software that lives</span><br>
+      <span class="line2"><span data-i18n="hero.titleLine2">on your machine.</span><span class="cursor-dot"></span></span>
     </h1>
     <p class="hero-sub">
-      Offline-first. No cloud. No tracking. No compromise.<br>
-      We build tools that work — with or without the internet.
+      <span data-i18n="hero.subLine1">Offline-first. No cloud. No tracking. No compromise.</span><br>
+      <span data-i18n="hero.subLine2">We build tools that work — with or without the internet.</span>
     </p>
     <div class="hero-actions">
-      <a href="#products" class="btn btn-primary">Browse products</a>
-      <a href="https://github.com/floke" target="_blank" class="btn btn-ghost">GitHub →</a>
+      <a href="#products" class="btn btn-primary" data-i18n="hero.browse">Browse products</a>
+      <a href="https://github.com/FlokeStudio" target="_blank" class="btn btn-ghost">GitHub →</a>
     </div>
   </div>
 </section>
  
-<!-- PRODUCTS -->
+<!-- PROJECTS (landing — compact) -->
 <section id="products">
   <div class="container">
     <hr class="divider" style="margin-top:0">
-    <div class="section-label">Products</div>
- 
-    <div class="products">
- 
-      <!-- Cultiva -->
-      <a href="https://github.com/krwg/Cultiva" target="_blank" class="product-card">
-        <span class="product-icon">🌱</span>
-        <div class="product-name">Cultiva</div>
-        <div class="product-desc">
-          Offline-first gamified habit tracker.<br>
-          Grow habits visually: seed → tree → legacy.<br>
-          Plugins, themes, no cloud.
-        </div>
-        <div class="product-meta">
-          <span class="tag tag-active">Windows</span>
-          <span class="tag tag-active">v0.3.5 Sequoia</span>
-          <span class="tag tag-active">Live</span>
-        </div>
-      </a>
- 
-      <!-- BLIP -->
-      <a href="https://github.com/krwg/BLIP" target="_blank" class="product-card">
-        <span class="product-icon">📡</span>
-        <div class="product-name">BLIP</div>
-        <div class="product-desc">
-          P2P messenger for LAN, Hamachi & Radmin VPN.<br>
-          Text, voice, video. Identify by a number 1–64.<br>
-          No servers. No internet.
-        </div>
-        <div class="product-meta">
-          <span class="tag tag-active">Windows</span>
-          <span class="tag tag-active">Live</span>
-        </div>
-      </a>
- 
-      <!-- Senza -->
-      <a href="https://github.com/krwg" target="_blank" class="product-card">
-        <span class="product-icon">🎵</span>
-        <div class="product-name">Senza</div>
-        <div class="product-desc">
-          Offline-first music player.<br>
-          Your library. Your device. Nothing else.
-        </div>
-        <div class="product-meta">
-          <span class="tag tag-active">Windows</span>
-          <span class="tag tag-active">iOS</span>
-          <span class="tag tag-soon">In development</span>
-        </div>
-      </a>
- 
-      <!-- FileStorage -->
-      <a href="https://github.com/krwg" target="_blank" class="product-card">
-        <span class="product-icon">📁</span>
-        <div class="product-name">FileStorage</div>
-        <div class="product-desc">
-          Local file management,<br>done the right way.
-        </div>
-        <div class="product-meta">
-          <span class="tag tag-active">Windows</span>
-          <span class="tag tag-soon">Coming soon</span>
-        </div>
-      </a>
- 
-      <!-- Tiver / Game -->
-      <a href="https://github.com/krwg" target="_blank" class="product-card product-card-wide">
-        <span class="product-icon">🎮</span>
-        <div class="product-name">Tiver &amp; [Game] <span style="color:var(--muted);font-weight:400;font-size:12px;">· Floke Engine</span></div>
-        <div class="product-desc">
-          Music tools and a collaborative game project — built with friends under Floke Engine.
-        </div>
-        <div class="product-meta">
-          <span class="tag tag-soon">Announced</span>
-        </div>
-      </a>
- 
-    </div>
- 
+    <div class="section-label" data-i18n="projects.label">Projects</div>
+
+    <div class="products" id="productsGrid"></div>
+
     <hr class="divider">
   </div>
 </section>
@@ -579,46 +1022,85 @@
 <!-- RELEASES -->
 <section id="releases">
   <div class="container">
-    <div class="section-label">Latest releases</div>
-    <div class="releases">
+    <div class="section-label" data-i18n="releases.label">Latest releases</div>
+    <div class="releases" id="dynamicReleases">
       <div class="release-row">
-        <div class="release-product">Cultiva</div>
-        <div class="release-version">0.3.5</div>
-        <div class="release-name"><em>Sequoia</em> · Plugins, Themes & Auto-Updates</div>
-        <div class="release-status status-live">Live</div>
-      </div>
-      <div class="release-row">
-        <div class="release-product">BLIP</div>
-        <div class="release-version">—</div>
-        <div class="release-name"><em>—</em> · Pixel brutalism × liquid glass</div>
-        <div class="release-status status-live">Live</div>
-      </div>
-      <div class="release-row">
-        <div class="release-product">Senza</div>
-        <div class="release-version">—</div>
-        <div class="release-name"><em>—</em> · Offline music player, Win + iOS</div>
-        <div class="release-status status-dev">Dev</div>
-      </div>
-      <div class="release-row">
-        <div class="release-product">FileStorage</div>
-        <div class="release-version">—</div>
-        <div class="release-name"><em>—</em> · Local file management</div>
-        <div class="release-status status-dev">Planned</div>
+        <div class="release-product">Floke</div>
+        <div class="release-version">...</div>
+        <div class="release-name"><em data-i18n="releases.loading">Loading releases from GitHub...</em></div>
+        <div class="release-status status-dev">Sync</div>
       </div>
     </div>
  
     <hr class="divider">
   </div>
 </section>
- 
+</main>
+
+<!-- PROJECT PAGE (App Store style) -->
+<section id="projectView" class="store-view hidden">
+  <div class="container">
+    <a href="#" class="btn btn-ghost store-back" id="storeBackBtn" data-i18n="store.back">← Back to Floke</a>
+
+    <div class="store-shell">
+      <div class="store-banner" id="storeBanner">
+        <img class="store-icon" id="storeIcon" src="assets/icons/cultiva.svg" alt="" width="96" height="96">
+        <div>
+          <div class="store-title" id="storeTitle"></div>
+          <div class="store-tagline" id="storeTagline"></div>
+          <div class="store-platform-line" id="storePlatformLine"></div>
+        </div>
+        <div class="store-actions">
+          <button type="button" class="btn btn-primary btn-get" id="storeGetBtn">Get</button>
+          <a class="store-share" id="storeRepoLink" href="#" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+
+      <div class="store-meta" id="storeMeta"></div>
+
+      <div class="store-body">
+        <div class="store-preview-block">
+          <div class="store-section-title" data-i18n="store.preview">Preview</div>
+          <div class="store-carousel-wrap">
+            <div class="store-carousel" id="storeCarousel"></div>
+            <div class="carousel-dots" id="storeCarouselDots"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="store-section-title" data-i18n="store.about">About this app</div>
+          <div class="store-desc" id="storeAbout"></div>
+          <ul class="store-features" id="storeFeatures"></ul>
+        </div>
+
+        <div>
+          <div class="store-section-title" data-i18n="store.whatsnew">What’s New</div>
+          <div class="store-whatsnew-list" id="storeWhatsNew"></div>
+        </div>
+
+        <div>
+          <div class="store-section-title" data-i18n="store.information">Information</div>
+          <div class="store-info-grid" id="storeInfo"></div>
+        </div>
+
+        <div>
+          <div class="store-section-title" data-i18n="store.privacy">App Privacy</div>
+          <div class="store-privacy" id="storePrivacy"></div>
+          <div id="storeNotice"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- MANIFESTO -->
-<section class="manifesto">
+<section class="manifesto" id="manifestoSection">
   <div class="container">
     <div class="section-label">Why Floke</div>
-    <div class="manifesto-line highlight">Your software shouldn't need permission to work.</div>
-    <div class="manifesto-line">The cloud is someone else's computer.</div>
-    <div class="manifesto-line">Offline-first isn't a limitation — it's a statement.</div>
-    <div class="manifesto-line highlight">We build tools that trust you.</div>
+    <div class="manifesto-line highlight" data-i18n="manifesto.l1">Your software shouldn't need permission to work.</div>
+    <div class="manifesto-line" data-i18n="manifesto.l2">The cloud is someone else's computer.</div>
+    <div class="manifesto-line" data-i18n="manifesto.l3">Offline-first isn't a limitation — it's a statement.</div>
+    <div class="manifesto-line highlight" data-i18n="manifesto.l4">We build tools that trust you.</div>
   </div>
 </section>
  
@@ -629,11 +1111,676 @@
       © 2026 Floke · built by <a href="https://github.com/krwg">krwg</a>
     </div>
     <div class="footer-links">
-      <a href="https://github.com/floke" target="_blank">GitHub</a>
-      <a href="https://t.me/floke" target="_blank">Telegram</a>
+      <a href="https://github.com/FlokeStudio" target="_blank">GitHub</a>
+      <a href="https://t.me/flokestudio" target="_blank">Telegram</a>
     </div>
   </div>
 </footer>
+
+<script>
+  const i18n = {
+    en: {
+      "nav.products": "Products",
+      "nav.releases": "Releases",
+      "hero.eyebrow": "Independent software studio",
+      "hero.titleLine1": "Software that lives",
+      "hero.titleLine2": "on your machine.",
+      "hero.subLine1": "Offline-first. No cloud. No tracking. No compromise.",
+      "hero.subLine2": "We build tools that work — with or without the internet.",
+      "hero.browse": "Browse products",
+      "projects.label": "Projects",
+      "card.why": "Why it matters",
+      "card.can": "What you can do",
+      "carousel.video": "Video",
+      "carousel.shot": "Screenshot",
+      "tag.live": "Live",
+      "tag.dev": "In development",
+      "releases.label": "Latest releases",
+      "releases.loading": "Loading releases from GitHub...",
+      "manifesto.l1": "Your software shouldn't need permission to work.",
+      "manifesto.l2": "The cloud is someone else's computer.",
+      "manifesto.l3": "Offline-first isn't a limitation — it's a statement.",
+      "manifesto.l4": "We build tools that trust you.",
+      "store.back": "← Back to Floke",
+      "store.preview": "Preview",
+      "store.video": "Video",
+      "store.screenshots": "Screenshots (10)",
+      "store.videoMissing": "Add preview.mp4 to assets/media/{project}/",
+      "store.shotMissing": "Screenshot",
+      "store.downloadHint": "Download from GitHub Releases. On first launch Windows may show SmartScreen — choose More info → Run anyway.",
+      "store.about": "About this app",
+      "store.whatsnew": "What's New",
+      "store.information": "Information",
+      "store.privacy": "App Privacy",
+      "store.get": "Get",
+      "store.onlyWin": "Only for Windows",
+      "store.free": "Free",
+      "store.meta.category": "Category",
+      "store.meta.developer": "Developer",
+      "store.meta.language": "Language",
+      "store.meta.platform": "Platform",
+      "store.meta.version": "Version",
+      "store.info.provider": "Provider",
+      "store.info.compatibility": "Compatibility",
+      "store.info.languages": "Languages",
+      "store.info.copyright": "Copyright",
+      "status.live": "Live",
+      "status.dev": "Dev"
+    },
+    ru: {
+      "nav.products": "Проекты",
+      "nav.releases": "Релизы",
+      "hero.eyebrow": "Независимая софт-студия",
+      "hero.titleLine1": "Софт, который живет",
+      "hero.titleLine2": "на твоей машине.",
+      "hero.subLine1": "Offline-first. Без облака. Без трекинга. Без компромиссов.",
+      "hero.subLine2": "Мы делаем инструменты, которые работают — с интернетом и без него.",
+      "hero.browse": "Смотреть проекты",
+      "projects.label": "Проекты",
+      "card.why": "Почему это важно",
+      "card.can": "Что можно делать",
+      "carousel.video": "Видео",
+      "carousel.shot": "Скриншот",
+      "tag.live": "Live",
+      "tag.dev": "В разработке",
+      "releases.label": "Последние релизы",
+      "releases.loading": "Загружаем релизы с GitHub...",
+      "manifesto.l1": "Вашему софту не нужно разрешение, чтобы работать.",
+      "manifesto.l2": "Облако — это чей-то чужой компьютер.",
+      "manifesto.l3": "Offline-first — это не ограничение, а позиция.",
+      "manifesto.l4": "Мы создаем инструменты, которые доверяют пользователю.",
+      "store.back": "← Назад к Floke",
+      "store.preview": "Превью",
+      "store.video": "Видео",
+      "store.screenshots": "Скриншоты (10)",
+      "store.videoMissing": "Добавьте preview.mp4 в assets/media/{project}/",
+      "store.shotMissing": "Скриншот",
+      "store.downloadHint": "Скачивание с GitHub Releases. При первом запуске Windows может показать SmartScreen — Подробнее → Выполнить в любом случае.",
+      "store.about": "О приложении",
+      "store.whatsnew": "Что нового",
+      "store.information": "Информация",
+      "store.privacy": "Конфиденциальность",
+      "store.get": "Скачать",
+      "store.onlyWin": "Только для Windows",
+      "store.free": "Бесплатно",
+      "store.meta.category": "Категория",
+      "store.meta.developer": "Разработчик",
+      "store.meta.language": "Языки",
+      "store.meta.platform": "Платформа",
+      "store.meta.version": "Версия",
+      "store.info.provider": "Поставщик",
+      "store.info.compatibility": "Совместимость",
+      "store.info.languages": "Языки",
+      "store.info.copyright": "Авторские права",
+      "status.live": "Live",
+      "status.dev": "Dev"
+    }
+  };
+
+  function projectMedia(slug) {
+    const pad = (n) => String(n).padStart(2, "0");
+    return {
+      video: "assets/media/" + slug + "/preview.mp4",
+      shots: Array.from({ length: 10 }, (_, i) => "assets/screenshots/" + slug + "/" + pad(i + 1) + ".jpg"),
+    };
+  }
+
+  const PRODUCT_TITLES = { cultiva: "Cultiva", blip: "BLIP", senza: "Senza" };
+  const PRODUCT_ORDER = ["cultiva", "blip", "senza"];
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  const projects = {
+    cultiva: {
+      ...projectMedia("cultiva"),
+      icon: "assets/icons/cultiva.svg",
+      bannerClass: "store-banner-cultiva",
+      repo: "FlokeStudio/Cultiva",
+      repoUrl: "https://github.com/FlokeStudio/Cultiva",
+      getUrl: "https://github.com/FlokeStudio/Cultiva/releases",
+      card: {
+        en: {
+          pitch: "A calm habit tracker that grows with you — from seed to tree to legacy, entirely on your device.",
+          why: [
+            "No account — your rituals stay on your PC",
+            "Visual growth makes progress feel real, not gamified noise",
+            "Plugins, themes, and ambient layers without a subscription",
+          ],
+          can: [
+            "Track habits with seed → tree → legacy progression",
+            "Customize look and feel with themes & ambient backgrounds",
+            "Extend with sandboxed plugins and native notifications",
+          ],
+        },
+        ru: {
+          pitch: "Спокойный трекер привычек с визуальным ростом — от семени к дереву и наследию, только на вашем устройстве.",
+          why: [
+            "Без аккаунта — ритуалы остаются на вашем ПК",
+            "Рост виден глазами, без лишнего «геймификационного» шума",
+            "Плагины, темы и ambient без подписки",
+          ],
+          can: [
+            "Привычки: семя → дерево → legacy",
+            "Темы и ambient-фоны под настроение",
+            "Плагины в sandbox и нативные уведомления",
+          ],
+        },
+      },
+      en: {
+        tagline: "Make your own growth rhythm",
+        platform: "Only for Windows · Free",
+        category: "Productivity",
+        about: "Cultiva is a desktop habit tracker built offline-first. Grow habits visually from seed to legacy, customize themes and ambient layers, and extend the app with a sandboxed plugin system.",
+        features: ["Local-first data storage", "Plugins, themes, ambient backgrounds", "Native notifications and auto-updates via GitHub Releases"],
+        privacy: "Cultiva stores your data locally on your device. No account is required. Network access is used only for optional plugin registry and update checks.",
+        compatibility: "Windows 10 / 11"
+      },
+      ru: {
+        tagline: "Выстрой свой ритм роста",
+        platform: "Только для Windows · Бесплатно",
+        category: "Продуктивность",
+        about: "Cultiva — desktop-трекер привычек с упором на offline-first. Визуальный рост привычек, темы, ambient-слои и расширяемость через sandbox-плагины.",
+        features: ["Локальное хранение данных", "Плагины, темы, ambient-фоны", "Нативные уведомления и автообновления через GitHub Releases"],
+        privacy: "Cultiva хранит данные локально на устройстве. Аккаунт не нужен. Сеть используется только для плагинов и проверки обновлений.",
+        compatibility: "Windows 10 / 11"
+      }
+    },
+    blip: {
+      ...projectMedia("blip"),
+      icon: "assets/icons/blip.svg",
+      bannerClass: "store-banner-blip",
+      repo: "FlokeStudio/BLIP",
+      repoUrl: "https://github.com/FlokeStudio/BLIP",
+      getUrl: "https://github.com/FlokeStudio/BLIP/releases",
+      card: {
+        en: {
+          pitch: "P2P messenger for your LAN — chat, voice, video, and files without cloud servers or accounts.",
+          why: [
+            "No registration — pick a BLIP ID on a 1–64 grid",
+            "Traffic stays on your network segment (LAN / VPN)",
+            "Pixel × glass aesthetic built for local trust",
+          ],
+          can: [
+            "Text chat with receipts, reactions, and file transfer",
+            "Voice & video calls, screen share, group channels",
+            "BEACON mesh library, Signal Corps workspace, EN/RU UI",
+          ],
+        },
+        ru: {
+          pitch: "P2P-мессенджер для вашей сети — чат, голос, видео и файлы без облачных серверов и аккаунтов.",
+          why: [
+            "Без регистрации — BLIP ID на сетке 1–64",
+            "Трафик только в вашем сегменте (LAN / VPN)",
+            "Пиксель × стекло — эстетика локального доверия",
+          ],
+          can: [
+            "Чат с доставкой, реакциями и передачей файлов",
+            "Звонки, видео, демонстрация экрана, группы",
+            "BEACON mesh, Сигнал Корпс, интерфейс EN/RU",
+          ],
+        },
+      },
+      en: {
+        tagline: "No cloud. No account. Just peers.",
+        platform: "Only for Windows · Free",
+        category: "Communication",
+        about: "BLIP is a LAN/P2P messenger for local networks and VPN segments. Chat, voice, video, and file distribution — including BEACON mesh publishing — without cloud relay or accounts.",
+        features: ["Peers identified by BLIP ID (1–64)", "Chat, calls, screen share, file transfer", "Works on LAN, Hamachi, Radmin VPN"],
+        privacy: "BLIP does not require registration. Communication stays on your network segment. No cloud message relay.",
+        compatibility: "Windows 10 / 11 · LAN / VPN"
+      },
+      ru: {
+        tagline: "Без облака. Без аккаунта. Только peers.",
+        platform: "Только для Windows · Бесплатно",
+        category: "Коммуникации",
+        about: "BLIP — LAN/P2P мессенджер для локальных сетей и VPN. Чаты, звонки, видео и передача файлов, включая BEACON mesh, без облачного relay и аккаунтов.",
+        features: ["Идентификация по BLIP ID (1–64)", "Чаты, звонки, screen share, файлы", "LAN, Hamachi, Radmin VPN"],
+        privacy: "BLIP не требует регистрации. Коммуникация остается в вашем сетевом сегменте. Облачного relay нет.",
+        compatibility: "Windows 10 / 11 · LAN / VPN"
+      }
+    },
+    senza: {
+      ...projectMedia("senza"),
+      icon: "assets/icons/senza.svg",
+      bannerClass: "store-banner-senza",
+      repo: "FlokeStudio/Senza",
+      repoUrl: "https://github.com/FlokeStudio/Senza",
+      getUrl: "https://github.com/FlokeStudio/Senza/releases/latest",
+      releaseTag: "0.1.0",
+      codename: "Coda",
+      card: {
+        en: {
+          pitch: "Your music library, not a streaming service — import, organize, fix tags, and listen offline.",
+          why: [
+            "Files stay yours — copied into a local Artist/Album library",
+            "No algorithm feed — your order, your playlists, your history",
+            "Private by design — play history never leaves your PC",
+          ],
+          can: [
+            "Import mp3, flac, wav, ogg, m4a, aac with drag & drop",
+            "Tag editor, cover crop, Smart Metadata Assistant",
+            "Music Vault score, Journal, Time Capsule · v0.1.0 Coda on GitHub",
+          ],
+        },
+        ru: {
+          pitch: "Ваша музыкальная библиотека, а не стриминг — импорт, порядок, теги и прослушивание без сети.",
+          why: [
+            "Файлы остаются вашими — копии в локальную структуру Артист/Альбом",
+            "Без алгоритмической ленты — ваш порядок и ваши плейлисты",
+            "Приватно — история прослушиваний только на ПК",
+          ],
+          can: [
+            "Импорт mp3, flac, wav, ogg, m4a, aac перетаскиванием",
+            "Редактор тегов, кроп обложки, умный помощник метаданных",
+            "Music Vault, журнал, Time Capsule · v0.1.0 Coda на GitHub",
+          ],
+        },
+      },
+      en: {
+        tagline: "Your library. Your files. Nothing else.",
+        platform: "Windows 10/11 · v0.1.0 Coda · Free",
+        category: "Music",
+        about: "Senza is an offline-first music library and player from Floke. Import your files into a local collection, fix tags and covers, browse albums and artists, and listen without streaming or an account.\n\nThe first release — 0.1.0 Coda — is available on GitHub: installer and portable builds. Music Vault, Listening Journal, tag editor with cover crop, Collection mode, and full English/Russian UI.",
+        features: [
+          "Import mp3, flac, wav, ogg, m4a, aac into Artist/Album folders",
+          "Tag editor, cover crop, Smart Metadata Assistant",
+          "Music Vault, Collection mode, playlists as real folders",
+          "Listening Journal + Music Time Capsule",
+          "Profile with pixel avatar · dark/light · EN/RU"
+        ],
+        privacy: "Senza keeps your library and play history on your PC. No sign-in. No upload of your music to Floke servers. Network is not required to play.",
+        compatibility: "Windows 10 / 11 (x64) · iOS planned"
+      },
+      ru: {
+        tagline: "Твоя библиотека. Твои файлы. Ничего лишнего.",
+        platform: "Windows 10/11 · v0.1.0 Coda · Бесплатно",
+        category: "Музыка",
+        about: "Senza — offline-first музыкальная библиотека и плеер от Floke. Импорт в локальную коллекцию, теги и обложки, альбомы и исполнители — без стриминга и аккаунта.\n\nПервый релиз — 0.1.0 Coda — на GitHub: установщик и portable. Music Vault, журнал прослушиваний, редактор тегов с кропом обложки, режим Коллекция, EN/RU.",
+        features: [
+          "Импорт mp3, flac, wav, ogg, m4a, aac в папки Артист/Альбом",
+          "Редактор тегов, кроп обложки, умный помощник метаданных",
+          "Music Vault, режим Коллекция, плейлисты как папки",
+          "Журнал прослушиваний + Music Time Capsule",
+          "Профиль с пиксель-аватаром · тёмная/светлая тема · EN/RU"
+        ],
+        privacy: "Библиотека и история прослушиваний хранятся на вашем ПК. Без входа. Музыка не загружается на серверы Floke. Для воспроизведения интернет не нужен.",
+        compatibility: "Windows 10 / 11 (x64) · iOS в планах"
+      }
+    }
+  };
+
+  let locale = localStorage.getItem("floke-lang");
+  if (!locale) {
+    locale = navigator.language && navigator.language.toLowerCase().startsWith("ru") ? "ru" : "en";
+  }
+
+  let theme = localStorage.getItem("floke-theme") || "dark";
+  const releaseCache = {};
+  const cardVersions = { cultiva: "…", blip: "…", senza: "v0.1.0" };
+
+  const mainView = document.getElementById("mainView");
+  const projectView = document.getElementById("projectView");
+  const manifestoSection = document.getElementById("manifestoSection");
+  const langEn = document.getElementById("langEn");
+  const langRu = document.getElementById("langRu");
+  const themeToggle = document.getElementById("themeToggle");
+
+  function t(key) {
+    return (i18n[locale] && i18n[locale][key]) || key;
+  }
+
+  function renderProductCards() {
+    const grid = document.getElementById("productsGrid");
+    if (!grid) return;
+    grid.innerHTML = PRODUCT_ORDER.map((slug, i) => {
+      const p = projects[slug];
+      const c = p.card[locale];
+      const ver = cardVersions[slug] || "…";
+      const list = (items) => items.map((x) => "<li>" + escHtml(x) + "</li>").join("");
+      return (
+        '<a href="#project/' + slug + '" class="product-card reveal" style="transition-delay:' + (i * 0.08) + 's">'
+        + '<img class="product-logo" src="' + p.icon + '" alt="" width="56" height="56">'
+        + '<div class="product-name">' + PRODUCT_TITLES[slug] + "</div>"
+        + '<p class="product-pitch">' + escHtml(c.pitch) + "</p>"
+        + '<div class="product-blocks">'
+        + '<div><div class="product-block-label">' + t("card.why") + '</div><ul class="product-list">' + list(c.why) + '</ul></div>'
+        + '<div><div class="product-block-label">' + t("card.can") + '</div><ul class="product-list">' + list(c.can) + '</ul></div>'
+        + "</div>"
+        + '<div class="product-meta">'
+        + '<span class="tag tag-active">Windows</span>'
+        + '<span class="tag tag-active" data-card-ver="' + slug + '">' + escHtml(ver) + "</span>"
+        + '<span class="tag tag-active">' + t("tag.live") + "</span>"
+        + "</div></a>"
+      );
+    }).join("");
+    initReveal(grid.querySelectorAll(".product-card"));
+  }
+
+  function renderStoreCarousel(slug, p) {
+    const carousel = document.getElementById("storeCarousel");
+    const dots = document.getElementById("storeCarouselDots");
+    if (!carousel || !dots) return;
+
+    const slides = [];
+    slides.push({ type: "video", src: p.video, poster: p.shots && p.shots[0] });
+    (p.shots || []).forEach((src, i) => slides.push({ type: "image", src, index: i + 1 }));
+
+    carousel.innerHTML = slides
+      .map((s, i) => {
+        if (s.type === "video") {
+          return (
+            '<div class="carousel-slide carousel-slide--video" data-index="' + i + '">'
+            + '<span class="carousel-slide-badge">' + t("carousel.video") + "</span>"
+            + '<video controls playsinline preload="metadata"' + (s.poster ? ' poster="' + s.poster + '"' : "") + ">"
+            + '<source src="' + s.src + '" type="video/mp4"></video></div>'
+          );
+        }
+        const alt = t("carousel.shot") + " " + s.index;
+        return (
+          '<div class="carousel-slide" data-index="' + i + '">'
+          + '<img src="' + s.src + '" alt="' + escHtml(alt) + '" loading="lazy" onerror="this.classList.add(\'is-missing\')">'
+          + "</div>"
+        );
+      })
+      .join("");
+
+    const videoEl = carousel.querySelector("video");
+    videoEl?.addEventListener("error", () => {
+      const slide = videoEl.closest(".carousel-slide");
+      if (slide) {
+        slide.innerHTML =
+          '<span class="carousel-slide-badge">' + t("carousel.video") + "</span>"
+          + '<div class="carousel-slide--placeholder">' + t("store.videoMissing").replace("{project}", slug) + "</div>";
+      }
+    });
+
+    dots.innerHTML = slides
+      .map(
+        (_, i) =>
+          '<button type="button" class="carousel-dot' + (i === 0 ? " active" : "") + '" data-index="' + i + '" aria-label="Slide ' + (i + 1) + '"></button>'
+      )
+      .join("");
+
+    function setActiveDot(index) {
+      dots.querySelectorAll(".carousel-dot").forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.dataset.index) === index);
+      });
+    }
+
+    carousel.onscroll = () => {
+      const children = [...carousel.querySelectorAll(".carousel-slide")];
+      const mid = carousel.scrollLeft + carousel.clientWidth * 0.35;
+      let best = 0;
+      let bestDist = Infinity;
+      children.forEach((el, i) => {
+        const dist = Math.abs(el.offsetLeft - mid);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      setActiveDot(best);
+    };
+
+    dots.querySelectorAll(".carousel-dot").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const slide = carousel.querySelector('[data-index="' + btn.dataset.index + '"]');
+        if (slide) carousel.scrollTo({ left: slide.offsetLeft - 14, behavior: "smooth" });
+      });
+    });
+  }
+
+  function initReveal(nodes) {
+    const list = nodes ? [...nodes] : [...document.querySelectorAll(".reveal")];
+    if (!("IntersectionObserver" in window)) {
+      list.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    list.forEach((el) => io.observe(el));
+  }
+
+  function applyLocale() {
+    document.documentElement.lang = locale;
+    langEn.classList.toggle("active", locale === "en");
+    langRu.classList.toggle("active", locale === "ru");
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (i18n[locale] && i18n[locale][key]) {
+        el.textContent = i18n[locale][key];
+      }
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-html");
+      if (i18n[locale] && i18n[locale][key]) {
+        el.innerHTML = i18n[locale][key].replace(/\n/g, "<br>");
+      }
+    });
+    renderProductCards();
+    const hash = window.location.hash || "";
+    if (hash.startsWith("#project/")) {
+      const slug = hash.replace("#project/", "").trim().toLowerCase();
+      if (projects[slug]) renderProject(slug);
+    }
+  }
+
+  function applyTheme() {
+    document.documentElement.setAttribute("data-theme", theme);
+    themeToggle.textContent = theme === "dark" ? "◐" : "◑";
+    themeToggle.title = theme === "dark" ? "Light mode" : "Dark mode";
+  }
+
+  function setLocale(next) {
+    locale = next;
+    localStorage.setItem("floke-lang", locale);
+    applyLocale();
+    loadLandingReleases();
+  }
+
+  function setTheme(next) {
+    theme = next;
+    localStorage.setItem("floke-theme", theme);
+    applyTheme();
+  }
+
+  langEn.addEventListener("click", () => setLocale("en"));
+  langRu.addEventListener("click", () => setLocale("ru"));
+  themeToggle.addEventListener("click", () => setTheme(theme === "dark" ? "light" : "dark"));
+
+  document.getElementById("navHome").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.hash = "";
+  });
+
+  document.getElementById("storeBackBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    window.location.hash = "";
+  });
+
+  function formatDate(dateString) {
+    const d = new Date(dateString);
+    return d.toLocaleDateString(locale === "ru" ? "ru-RU" : "en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  }
+
+  function releaseRow(product, version, title, isLive) {
+    return '<div class="release-row reveal">'
+      + '<div class="release-product">' + product + '</div>'
+      + '<div class="release-version">' + version + '</div>'
+      + '<div class="release-name"><em>' + title + '</em></div>'
+      + '<div class="release-status ' + (isLive ? 'status-live' : 'status-dev') + '">' + (isLive ? t("status.live") : t("status.dev")) + '</div>'
+      + '</div>';
+  }
+
+  async function fetchReleases(repo, count) {
+    if (releaseCache[repo]) return releaseCache[repo];
+    const response = await fetch('https://api.github.com/repos/' + repo + '/releases?per_page=' + count);
+    if (!response.ok) throw new Error('GitHub API failed');
+    const data = await response.json();
+    releaseCache[repo] = data;
+    return data;
+  }
+
+  async function loadLandingReleases() {
+    const container = document.getElementById('dynamicReleases');
+    try {
+      const [cultivaList, blipList, senzaList] = await Promise.all([
+        fetchReleases('FlokeStudio/Cultiva', 1),
+        fetchReleases('FlokeStudio/BLIP', 1),
+        fetchReleases('FlokeStudio/Senza', 1).catch(() => [])
+      ]);
+      const cultiva = cultivaList[0];
+      const blip = blipList[0];
+      const senza = senzaList[0];
+      const cv = cultiva.tag_name || 'latest';
+      const bv = blip.tag_name || 'latest';
+      const sv = senza ? (senza.tag_name || 'v0.1.0') : 'v0.1.0';
+      cardVersions.cultiva = cv;
+      cardVersions.blip = bv;
+      cardVersions.senza = sv;
+      renderProductCards();
+      const senzaTitle = senza
+        ? ((senza.name || sv) + ' · ' + formatDate(senza.published_at))
+        : (locale === 'ru' ? '0.1.0 Coda · первый релиз' : '0.1.0 Coda · first release');
+      const senzaLive = Boolean(senza);
+      container.innerHTML = ''
+        + releaseRow('Cultiva', cv, (cultiva.name || cv) + ' · ' + formatDate(cultiva.published_at), true)
+        + releaseRow('BLIP', bv, (blip.name || bv) + ' · ' + formatDate(blip.published_at), true)
+        + releaseRow('Senza', sv, senzaTitle, senzaLive);
+      initReveal(container.querySelectorAll(".release-row.reveal"));
+    } catch (e) {
+      cardVersions.cultiva = "v0.4.0";
+      cardVersions.blip = "v1.1.1";
+      cardVersions.senza = "v0.1.0";
+      renderProductCards();
+      container.innerHTML = ''
+        + releaseRow('Cultiva', '0.4.0', 'Coconut · Notifications, Plugins, Ambient Layers', true)
+        + releaseRow('BLIP', '1.1.1', 'Beacon · large file publishing fix', true)
+        + releaseRow('Senza', 'v0.1.0', locale === 'ru' ? '0.1.0 Coda · первый релиз' : '0.1.0 Coda · first release', true);
+      initReveal(container.querySelectorAll(".release-row.reveal"));
+    }
+  }
+
+  function metaItem(label, value) {
+    return '<div class="store-meta-item"><div class="store-meta-label">' + label + '</div><div class="store-meta-value">' + value + '</div></div>';
+  }
+
+  async function renderProject(slug) {
+    const p = projects[slug];
+    const copy = p[locale];
+    const banner = document.getElementById('storeBanner');
+    banner.className = 'store-banner ' + p.bannerClass;
+
+    const storeIcon = document.getElementById('storeIcon');
+    if (storeIcon) {
+      storeIcon.src = p.icon;
+      storeIcon.alt = PRODUCT_TITLES[slug] || slug;
+    }
+    document.getElementById('storeTitle').textContent = PRODUCT_TITLES[slug] || slug;
+
+    document.getElementById('storeTagline').textContent = copy.tagline;
+    document.getElementById('storePlatformLine').textContent = copy.platform;
+    document.getElementById('storeRepoLink').href = p.repoUrl;
+    document.getElementById('storeAbout').textContent = copy.about;
+
+    const featuresEl = document.getElementById('storeFeatures');
+    featuresEl.innerHTML = copy.features.map((f) => '<li>' + f + '</li>').join('');
+    document.getElementById('storePrivacy').textContent = copy.privacy;
+
+    renderStoreCarousel(slug, p);
+
+    const getBtn = document.getElementById('storeGetBtn');
+    getBtn.textContent = t('store.get');
+
+    let version = 'TBA';
+    const whatsNewEl = document.getElementById('storeWhatsNew');
+    whatsNewEl.innerHTML = '<div class="store-whatsnew-item"><div class="store-whatsnew-body">' + t('releases.loading') + '</div></div>';
+
+    if (p.repo) {
+      try {
+        const list = await fetchReleases(p.repo, 5);
+        if (list.length) version = list[0].tag_name || list[0].name || 'latest';
+        whatsNewEl.innerHTML = list.map((r) => {
+          const body = (r.body || '').replace(/<[^>]+>/g, '').trim().slice(0, 220);
+          return '<div class="store-whatsnew-item"><div class="store-whatsnew-head"><span class="store-whatsnew-ver">' + (r.tag_name || r.name) + '</span><span class="store-whatsnew-date">' + formatDate(r.published_at) + '</span></div><div class="store-whatsnew-body">' + (body || (r.name || '')) + '</div></div>';
+        }).join('');
+      } catch (e) {
+        whatsNewEl.innerHTML = '<div class="store-whatsnew-item"><div class="store-whatsnew-body">' + (locale === 'ru' ? 'Не удалось загрузить релизы.' : 'Could not load releases.') + '</div></div>';
+      }
+    } else {
+      whatsNewEl.innerHTML = '<div class="store-whatsnew-item"><div class="store-whatsnew-body">' + (locale === 'ru' ? 'Первый релиз в разработке.' : 'First release in development.') + '</div></div>';
+    }
+
+    document.getElementById('storeNotice').innerHTML = p.getUrl
+      ? '<div class="notice">' + t('store.downloadHint') + '</div>'
+      : '';
+
+    document.getElementById('storeMeta').innerHTML = ''
+      + metaItem(t('store.meta.category'), copy.category)
+      + metaItem(t('store.meta.developer'), 'Floke')
+      + metaItem(t('store.meta.language'), 'EN / RU')
+      + metaItem(t('store.meta.platform'), 'Windows')
+      + metaItem(t('store.meta.version'), version);
+
+    function infoItem(label, value) {
+      return '<div class="store-info-item"><div class="store-meta-label">' + label + '</div><div class="store-meta-value">' + value + '</div></div>';
+    }
+    document.getElementById('storeInfo').innerHTML = ''
+      + infoItem(t('store.info.provider'), 'Floke Studio')
+      + infoItem(t('store.info.compatibility'), copy.compatibility)
+      + infoItem(t('store.info.languages'), locale === 'ru' ? 'Английский, Русский' : 'English, Russian')
+      + infoItem(t('store.info.copyright'), '© 2026 Floke');
+
+    getBtn.onclick = () => {
+      if (p.getUrl) window.open(p.getUrl, '_blank', 'noopener,noreferrer');
+      else window.open(p.getUrl || p.repoUrl, '_blank', 'noopener');
+    };
+
+    mainView.classList.add('hidden');
+    manifestoSection.classList.add('hidden');
+    projectView.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderByHash() {
+    const hash = window.location.hash || '';
+    if (hash.startsWith('#project/')) {
+      const slug = hash.replace('#project/', '').trim().toLowerCase();
+      if (projects[slug]) {
+        renderProject(slug);
+        return;
+      }
+    }
+    projectView.classList.add('hidden');
+    mainView.classList.remove('hidden');
+    manifestoSection.classList.remove('hidden');
+  }
+
+  window.addEventListener('hashchange', renderByHash);
+
+  window.addEventListener("scroll", () => {
+    document.querySelector("nav")?.classList.toggle("nav-scrolled", window.scrollY > 24);
+  }, { passive: true });
+
+  applyTheme();
+  applyLocale();
+  loadLandingReleases();
+  renderByHash();
+</script>
  
 </body>
 </html>
