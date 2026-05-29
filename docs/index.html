@@ -176,6 +176,7 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 .pcard-tags{margin-top:16px;display:flex;gap:6px;flex-wrap:wrap}
 .tag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border2);color:var(--muted2);border-radius:3px}
 .tag-live{border-color:var(--accent2);color:var(--accent2)}
+.tag-soon{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 .tag-ver{border-color:var(--accent);color:var(--accent)}
 
 /* RELEASES */
@@ -225,6 +226,16 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .store-head-blip{background:radial-gradient(ellipse 80% 80% at 0% 0%,rgba(50,40,100,.5) 0%,transparent 60%)}
 .store-head-senza{background:radial-gradient(ellipse 80% 80% at 0% 0%,rgba(90,30,40,.5) 0%,transparent 60%)}
 .store-head-glyph{background:radial-gradient(ellipse 85% 70% at 0% 0%,rgba(120,90,40,.45) 0%,transparent 62%)}
+.store-head-flint{background:radial-gradient(ellipse 85% 75% at 0% 0%,rgba(200,169,110,.35) 0%,transparent 62%)}
+.store-head-mnemo{background:radial-gradient(ellipse 80% 80% at 100% 0%,rgba(74,124,89,.35) 0%,transparent 60%)}
+
+.sec-label--sub{margin-top:52px}
+.sec-hint{
+  font-size:11px;color:var(--muted);line-height:1.75;
+  margin:-18px 0 28px;max-width:540px;
+}
+.products--intel{margin-bottom:0}
+.tag-engine{border-color:var(--accent2);color:var(--accent2)}
 
 /* ── Glyph stage (Apple-style) ── */
 .glyph-stage{
@@ -749,6 +760,9 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   <hr class="div" style="margin-top:0">
   <div class="sec-label" data-k="sec.products">Projects</div>
   <div class="products" id="prodGrid"></div>
+  <div class="sec-label sec-label--sub" data-k="sec.intelligence">Intelligence layer</div>
+  <p class="sec-hint" data-k="sec.intelligenceHint">Models and engines that power Floke apps — metadata, local LLM, and the glue between products.</p>
+  <div class="products products--intel" id="intelGrid"></div>
   <hr class="div">
 </div>
 </section>
@@ -868,6 +882,8 @@ const STR = {
     "hero.sub":"Offline-first. No cloud. No tracking. No compromise.\nWe build tools that work — with or without the internet.",
     "hero.browse":"Browse products",
     "sec.products":"Projects","sec.releases":"Latest releases",
+    "sec.intelligence":"Intelligence layer",
+    "sec.intelligenceHint":"Models and engines that power Floke apps — metadata, local LLM, and the glue between products.",
     "rel.loading":"Syncing with GitHub…",
     "m1":"Your software shouldn't need permission to work.",
     "m2":"The cloud is someone else's computer.",
@@ -881,7 +897,8 @@ const STR = {
     "store.videoBadge":"Video","store.shotBadge":"Screenshot",
     "store.videoLabel":"Video","store.shotLabel":"Screenshot",
     "card.why":"Why it matters","card.can":"What you can do",
-    "tag.live":"Live","tag.dev":"In dev",
+    "card.horizon":"The summit","card.today":"Today",
+    "tag.live":"Live","tag.dev":"In dev","tag.soon":"Q3 2026",
     "meta.category":"Category","meta.dev":"Developer","meta.lang":"Language","meta.platform":"Platform","meta.ver":"Version",
     "info.provider":"Provider","info.compat":"Compatibility","info.langs":"Languages","info.copy":"Copyright",
     "status.live":"Live","status.dev":"Dev",
@@ -925,6 +942,15 @@ const STR = {
     "glyph.name":"Glyph2.1-O","glyph.tagline":"Metadata Intelligence for your files",
     "glyph.plat":"Version 2.1-O","glyph.pitch":"The Floke metadata model — private, precise, and built to integrate across our apps. Try it first in Senza.",
     "glyph.category":"Metadata Model","glyph.version":"2.1-O",
+    "mnemo.category":"Local AI Engine","mnemo.version":"1.2-O",
+    "flint.get":"Coming Q3 2026","flint.toast.title":"Flint is almost ready.",
+    "flint.toast.msg":"Local agent modes — General, Writer, and Code. Propose file changes and fetches; you approve every step. Document memory, streaming replies, zero cloud. One installer on your PC, Q3 2026. You'll want this the day it drops.",
+    "flint.toast.cta":"I'll be there on day one",
+    "mnemo.get":"Coming Q3 2026","mnemo.toast.title":"Mnemo 1.2-O ships with Flint.",
+    "mnemo.toast.msg":"The local engine behind agent modes — Code, Writer, General — with tools you control. Built for builders who expect coding-agent workflows, not a chat tab in someone else's datacenter. Q3 2026 · on your hardware only.",
+    "mnemo.toast.cta":"Worth the wait",
+    "mnemo.releaseNote":"Public release · Q3 2026",
+    "flint.releaseNote":"Public release · Q3 2026",
     "glyph.card.why":"Why Glyph","glyph.card.can":"Capabilities",
     "glyph.toast.title":"Try Glyph in Senza","glyph.toast.msg":"Glyph2.1-O ships inside Senza 1.0.0 Vivo today. Download Senza to experience metadata intelligence on your music library.",
     "glyph.toast.open":"Download Senza","glyph.toast.dismiss":"Dismiss",
@@ -939,6 +965,8 @@ const STR = {
     "hero.sub":"Offline-first. Без облака. Без трекинга. Без компромиссов.\nМы делаем инструменты, которые работают — с сетью и без.",
     "hero.browse":"Смотреть проекты",
     "sec.products":"Проекты","sec.releases":"Последние релизы",
+    "sec.intelligence":"Слой интеллекта",
+    "sec.intelligenceHint":"Модели и движки под капотом приложений Floke — метаданные, локальный LLM и связь между продуктами.",
     "rel.loading":"Синхронизация с GitHub…",
     "m1":"Вашему софту не нужно разрешение, чтобы работать.",
     "m2":"Облако — это чужой компьютер.",
@@ -952,7 +980,8 @@ const STR = {
     "store.videoBadge":"Видео","store.shotBadge":"Скриншот",
     "store.videoLabel":"Видео","store.shotLabel":"Скриншот",
     "card.why":"Почему это важно","card.can":"Что можно делать",
-    "tag.live":"Live","tag.dev":"В разработке",
+    "card.horizon":"Вершина","card.today":"Сегодня",
+    "tag.live":"Live","tag.dev":"В разработке","tag.soon":"Q3 2026",
     "meta.category":"Категория","meta.dev":"Разработчик","meta.lang":"Язык","meta.platform":"Платформа","meta.ver":"Версия",
     "info.provider":"Поставщик","info.compat":"Совместимость","info.langs":"Языки","info.copy":"Авторские права",
     "status.live":"Live","status.dev":"Dev",
@@ -996,6 +1025,15 @@ const STR = {
     "glyph.name":"Glyph2.1-O","glyph.tagline":"Интеллект метаданных",
     "glyph.plat":"Версия 2.1-O","glyph.pitch":"Модель метаданных Floke — приватная, точная, для интеграции во все продукты. Первый опыт — в Senza.",
     "glyph.category":"Модель метаданных","glyph.version":"2.1-O",
+    "mnemo.category":"Локальный AI-движок","mnemo.version":"1.2-O",
+    "flint.get":"Q3 2026","flint.toast.title":"Flint уже на финишной прямой.",
+    "flint.toast.msg":"Локальные режимы агента — General, Writer и Code. Предложения по файлам и URL; каждый шаг — ваше Y/N. Память документов, стриминг, без облака. Один установщик на ваш ПК, Q3 2026. В день релиза захотите поставить сразу.",
+    "flint.toast.cta":"Буду в первый день",
+    "mnemo.get":"Q3 2026","mnemo.toast.title":"Mnemo 1.2-O — в составе Flint.",
+    "mnemo.toast.msg":"Локальный движок режимов агента — Code, Writer, General — с инструментами под вашим контролем. Для тех, кто ждёт от coding-agent реальных действий, а не вкладку в чужом дата-центре. Q3 2026 · только ваше железо.",
+    "mnemo.toast.cta":"Жду",
+    "mnemo.releaseNote":"Публичный релиз · Q3 2026",
+    "flint.releaseNote":"Публичный релиз · Q3 2026",
     "glyph.card.why":"Зачем Glyph","glyph.card.can":"Возможности",
     "glyph.toast.title":"Попробуйте Glyph в Senza","glyph.toast.msg":"Glyph2.1-O уже в Senza 1.0.0 Vivo. Скачайте Senza, чтобы увидеть интеллект метаданных на своей музыкальной библиотеке.",
     "glyph.toast.open":"Скачать Senza","glyph.toast.dismiss":"Закрыть",
@@ -1112,6 +1150,65 @@ const PROJECTS = {
       privacy:"Библиотека, логи Glyph и история — только на вашем ПК. Без входа. Для воспроизведения интернет не нужен."
     }
   },
+  flint: {
+    icon: "assets/icons/flint.svg",
+    bannerCls: "store-head-flint",
+    repo: "FlokeStudio/Flint",
+    getUrl: "https://github.com/FlokeStudio/Flint",
+    comingSoon: true,
+    releaseWindow: "Q3 2026",
+    media: {
+      shots: ["assets/icons/flint.svg"]
+    },
+    en: {
+      name:"Flint", tagline:"Think here. Stay here.", plat:"Windows · Coming Q3 2026",
+      category:"Local Agent", compat:"Windows 10 / 11 (x64)",
+      pitch:"A local agent for code, writing, and everyday work — with modes, tools, and your sign-off on every action.",
+      why:[
+        "2.0+ — multi-step agents that edit projects, not just chat about them",
+        "Deep workspace context: repos, docs, notes — yours, not a vendor's",
+        "Optional Floke bridges when you want them — never required to get started"
+      ],
+      can:[
+        "v0.6 — Code, Writer & General agents · dedicated Code mode",
+        "Agent tools: write files, fetch links — you approve Y/N, like a coding agent should",
+        "Streaming · document memory · markdown · EN/RU · Q3 2026"
+      ],
+      about:"Flint is a local agent workstation — built for developers, writers, and anyone who wants an assistant that actually does work on their machine.\n\nSwitch agent modes. Open Code mode for architecture, review, and fixes. Let the agent propose file changes and web fetches — you stay in control with a clear yes or no on every step. Index your documents. Keep conversations private. No subscription. No upload.\n\nToday we're finishing v0.6. The summit — Flint 2.0+ — is long-horizon agents, richer toolchains, and optional ties to the rest of Floke when you choose.\n\nPublic release · Q3 2026. You'll install it once — and it stays yours.",
+      features:[
+        "Summit — autonomous project edits, tool chains, workspace-wide context (2.0+)",
+        "Summit — optional Senza & Cultiva bridges — additive, not mandatory",
+        "Today — v0.6 · Code / Writer / General agents · Code mode toolbar",
+        "Today — agent file & URL actions with permission modal · trusted folders",
+        "Today — streaming replies · RAG · Pro personality · EN/RU"
+      ],
+      privacy:"Conversations stay local. Agent actions need your approval. No telemetry. No cloud relay."
+    },
+    ru: {
+      name:"Flint", tagline:"Думай здесь. Оставайся здесь.", plat:"Windows · Q3 2026",
+      category:"Локальный агент", compat:"Windows 10 / 11 (x64)",
+      pitch:"Локальный агент для кода, текстов и дел — с режимами, инструментами и вашим Y/N на каждое действие.",
+      why:[
+        "2.0+ — многошаговые агенты, которые меняют проекты, а не только обсуждают",
+        "Контекст workspace: репозитории, доки, заметки — ваши, не вендора",
+        "Мосты Floke — опционально, для старта не нужны"
+      ],
+      can:[
+        "v0.6 — агенты Code, Writer и General · отдельный режим Code",
+        "Инструменты агента: файлы, URL — вы подтверждаете Y/N, как у coding-agent",
+        "Стриминг · память документов · markdown · EN/RU · Q3 2026"
+      ],
+      about:"Flint — локальная agent-станция для разработчиков, авторов и всех, кому нужен ассистент, который реально работает на их машине.\n\nПереключайте режимы агентов. Code mode — архитектура, ревью, правки. Агент предлагает изменения файлов и загрузку ссылок — вы решаете да или нет на каждом шаге. Индексируйте документы. Диалоги приватны. Без подписки. Без загрузок.\n\nСейчас доводим v0.6. Вершина — Flint 2.0+ — long-horizon агенты, богаче инструменты, опциональные связи с Floke по вашему выбору.\n\nПубличный релиз · Q3 2026. Установите один раз — и он остаётся вашим.",
+      features:[
+        "Вершина — автономные правки проектов, цепочки инструментов (2.0+)",
+        "Вершина — опциональные мосты Senza и Cultiva",
+        "Сегодня — v0.6 · агенты Code / Writer / General · панель Code mode",
+        "Сегодня — файлы и URL агента с модалкой прав · доверенные папки",
+        "Сегодня — стриминг · RAG · режим Pro · EN/RU"
+      ],
+      privacy:"Диалоги локально. Действия агента — только с вашего одобрения. Без телеметрии и облака."
+    }
+  },
   glyph: {
     icon: "assets/icons/glyph.svg",
     bannerCls: "store-head-glyph",
@@ -1140,13 +1237,78 @@ const PROJECTS = {
       pitch:"Модель метаданных Floke — приватная, точная, для всех продуктов студии. Первый опыт — в Senza.",
       why:["On-device — файлы не покидают вашу машину","Контекст библиотеки — альбомы, артисты, соседи","Самообучение — на каждой вашей правке"],
       can:["Чистые теги из мусорных имён и папок","Балл уверенности + diff до применения","Batch всей библиотеки с превью"],
-      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.0.0 Vivo. Завтра — в других продуктах Floke.",
+      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.0.0 Vivo. Завтра — в Flint и других продуктах Floke.",
       features:["Категория: модель метаданных · версия 2.1-O","Конвейер rules → knowledge → ML → KNN","Diff, batch, поиск дубликатов","SQLite-лог для обучения","Попробовать: в составе Senza"],
       privacy:"Всё обрабатывается локально. Без обучения на ваших данных в облаке. Онлайн-запросы опциональны и кэшируются."
     }
+  },
+  mnemo: {
+    icon: "assets/icons/mnemo.svg",
+    bannerCls: "store-head-mnemo",
+    repo: "FlokeStudio/Flint",
+    getUrl: "https://github.com/FlokeStudio/Flint",
+    integrated: true,
+    comingSoon: true,
+    version: "1.2-O",
+    releaseWindow: "Q3 2026",
+    media: {
+      shots: ["assets/icons/mnemo.svg"]
+    },
+    en: {
+      name:"Mnemo 1.2-O", tagline:"Memory. On device.", plat:"Version 1.2-O · Coming Q3 2026",
+      category:"Local Engine", compat:"Windows · debuts in Flint",
+      pitch:"The engine that runs agent modes locally — Code, Writer, General — with tools you approve, not a server you rent.",
+      why:[
+        "2.0+ — longer agent runs, richer code tools, workspace-scale memory",
+        "One versioned engine — Flint first, more hosts later",
+        "Silent writes never happen — consent is part of the architecture"
+      ],
+      can:[
+        "1.2-O — powers agent modes & Code mode in Flint today",
+        "Streaming inference · document RAG · file & URL tools gated by you",
+        "Public with Flint · Q3 2026 · install and run entirely offline"
+      ],
+      about:"Mnemo is the local engine behind Flint's agent modes — not a chatbot skin, not a cloud proxy.\n\nIt drives Code mode for real engineering work: review, refactor, explain stack traces. Writer and General modes for everything else. When the agent wants to touch a file or fetch a URL, Mnemo stops and waits for your approval.\n\n1.2-O is what we ship in v0.6. 2.0-O is the summit: deeper code intelligence, multi-step toolchains, optional Floke ecosystem context when you opt in.\n\nArrives with Flint · Q3 2026. On your machine from the first launch.",
+      features:[
+        "Summit — 2.0-O · long-horizon agents · deeper code & tool integration",
+        "Summit — optional Floke library bridges · opt-in only",
+        "Today — 1.2-O · Code / Writer / General · streaming · RAG",
+        "Today — permission-gated file & URL actions · trusted paths",
+        "Today — non-blocking UI · Pro mode · EN/RU system prompts"
+      ],
+      privacy:"Inference on your hardware. Agent actions require explicit approval. No cloud relay."
+    },
+    ru: {
+      name:"Mnemo 1.2-O", tagline:"Память. На устройстве.", plat:"Версия 1.2-O · Q3 2026",
+      category:"Локальный движок", compat:"Windows · дебют в Flint",
+      pitch:"Движок локальных режимов агента — Code, Writer, General — с инструментами, которые вы одобряете, а не сервером в аренду.",
+      why:[
+        "2.0+ — длинные agent-run'ы, богаче code-tools, память масштаба workspace",
+        "Один версионированный движок — сначала Flint, потом другие хосты",
+        "Тихих записей не бывает — согласие заложено в архитектуру"
+      ],
+      can:[
+        "1.2-O — питает режимы агента и Code mode во Flint сегодня",
+        "Стриминг · RAG по документам · файлы и URL только с вашего Y/N",
+        "Публично с Flint · Q3 2026 · полностью offline после установки"
+      ],
+      about:"Mnemo — локальный движок режимов агента во Flint, не оболочка чатбота и не облачный прокси.\n\nCode mode для инженерной работы: ревью, рефакторинг, разбор ошибок. Writer и General — для остального. Если агент хочет тронуть файл или URL, Mnemo ждёт вашего одобрения.\n\n1.2-O — то, что в v0.6. 2.0-O — вершина: глубже code intelligence, multi-step инструменты, опциональный контекст Floke по вашему выбору.\n\nПриходит с Flint · Q3 2026. С первого запуска — на вашей машине.",
+      features:[
+        "Вершина — 2.0-O · long-horizon агенты · глубже code & tools",
+        "Вершина — опциональные мосты библиотек Floke",
+        "Сегодня — 1.2-O · Code / Writer / General · стриминг · RAG",
+        "Сегодня — файлы и URL с модалкой прав · доверенные пути",
+        "Сегодня — UI без блокировок · Pro mode · EN/RU"
+      ],
+      privacy:"Inference на вашем железе. Действия агента — только с явного одобрения. Без облачного relay."
+    }
   }
 };
-const ORDER = ["cultiva","blip","glyph","senza"];
+const ORDER_APPS = ["cultiva","blip","senza","flint"];
+const ORDER_INTEL = ["glyph","mnemo"];
+
+function isIntelSlug(slug){ return ORDER_INTEL.includes(slug); }
+function isIntegratedSlug(slug){ return slug==="glyph" || slug==="mnemo"; }
 
 let locale = localStorage.getItem("floke-lang") || (navigator.language.startsWith("ru") ? "ru" : "en");
 let theme = localStorage.getItem("floke-theme") || "dark";
@@ -1283,17 +1445,33 @@ function applyTheme(){
 let glyphToastTimer = null;
 
 function showFlokeToast(){
+  showProductToast("glyph");
+}
+
+function showProductToast(slug){
   const wrap = document.getElementById("flokeToastWrap");
   if(!wrap) return;
-  document.getElementById("flokeToastTitle").textContent = t("glyph.toast.title");
-  document.getElementById("flokeToastMsg").textContent = t("glyph.toast.msg");
-  document.getElementById("flokeToastActions").innerHTML = `
-    <a class="floke-toast-primary" href="${SENZA_RELEASE_URL}" target="_blank" rel="noopener">${esc(t("glyph.toast.open"))}</a>
-    <button type="button" class="floke-toast-ghost" id="flokeToastDismiss">${esc(t("glyph.toast.dismiss"))}</button>`;
+  const titleKey = `${slug}.toast.title`;
+  const msgKey = `${slug}.toast.msg`;
+  const ctaKey = slug==="glyph" ? null : `${slug}.toast.cta`;
+  document.getElementById("flokeToastTitle").textContent = t(titleKey);
+  document.getElementById("flokeToastMsg").textContent = t(msgKey);
+  if(slug==="glyph"){
+    document.getElementById("flokeToastActions").innerHTML = `
+      <a class="floke-toast-primary" href="${SENZA_RELEASE_URL}" target="_blank" rel="noopener">${esc(t("glyph.toast.open"))}</a>
+      <button type="button" class="floke-toast-ghost" id="flokeToastDismiss">${esc(t("glyph.toast.dismiss"))}</button>`;
+  } else {
+    document.getElementById("flokeToastActions").innerHTML = `
+      <button type="button" class="floke-toast-primary" id="flokeToastDismiss">${esc(t(ctaKey))}</button>`;
+  }
   wrap.classList.add("is-visible");
   document.getElementById("flokeToastDismiss")?.addEventListener("click", hideFlokeToast, { once: true });
   clearTimeout(glyphToastTimer);
-  glyphToastTimer = setTimeout(hideFlokeToast, 12000);
+  glyphToastTimer = setTimeout(hideFlokeToast, 14000);
+}
+
+function showComingSoonToast(slug){
+  showProductToast(slug);
 }
 
 function hideFlokeToast(){
@@ -1634,35 +1812,63 @@ function applyLocale(){
   localStorage.setItem("floke-lang", locale);
 }
 
-function renderCards(){
-  const grid = document.getElementById("prodGrid");
-  grid.innerHTML = ORDER.map((slug,i) => {
-    const p = PROJECTS[slug];
-    const c = p[locale];
-    const rawVer = verCache[slug] || "…";
-    const ver = slug === "senza" ? formatRelVer(rawVer, "Senza") : rawVer;
-    const why = c.why.map(x=>`<li>${esc(x)}</li>`).join("");
-    const can = c.can.map(x=>`<li>${esc(x)}</li>`).join("");
-    return `<button type="button" class="pcard rv" data-slug="${slug}" style="transition-delay:${i*.07}s" aria-label="Open ${esc(c.name)}">
-      ${iconSlotHtml(p.icon, p.icon)}
-      <div class="pcard-name">${esc(c.name)}</div>
-      <p class="pcard-pitch">${esc(c.pitch)}</p>
-      <div class="pcard-row">
-        <div><div class="pcard-col-label">${t("card.why")}</div><ul class="pcard-list">${why}</ul></div>
-        <div><div class="pcard-col-label">${t("card.can")}</div><ul class="pcard-list">${can}</ul></div>
-      </div>
-      <div class="pcard-tags">
-        <span class="tag">Windows</span>
-        ${slug==="glyph"?`<span class="tag tag-model">${esc(t("glyph.category"))}</span><span class="tag tag-cat">${esc(t("glyph.version"))}</span>`:`<span class="tag tag-ver">${esc(ver)}</span>`}
-        <span class="tag tag-live">${t("tag.live")}</span>
-      </div>
-      <span class="pcard-arr" aria-hidden="true">↗</span>
-    </button>`;
-  }).join("");
+function isComingSoon(slug){
+  return !!PROJECTS[slug]?.comingSoon;
+}
+
+function cardTagsHtml(slug, ver){
+  const soon = isComingSoon(slug);
+  const liveTag = soon
+    ? `<span class="tag tag-soon">${t("tag.soon")}</span>`
+    : `<span class="tag tag-live">${t("tag.live")}</span>`;
+  if(slug==="glyph"){
+    return `<span class="tag">Windows</span><span class="tag tag-model">${esc(t("glyph.category"))}</span><span class="tag tag-cat">${esc(t("glyph.version"))}</span>${liveTag}`;
+  }
+  if(slug==="mnemo"){
+    return `<span class="tag">Windows</span><span class="tag tag-engine">${esc(t("mnemo.category"))}</span><span class="tag tag-cat">${esc(t("mnemo.version"))}</span>${liveTag}`;
+  }
+  if(slug==="flint"){
+    return `<span class="tag">Windows</span><span class="tag tag-ver">${esc(ver)}</span>${liveTag}`;
+  }
+  return `<span class="tag">Windows</span><span class="tag tag-ver">${esc(ver)}</span>${liveTag}`;
+}
+
+function buildCardHtml(slug, delayIdx){
+  const p = PROJECTS[slug];
+  const c = p[locale];
+  const rawVer = verCache[slug] || (p.version || "…");
+  const ver = slug === "senza" ? formatRelVer(rawVer, "Senza") : rawVer;
+  const whyLabel = isComingSoon(slug) ? t("card.horizon") : t("card.why");
+  const canLabel = isComingSoon(slug) ? t("card.today") : t("card.can");
+  const why = c.why.map(x=>`<li>${esc(x)}</li>`).join("");
+  const can = c.can.map(x=>`<li>${esc(x)}</li>`).join("");
+  return `<button type="button" class="pcard rv" data-slug="${slug}" style="transition-delay:${delayIdx*.07}s" aria-label="Open ${esc(c.name)}">
+    ${iconSlotHtml(p.icon, p.icon)}
+    <div class="pcard-name">${esc(c.name)}</div>
+    <p class="pcard-pitch">${esc(c.pitch)}</p>
+    <div class="pcard-row">
+      <div><div class="pcard-col-label">${whyLabel}</div><ul class="pcard-list">${why}</ul></div>
+      <div><div class="pcard-col-label">${canLabel}</div><ul class="pcard-list">${can}</ul></div>
+    </div>
+    <div class="pcard-tags">${cardTagsHtml(slug, ver)}</div>
+    <span class="pcard-arr" aria-hidden="true">↗</span>
+  </button>`;
+}
+
+function bindCardGrid(grid){
   grid.querySelectorAll(".pcard").forEach(el => {
     el.addEventListener("click", () => { location.hash = "#project/" + el.dataset.slug; });
   });
   initReveal(grid.querySelectorAll(".rv"));
+}
+
+function renderCards(){
+  const prod = document.getElementById("prodGrid");
+  const intel = document.getElementById("intelGrid");
+  prod.innerHTML = ORDER_APPS.map((slug,i) => buildCardHtml(slug, i)).join("");
+  intel.innerHTML = ORDER_INTEL.map((slug,i) => buildCardHtml(slug, ORDER_APPS.length + i)).join("");
+  bindCardGrid(prod);
+  bindCardGrid(intel);
 }
 
 async function fetchRel(repo, n=8){
@@ -1688,7 +1894,9 @@ const FALLBACK_RELS = {
   cultiva: { ver:"v0.4.0", name:"Coconut · Notifications, Plugins, Ambient Layers" },
   blip: { ver:"v1.1.1", name:"Beacon · large file publishing fix" },
   senza: { ver:"1.0.0", name: locale => locale==="ru" ? "1.0.0 Vivo" : "1.0.0 Vivo" },
-  glyph: { ver:"2.1-O", name: () => "—" }
+  flint: { ver:"v0.6", name: locale === "ru" ? "В разработке · релиз Q3 2026" : "In development · public Q3 2026" },
+  glyph: { ver:"2.1-O", name: () => "—" },
+  mnemo: { ver:"1.2-O", name: () => locale === "ru" ? "С Flint · Q3 2026" : "With Flint · Q3 2026" }
 };
 
 async function loadReleases(){
@@ -1705,42 +1913,51 @@ async function loadReleases(){
     if(c) verCache.cultiva = c.tag_name;
     if(b) verCache.blip = b.tag_name;
     verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.0.0";
+    verCache.flint = "v0.6";
     verCache.glyph = "2.1-O";
+    verCache.mnemo = "1.2-O";
     renderCards();
     renderGlyphSlides();
 
     const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"1.0.0";
+    const fv = verCache.flint||"v0.6";
     const rel = r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
       <div class="rel-ver">${esc(formatRelVer(r.ver, r.product))}</div>
       <div class="rel-name"><em>${esc(r.name)}</em></div>
-      <div class="rel-badge ${r.live?"rb-live":"rb-dev"}">${r.live?t("status.live"):t("status.dev")}</div>
+      <div class="rel-badge ${r.badgeCls}">${esc(r.badge)}</div>
     </div>`;
     relGrid.innerHTML = [
-      { product:"Cultiva", ver:cv, name:(c?.name||cv)+(c?` · ${fmtDate(c.published_at)}`:""), live:true },
-      { product:"BLIP", ver:bv, name:(b?.name||bv)+(b?` · ${fmtDate(b.published_at)}`:""), live:true },
-      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · 1.0.0 Vivo"), live:!!s },
-      { product:"Glyph2.1-O", ver:"2.1-O", name:t("glyph.releaseEmpty"), live:true }
+      { product:"Cultiva", ver:cv, name:(c?.name||cv)+(c?` · ${fmtDate(c.published_at)}`:""), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"BLIP", ver:bv, name:(b?.name||bv)+(b?` · ${fmtDate(b.published_at)}`:""), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · 1.0.0 Vivo"), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Flint", ver:fv, name:t("flint.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" },
+      { product:"Glyph2.1-O", ver:"2.1-O", name:t("glyph.releaseEmpty"), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Mnemo 1.2-O", ver:"1.2-O", name:t("mnemo.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" }
     ].map(rel).join("");
     initReveal(relGrid.querySelectorAll(".rv"));
   } catch(e){
     verCache.cultiva = FALLBACK_RELS.cultiva.ver;
     verCache.blip = FALLBACK_RELS.blip.ver;
     verCache.senza = FALLBACK_RELS.senza.ver;
+    verCache.flint = FALLBACK_RELS.flint.ver;
     verCache.glyph = FALLBACK_RELS.glyph.ver;
+    verCache.mnemo = FALLBACK_RELS.mnemo.ver;
     renderCards();
     renderGlyphSlides();
     const fb = FALLBACK_RELS;
     relGrid.innerHTML = [
       { product:"Cultiva", ver:fb.cultiva.ver, name:fb.cultiva.name, live:true },
       { product:"BLIP", ver:fb.blip.ver, name:fb.blip.name, live:true },
-      { product:"Senza", ver:fb.senza.ver, name:typeof fb.senza.name==="function"?fb.senza.name(locale):fb.senza.name, live:true },
-      { product:"Glyph2.1-O", ver:fb.glyph.ver, name:typeof fb.glyph.name==="function"?fb.glyph.name(locale):fb.glyph.name, live:true }
+      { product:"Senza", ver:fb.senza.ver, name:typeof fb.senza.name==="function"?fb.senza.name(locale):fb.senza.name, badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Flint", ver:fb.flint.ver, name:fb.flint.name, badge:t("tag.soon"), badgeCls:"rb-dev" },
+      { product:"Glyph2.1-O", ver:fb.glyph.ver, name:typeof fb.glyph.name==="function"?fb.glyph.name(locale):fb.glyph.name, badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Mnemo 1.2-O", ver:fb.mnemo.ver, name:typeof fb.mnemo.name==="function"?fb.mnemo.name(locale):fb.mnemo.name, badge:t("tag.soon"), badgeCls:"rb-dev" }
     ].map(r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
       <div class="rel-ver">${esc(formatRelVer(r.ver, r.product))}</div>
       <div class="rel-name"><em>${esc(r.name)}</em></div>
-      <div class="rel-badge rb-live">${t("status.live")}</div>
+      <div class="rel-badge ${r.badgeCls}">${esc(r.badge)}</div>
     </div>`).join("");
     initReveal(relGrid.querySelectorAll(".rv"));
   }
@@ -1783,7 +2000,9 @@ function renderStoreCarousel(slug, media){
   }
 
   const slides = [];
-  slides.push({ type:"video", src:media.video, label:t("ph.video"), path:media.video });
+  if(media.video){
+    slides.push({ type:"video", src:media.video, label:t("ph.video"), path:media.video });
+  }
   (media.shots || []).forEach((src, i) => {
     const num = String(i + 1).padStart(2, "0");
     slides.push({ type:"img", src, label:t("ph.shot") + " " + num, path:src });
@@ -1865,15 +2084,21 @@ async function renderStore(slug){
   document.getElementById("storeAbout").textContent = c.about;
   document.getElementById("storeFeatures").innerHTML = c.features.map(f=>`<li>${esc(f)}</li>`).join("");
   document.getElementById("storePrivacy").textContent = c.privacy;
-  document.getElementById("storeNotice").innerHTML = slug==="glyph"
-    ? `<div class="notice">${esc(t("glyph.toast.msg"))}</div>`
-    : `<div class="notice">${esc(t("store.hint"))}</div>`;
+  document.getElementById("storeNotice").innerHTML = isIntegratedSlug(slug) && !isComingSoon(slug)
+    ? `<div class="notice">${esc(slug==="mnemo" ? t("mnemo.toast.msg") : t("glyph.toast.msg"))}</div>`
+    : isComingSoon(slug)
+      ? `<div class="notice">${esc(t(`${slug}.toast.msg`))}</div>`
+      : `<div class="notice">${esc(t("store.hint"))}</div>`;
 
   const getBtn = document.getElementById("storeGetBtn");
-  getBtn.textContent = slug==="glyph" ? t("glyph.get") : t("store.get");
-  if(slug==="glyph"){
+  if(isComingSoon(slug)){
+    getBtn.textContent = slug==="mnemo" ? t("mnemo.get") : t("flint.get");
+    getBtn.onclick = () => showComingSoonToast(slug);
+  } else if(slug==="glyph"){
+    getBtn.textContent = t("glyph.get");
     getBtn.onclick = showFlokeToast;
   } else {
+    getBtn.textContent = t("store.get");
     getBtn.onclick = () => window.open(p.getUrl, "_blank", "noopener");
   }
 
@@ -1881,13 +2106,13 @@ async function renderStore(slug){
 
   const metaEl = document.getElementById("storeMeta");
   const mi = (l,v) => `<div class="smi"><div class="smi-l">${l}</div><div class="smi-v">${v === "" ? "" : esc(v)}</div></div>`;
-  if(slug==="glyph"){
+  if(slug==="glyph" || slug==="mnemo"){
     metaEl.classList.add("store-meta--glyph");
     metaEl.innerHTML = mi(t("meta.category"), c.category)
       + mi(t("meta.dev"), "Floke")
       + mi(t("meta.lang"), "EN / RU")
       + mi(t("meta.platform"), "Windows")
-      + mi(t("meta.release"), "");
+      + mi(t("meta.release"), slug==="mnemo" ? t("mnemo.version") : "");
   } else {
     metaEl.classList.remove("store-meta--glyph");
     metaEl.innerHTML = mi(t("meta.category"), c.category)
@@ -1903,8 +2128,11 @@ async function renderStore(slug){
   ].map(([l,v])=>`<div class="info-item"><div class="smi-l">${l}</div><div class="smi-v">${esc(v)}</div></div>`).join("");
 
   const clEl = document.getElementById("storeChangelog");
-  if(slug==="glyph"){
-    clEl.innerHTML = `<div class="cl-item"><div class="cl-body"><p>${esc(t("glyph.toast.msg"))}</p></div></div>`;
+  if(isComingSoon(slug)){
+    clEl.innerHTML = `<div class="cl-item"><div class="cl-body"><p>${esc(t(`${slug}.toast.msg`))}</p></div></div>`;
+  } else if(isIntegratedSlug(slug)){
+    const msg = slug==="mnemo" ? t("mnemo.toast.msg") : t("glyph.toast.msg");
+    clEl.innerHTML = `<div class="cl-item"><div class="cl-body"><p>${esc(msg)}</p></div></div>`;
   } else {
     clEl.innerHTML = `<div class="cl-item"><div class="cl-body">${t("store.loading")}</div></div>`;
     if(p.repo){
@@ -1978,3 +2206,4 @@ setTimeout(()=>{
 </script>
 </body>
 </html>
+
