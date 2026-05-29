@@ -55,6 +55,7 @@ body::after{
 }
 
 .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.wrap--wide{max-width:1120px}
 
 /* NAV */
 nav{
@@ -81,8 +82,13 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 }
 .nav-btn:hover,.nav-btn.on{border-color:var(--accent);color:var(--text)}
 
-/* HERO */
-.hero{padding:148px 0 100px;position:relative;overflow:hidden}
+/* HERO — full viewport on load */
+.hero{
+  position:relative;overflow:hidden;
+  min-height:calc(100svh - 52px);
+  display:flex;align-items:center;
+  padding:max(120px,18vh) 0 max(80px,12vh);
+}
 .hero-blob{
   position:absolute;top:-100px;right:-140px;width:min(640px,85vw);height:min(640px,85vw);
   background:radial-gradient(circle,rgba(200,169,110,.16) 0%,transparent 68%);
@@ -218,6 +224,230 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .store-head-cultiva{background:radial-gradient(ellipse 80% 80% at 0% 0%,rgba(40,70,35,.5) 0%,transparent 60%)}
 .store-head-blip{background:radial-gradient(ellipse 80% 80% at 0% 0%,rgba(50,40,100,.5) 0%,transparent 60%)}
 .store-head-senza{background:radial-gradient(ellipse 80% 80% at 0% 0%,rgba(90,30,40,.5) 0%,transparent 60%)}
+.store-head-glyph{background:radial-gradient(ellipse 85% 70% at 0% 0%,rgba(120,90,40,.45) 0%,transparent 62%)}
+
+/* ── Glyph stage (Apple-style) ── */
+.glyph-stage{
+  position:relative;padding:0 0 88px;margin:0 0 24px;overflow:hidden;
+  scroll-margin-top:60px;
+}
+.glyph-stage__mesh{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%,rgba(200,169,110,.22) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 40%,rgba(200,169,110,.08) 0%,transparent 50%),
+    radial-gradient(ellipse 40% 50% at 0% 80%,rgba(74,124,89,.06) 0%,transparent 50%);
+}
+.glyph-stage__grain{
+  position:absolute;inset:0;opacity:.35;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+.glyph-stage__inner{position:relative;z-index:1;padding-top:64px}
+
+.glyph-hero{text-align:center;padding:0 20px 48px;max-width:920px;margin:0 auto}
+.glyph-hero-title{
+  font-size:clamp(42px,9vw,88px);font-weight:700;line-height:.95;
+  letter-spacing:-.045em;margin-bottom:20px;
+}
+.glyph-hero-title span{
+  display:block;background:linear-gradient(135deg,var(--text) 0%,var(--muted) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+[data-theme="light"] .glyph-hero-title span{
+  background:linear-gradient(135deg,var(--text) 20%,var(--muted) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.glyph-hero-sub{
+  font-size:clamp(15px,2.4vw,21px);line-height:1.55;color:var(--muted);
+  max-width:36ch;margin:0 auto;font-weight:400;
+}
+.glyph-hero-sub strong{color:var(--text);font-weight:700}
+
+/* Terminal / player window */
+.glyph-term-wrap{
+  max-width:720px;margin:0 auto 40px;padding:0 16px;
+}
+.glyph-term{
+  border-radius:6px;border:1px solid var(--border2);
+  background:#0c0c0c;box-shadow:0 32px 80px rgba(0,0,0,.5);
+  overflow:hidden;transition:opacity .4s var(--ease),transform .4s var(--ease),max-height .45s var(--ease);
+}
+[data-theme="light"] .glyph-term{background:#1a1a1a}
+.glyph-term.is-closed{opacity:.35;transform:scale(.98)}
+.glyph-term.is-closed .glyph-term-body,
+.glyph-term.is-minimized .glyph-term-body{
+  max-height:0!important;opacity:0;padding:0;border:none;
+}
+.glyph-term.is-closed .glyph-term-bar,
+.glyph-term.is-minimized .glyph-term-bar{border-bottom:none}
+.glyph-term:not(.is-powered) .glyph-term-body{opacity:.45}
+.glyph-term:not(.is-powered) .glyph-term-screen{filter:grayscale(.4)}
+.glyph-term-bar{
+  display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:linear-gradient(180deg,#1e1e1e 0%,#141414 100%);
+  border-bottom:1px solid #2a2a2a;
+}
+.glyph-term-lights{display:flex;gap:7px;align-items:center}
+.glyph-light{
+  width:11px;height:11px;border-radius:50%;border:none;padding:0;cursor:pointer;
+  transition:filter .15s,transform .15s;flex-shrink:0;
+}
+.glyph-light:hover{filter:brightness(1.15);transform:scale(1.08)}
+.glyph-light--close{background:#ff5f57}
+.glyph-light--min{background:#febc2e}
+.glyph-light--power{background:#28c840}
+.glyph-term.is-closed .glyph-light--close{box-shadow:0 0 0 2px rgba(255,95,87,.5)}
+.glyph-term.is-powered .glyph-light--power{box-shadow:0 0 0 2px rgba(40,200,64,.45)}
+.glyph-term-title{
+  flex:1;font-size:10px;letter-spacing:.06em;color:#888;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.glyph-term-status{
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#555;min-width:4.5em;text-align:right;
+}
+.glyph-term.is-powered .glyph-term-status{color:var(--accent2)}
+.glyph-term.is-running .glyph-term-status{color:var(--accent)}
+.glyph-term-body{
+  max-height:420px;overflow:hidden;
+  transition:max-height .45s var(--ease),opacity .35s,padding .35s;
+}
+.glyph-term-screen{
+  padding:16px 18px 18px;font-size:11px;line-height:1.65;
+  font-family:'Space Mono',monospace;color:#b8b8b8;
+}
+.glyph-term-log{min-height:88px;margin-bottom:12px}
+.glyph-term-line{
+  opacity:0;transform:translateY(4px);
+  transition:opacity .2s var(--ease),transform .2s var(--ease);
+}
+.glyph-term.is-demo-done .glyph-term-line,
+.glyph-term.is-running .glyph-term-line.visible{opacity:1;transform:none}
+.glyph-term-line .cmd{color:var(--accent2)}
+.glyph-term-line .warn{color:#c47070}
+.glyph-term-line .ok{color:var(--accent)}
+.glyph-term-divider{height:1px;background:#2a2a2a;margin:12px 0}
+.glyph-term-tags{display:grid;gap:6px}
+.glyph-term-tag{
+  display:grid;grid-template-columns:5.5em 1fr;gap:10px;
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .25s var(--ease),transform .25s var(--ease);
+}
+.glyph-term.is-demo-done .glyph-term-tag{opacity:1;transform:none}
+.glyph-term.is-demo-done .glyph-term-tag:nth-child(1){transition-delay:.05s}
+.glyph-term.is-demo-done .glyph-term-tag:nth-child(2){transition-delay:.1s}
+.glyph-term.is-demo-done .glyph-term-tag:nth-child(3){transition-delay:.15s}
+.glyph-term.is-demo-done .glyph-term-tag:nth-child(4){transition-delay:.2s}
+.glyph-term-tag kbd{
+  font:inherit;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  color:#666;background:none;border:none;padding:0;
+}
+.glyph-term-tag span{color:#e8e8e8}
+.glyph-term-score{
+  display:flex;align-items:center;gap:10px;margin-top:10px;font-size:10px;color:#666;
+  opacity:0;transition:opacity .3s .1s;
+}
+.glyph-term.is-demo-done .glyph-term-score{opacity:1}
+.glyph-term-score-bar{
+  flex:1;max-width:120px;height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden;
+}
+.glyph-term-score-fill{
+  height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));
+  transition:width .5s var(--ease);
+}
+.glyph-term.is-demo-done .glyph-term-score-fill{width:87%}
+.glyph-term-hint{
+  padding:8px 14px 12px;font-size:9px;color:#555;text-align:center;letter-spacing:.04em;
+  border-top:1px solid #1a1a1a;
+}
+
+/* Glyph capabilities — horizontal slides */
+.glyph-slides-wrap{max-width:1000px;margin:0 auto 48px;padding:0 16px;overflow:visible}
+.glyph-slides-track{
+  display:flex;gap:14px;width:100%;max-width:100%;
+  overflow-x:auto;overflow-y:hidden;padding:4px 2px 10px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  cursor:grab;touch-action:pan-x;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.glyph-slides-track.is-dragging{cursor:grabbing;scroll-snap-type:none;scroll-behavior:auto}
+.glyph-slides-track::-webkit-scrollbar{display:none}
+.glyph-slide{
+  flex:0 0 clamp(280px,78vw,340px);scroll-snap-align:start;scroll-snap-stop:always;
+  padding:28px 24px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg2);min-height:220px;user-select:none;
+}
+.glyph-slide-num{font-size:42px;font-weight:700;color:color-mix(in srgb,var(--accent) 40%,var(--border));line-height:1;margin-bottom:12px}
+.glyph-slide h4{font-size:17px;font-weight:700;margin-bottom:10px;letter-spacing:-.02em}
+.glyph-slide .lead{font-size:12px;color:var(--text);line-height:1.7;margin-bottom:10px}
+.glyph-slide p:last-child{font-size:11px;color:var(--muted);line-height:1.75}
+
+.glyph-statement{
+  text-align:center;padding:48px 24px 40px;max-width:720px;margin:0 auto;
+}
+.glyph-statement h3{
+  font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:-.03em;
+  line-height:1.2;margin-bottom:16px;
+}
+.glyph-statement p{font-size:13px;color:var(--muted);line-height:1.85}
+
+.glyph-slides-scrub{
+  display:flex;align-items:center;gap:12px;max-width:min(420px,72%);margin:14px auto 0;
+}
+.glyph-slides-scrub-arr{
+  font-family:inherit;font-size:11px;line-height:1;width:28px;height:28px;padding:0;
+  color:rgba(255,255,255,.35);flex-shrink:0;user-select:none;
+  border:1px solid var(--border2);background:var(--bg3);border-radius:4px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.glyph-slides-scrub-arr:hover{border-color:var(--accent);color:var(--accent)}
+.glyph-slides-scrub-track{
+  flex:1;height:2px;background:rgba(255,255,255,.14);border-radius:1px;position:relative;cursor:pointer;
+}
+.glyph-slides-scrub-thumb{
+  position:absolute;top:0;left:0;height:100%;min-width:18%;
+  background:rgba(255,255,255,.88);border-radius:1px;
+  transition:left .08s linear,width .08s linear;
+}
+[data-theme="light"] .glyph-slides-scrub-track{background:rgba(0,0,0,.1)}
+[data-theme="light"] .glyph-slides-scrub-thumb{background:rgba(20,20,20,.75)}
+[data-theme="light"] .glyph-slides-scrub-arr{color:rgba(0,0,0,.25)}
+
+.glyph-cta-bar{
+  text-align:center;padding:0 20px 20px;
+}
+.glyph-cta-bar .btn{font-size:11px;padding:11px 22px}
+.glyph-cta-note{margin-top:14px;font-size:10px;color:var(--muted);letter-spacing:.06em}
+
+/* Toast */
+.floke-toast-wrap{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);
+  z-index:10000;max-width:min(420px,calc(100vw - 32px));width:100%;
+  transition:transform .45s var(--ease),opacity .35s;opacity:0;pointer-events:none;
+}
+.floke-toast-wrap.is-visible{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+.floke-toast{
+  display:flex;align-items:flex-start;gap:14px;padding:16px 18px;
+  border-radius:16px;border:1px solid var(--border2);
+  background:color-mix(in srgb,var(--bg-elevated,var(--bg2)) 94%,transparent);
+  backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.4);
+}
+.floke-toast-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:grid;place-items:center;background:var(--accent-dim);color:var(--accent);font-size:16px;
+}
+.floke-toast-body{flex:1;min-width:0;text-align:left}
+.floke-toast-title{font-size:12px;font-weight:700;margin-bottom:4px}
+.floke-toast-msg{font-size:11px;color:var(--muted);line-height:1.6}
+.floke-toast-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.floke-toast-actions a,.floke-toast-actions button{
+  font-family:inherit;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:6px 12px;border-radius:6px;text-decoration:none;cursor:pointer;border:1px solid;
+}
+.floke-toast-primary{background:var(--accent);border-color:var(--accent);color:#0a0a0a;font-weight:700}
+[data-theme="light"] .floke-toast-primary{color:#fff}
+.floke-toast-ghost{background:transparent;border-color:var(--border2);color:var(--muted)}
+.tag-model{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.tag-cat{border-color:var(--border2);color:var(--muted)}
 .store-icon{
   width:88px;height:88px;border-radius:20px;border:1px solid var(--border2);
   flex-shrink:0;
@@ -227,7 +457,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .store-tagline{font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
 .store-plat{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
 .store-actions{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-.btn-get{border-radius:99px;min-width:96px;justify-content:center;padding:11px 24px;font-weight:700}
+.btn-get{min-width:96px;justify-content:center;padding:11px 22px;font-weight:700}
 .store-gh{font-size:10px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:color .2s}
 .store-gh:hover{color:var(--accent)}
 
@@ -235,6 +465,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   display:grid;grid-template-columns:repeat(5,1fr);
   padding:14px 24px;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg);
 }
+.store-meta--glyph .smi:nth-child(5) .smi-v{min-height:1em}
 .smi{padding:0 14px;border-right:1px solid var(--border)}
 .smi:first-child{padding-left:0}
 .smi:last-child{border-right:none}
@@ -255,9 +486,64 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .carousel::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
 .c-slide{
   flex:0 0 min(88%,560px);aspect-ratio:16/10;scroll-snap-align:start;
-  border:1px solid var(--border);border-radius:12px;position:relative;
+  border:1px solid var(--border);border-radius:6px;position:relative;
 }
-.c-slide video,.c-slide img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+.c-slide video,.c-slide img{width:100%;height:100%;object-fit:cover;border-radius:5px}
+
+/* Glyph store — video + screenshot side by side (only when .carousel-wrap--glyph) */
+.preview-duo[hidden],.preview-nav[hidden]{display:none!important}
+.carousel-wrap:not(.carousel-wrap--glyph) .preview-duo,
+.carousel-wrap:not(.carousel-wrap--glyph) .preview-nav{display:none!important}
+.carousel-wrap--glyph .preview-duo{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch;
+}
+@media(max-width:640px){.carousel-wrap--glyph .preview-duo{grid-template-columns:1fr}}
+.preview-pane{
+  position:relative;aspect-ratio:16/10;min-height:200px;width:100%;
+  border:1px solid var(--border);border-radius:6px;background:var(--bg3);overflow:hidden;
+  transition:border-color .25s,box-shadow .25s;
+}
+.preview-pane--shot,.preview-pane--video{height:100%}
+.preview-pane.is-focus{border-color:color-mix(in srgb,var(--accent) 55%,var(--border));box-shadow:0 0 0 1px var(--accent-dim)}
+.preview-pane video,.preview-pane img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;border-radius:5px;
+}
+.preview-pane .media-slot-label{z-index:1}
+.preview-badge{
+  position:absolute;top:10px;left:10px;z-index:2;
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  padding:4px 9px;background:rgba(8,8,8,.82);
+  border:1px solid color-mix(in srgb,var(--accent) 45%,var(--border));
+  color:var(--accent);border-radius:4px;
+}
+.preview-pane .media-slot-label{
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+}
+.preview-pane .media-slot-label small{text-transform:none;letter-spacing:.06em}
+.preview-nav{
+  display:flex;align-items:center;gap:14px;margin-top:16px;
+}
+.preview-arr{
+  font-family:inherit;font-size:14px;line-height:1;width:28px;height:28px;padding:0;
+  border:1px solid var(--border2);background:var(--bg3);color:var(--muted);
+  border-radius:4px;cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.preview-arr:hover{border-color:var(--accent);color:var(--accent)}
+.preview-nav-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.preview-progress{
+  width:100%;height:2px;background:var(--border2);border-radius:1px;overflow:hidden;
+}
+.preview-progress-fill{
+  height:100%;width:50%;background:var(--accent);
+  transition:width .35s var(--ease);
+}
+.preview-dots{display:flex;gap:8px;justify-content:center}
+.carousel-wrap--glyph .carousel,
+.carousel-wrap--glyph > .c-dots{display:none!important}
+.carousel-wrap:not(.carousel-wrap--glyph) .carousel{display:flex!important}
+.carousel-wrap:not(.carousel-wrap--glyph) > .c-dots{display:flex!important}
+
 .c-badge{
   position:absolute;top:10px;left:10px;z-index:2;font-size:9px;letter-spacing:.14em;
   text-transform:uppercase;padding:4px 8px;background:rgba(8,8,8,.78);
@@ -374,6 +660,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   <a href="#" class="nav-logo" id="navHome">FL<b>O</b>KE</a>
   <ul class="nav-center">
     <li><a href="#products" data-k="nav.products">Products</a></li>
+    <li><a href="#glyph" data-k="nav.glyph">Glyph</a></li>
     <li><a href="#releases" data-k="nav.releases">Releases</a></li>
     <li><a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
@@ -400,6 +687,59 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
     <div class="hero-cta">
       <a href="#products" class="btn btn-solid" data-k="hero.browse">Browse products</a>
       <a href="https://github.com/FlokeStudio" target="_blank" rel="noopener" class="btn btn-outline">GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<section id="glyph" class="glyph-stage">
+  <div class="glyph-stage__mesh" aria-hidden="true"></div>
+  <div class="glyph-stage__grain" aria-hidden="true"></div>
+  <div class="wrap wrap--wide glyph-stage__inner">
+    <header class="glyph-hero rv">
+      <h2 class="glyph-hero-title">
+        <span data-k="glyph.h1a">Metadata</span>
+        <span data-k="glyph.h1b">Intelligence.</span>
+      </h2>
+      <p class="glyph-hero-sub" data-k="glyph.heroSub">A new class of on-device intelligence — <strong>Glyph</strong> turns chaos into structure. Filenames, folders, and your library become metadata you can trust. <strong>Private. Instant. Yours.</strong></p>
+    </header>
+
+    <div class="glyph-term-wrap rv" id="glyphTermWrap">
+      <div class="glyph-term is-powered" id="glyphTerm" role="region" aria-label="Glyph demo">
+        <div class="glyph-term-bar">
+          <div class="glyph-term-lights">
+            <button type="button" class="glyph-light glyph-light--close" id="glyphLightClose" aria-label="Close panel"></button>
+            <button type="button" class="glyph-light glyph-light--min" id="glyphLightMin" aria-label="Minimize"></button>
+            <button type="button" class="glyph-light glyph-light--power" id="glyphLightPower" aria-label="Power"></button>
+          </div>
+          <span class="glyph-term-title">glyph2.1-o — senza://metadata</span>
+          <span class="glyph-term-status" id="glyphTermStatus" data-k="glyph.term.off">off</span>
+        </div>
+        <div class="glyph-term-body" id="glyphTermBody">
+          <div class="glyph-term-screen">
+            <div class="glyph-term-log" id="glyphTermLog" aria-live="polite"></div>
+            <div class="glyph-term-divider" aria-hidden="true"></div>
+            <div class="glyph-term-tags" id="glyphTermTags"></div>
+            <div class="glyph-term-score">
+              <span data-k="glyph.confidence">confidence</span>
+              <div class="glyph-term-score-bar" aria-hidden="true"><div class="glyph-term-score-fill"></div></div>
+              <span id="glyphScoreNum">—</span>
+            </div>
+          </div>
+          <p class="glyph-term-hint" data-k="glyph.term.hint">● power on · scroll to preview · red closes panel</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="glyph-statement rv">
+      <h3 data-k="glyph.statement.h">Intelligence that stays on your machine.</h3>
+      <p data-k="glyph.statement.p">No cloud training on your library. No upload. Glyph ships inside Floke apps today — and will power more products across the studio tomorrow.</p>
+    </div>
+
+    <div class="glyph-slides-wrap rv" id="glyphSlides"></div>
+
+    <div class="glyph-cta-bar rv">
+      <button type="button" class="btn btn-solid" id="glyphMainCta" data-k="glyph.cta">Experience Glyph</button>
+      <p class="glyph-cta-note" data-k="glyph.ctaNote">Available now in Senza 1.0.0 Vivo — our music player.</p>
     </div>
   </div>
 </section>
@@ -460,8 +800,17 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
     <div class="store-body">
       <div>
         <div class="store-sec-t" data-k="store.preview">Preview</div>
-        <div class="carousel-wrap">
+        <div class="carousel-wrap" id="storeCarouselWrap">
           <div class="carousel" id="storeCarousel"></div>
+          <div class="preview-duo" id="storePreviewDuo" hidden></div>
+          <div class="preview-nav" id="storePreviewNav" hidden>
+            <button type="button" class="preview-arr" id="previewPrev" aria-label="Previous">‹</button>
+            <div class="preview-nav-mid">
+              <div class="preview-progress" aria-hidden="true"><div class="preview-progress-fill" id="previewProgressFill"></div></div>
+              <div class="preview-dots" id="previewDots"></div>
+            </div>
+            <button type="button" class="preview-arr" id="previewNext" aria-label="Next">›</button>
+          </div>
           <div class="c-dots" id="storeDots"></div>
         </div>
       </div>
@@ -489,6 +838,17 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 </div>
 </section>
 
+<div class="floke-toast-wrap" id="flokeToastWrap" role="status" aria-live="polite">
+  <div class="floke-toast">
+    <div class="floke-toast-icon" aria-hidden="true">◇</div>
+    <div class="floke-toast-body">
+      <div class="floke-toast-title" id="flokeToastTitle">Glyph2.1-O</div>
+      <p class="floke-toast-msg" id="flokeToastMsg"></p>
+      <div class="floke-toast-actions" id="flokeToastActions"></div>
+    </div>
+  </div>
+</div>
+
 <footer>
 <div class="wrap">
   <div class="foot-l">© 2026 Floke · built by <a href="https://github.com/krwg">krwg</a></div>
@@ -502,7 +862,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 <script>
 const STR = {
   en: {
-    "nav.products":"Products","nav.releases":"Releases",
+    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases",
     "hero.tag":"Independent software studio",
     "hero.l1":"Software that lives","hero.l2":"on your machine.",
     "hero.sub":"Offline-first. No cloud. No tracking. No compromise.\nWe build tools that work — with or without the internet.",
@@ -519,15 +879,61 @@ const STR = {
     "store.get":"Get","store.loading":"Loading release notes…",
     "store.hint":"Download from GitHub Releases. On first launch Windows may show SmartScreen — choose More info → Run anyway.",
     "store.videoBadge":"Video","store.shotBadge":"Screenshot",
+    "store.videoLabel":"Video","store.shotLabel":"Screenshot",
     "card.why":"Why it matters","card.can":"What you can do",
     "tag.live":"Live","tag.dev":"In dev",
     "meta.category":"Category","meta.dev":"Developer","meta.lang":"Language","meta.platform":"Platform","meta.ver":"Version",
     "info.provider":"Provider","info.compat":"Compatibility","info.langs":"Languages","info.copy":"Copyright",
     "status.live":"Live","status.dev":"Dev",
-    "ph.icon":"ICON","ph.video":"VIDEO","ph.shot":"SCREENSHOT"
+    "ph.icon":"ICON","ph.video":"VIDEO","ph.shot":"SCREENSHOT",
+    "glyph.h1a":"Metadata","glyph.h1b":"Intelligence.",
+    "glyph.heroSub":"A new class of on-device intelligence — <strong>Glyph</strong> turns chaos into structure. Filenames, folders, and your library become metadata you can trust. <strong>Private. Instant. Yours.</strong>",
+    "glyph.confidence":"confidence",
+    "glyph.demo.titleL":"title","glyph.demo.artistL":"artist","glyph.demo.albumL":"album","glyph.demo.genreL":"genre",
+    "glyph.term.off":"off","glyph.term.on":"on","glyph.term.run":"running…","glyph.term.min":"minimized","glyph.term.hint":"● green = power · scroll to preview · red closes panel",
+    "glyph.term.l1":"<span class=\"cmd\">&gt; ingest</span> 01_Artist_-_Song_[Official_Video_4K].mp3",
+    "glyph.term.l2":"<span class=\"cmd\">&gt; parse</span> filename → tokens",
+    "glyph.term.l3":"<span class=\"cmd\">&gt; knn</span> neighbors: 7 · album context",
+    "glyph.term.l4":"<span class=\"ok\">&gt; apply</span> tags + confidence 87%",
+    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118",
+    "glyph.statement.h":"Intelligence that stays on your machine.",
+    "glyph.statement.p":"No cloud training on your library. No upload. Glyph ships inside Floke apps today — and will power more products across the studio tomorrow.",
+    "glyph.chip1":"On-device","glyph.chip2":"Diff before apply","glyph.chip3":"Learns from edits","glyph.chip4":"Batch at scale",
+    "glyph.cta":"Try Glyph","glyph.ctaNote":"Available now in Senza 1.0.0 Vivo — our music player.",
+    "glyph.spec.sub":"Six modules. One on-device pipeline — from messy filenames to tags you trust.",
+    "glyph.spec.modelLabel":"model",
+    "glyph.spec.foot":"Pipeline order: <strong>rules → knowledge → ML → KNN → optional online → Ollama</strong> · Glyph2.1-O ships in Senza today, more Floke apps next.",
+    "glyph.pipe1":"Parse","glyph.pipe2":"Context","glyph.pipe3":"Genre","glyph.pipe4":"Learn","glyph.pipe5":"Diff","glyph.pipe6":"AI",
+    "glyph.cap1.code":"PARSE","glyph.cap1.t":"Reads the noise. Writes the signal.","glyph.cap1.p":"Strips junk from filenames — video tags, bitrate labels, type beats — and surfaces clean title, artist, album.",
+    "glyph.cap1.x":"Bracket spam, “Official Video”, leaked tracklists, folder names like Artist - 2024 - Album — Glyph tokenizes the mess before any model runs. You get readable fields, not guesswork.",
+    "glyph.cap1.tag":"filename · folders",
+    "glyph.cap2.code":"CONTEXT","glyph.cap2.t":"Your library is context.","glyph.cap2.p":"K-nearest neighbors across albums and artists. Glyph infers what’s missing from what you already own.",
+    "glyph.cap2.x":"Track 4 has no album tag? Seven neighbors on the same disc already told Glyph the answer. Context beats cold metadata — and it never phones home.",
+    "glyph.cap2.tag":"KNN · offline",
+    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Genre & mood in milliseconds.","glyph.cap3.p":"Local heuristics and optional ONNX score genre, energy, and mood without the cloud.",
+    "glyph.cap3.x":"Typical pass completes in under 2 ms per file on a modern PC. Optional ONNX when you want deeper signal — still entirely on your machine.",
+    "glyph.cap3.tag":"~2 ms · ONNX opt.",
+    "glyph.cap4.code":"LEARN","glyph.cap4.t":"It remembers how you edit.","glyph.cap4.p":"Every accept, reject, or manual fix becomes a rule. Next time, Glyph applies your taste.",
+    "glyph.cap4.x":"SQLite event log + JSONL export for fine-tune. Your library trains Glyph locally — not a datacenter. The more you curate, the less you repeat yourself.",
+    "glyph.cap4.tag":"rules · event log",
+    "glyph.cap5.code":"DIFF","glyph.cap5.t":"See the diff. Then commit.","glyph.cap5.p":"Field-by-field preview before anything is written to disk.",
+    "glyph.cap5.x":"Batch fill your whole library with one action — but every track shows what will change first. Apply all, apply selected, or walk away. Zero surprises.",
+    "glyph.cap5.tag":"batch · preview",
+    "glyph.cap6.code":"OLLAMA","glyph.cap6.t":"Optional local AI.","glyph.cap6.p":"Ollama on demand for hard cases — still on your machine, still your data.",
+    "glyph.cap6.x":"When heuristics and neighbors aren’t enough, summon a local agent. MusicBrainz and AcoustID are optional enrichments — cached on disk, never required to play.",
+    "glyph.cap6.tag":"Ollama · MB opt.",
+    "glyph.name":"Glyph2.1-O","glyph.tagline":"Metadata Intelligence for your files",
+    "glyph.plat":"Version 2.1-O","glyph.pitch":"The Floke metadata model — private, precise, and built to integrate across our apps. Try it first in Senza.",
+    "glyph.category":"Metadata Model","glyph.version":"2.1-O",
+    "glyph.card.why":"Why Glyph","glyph.card.can":"Capabilities",
+    "glyph.toast.title":"Try Glyph in Senza","glyph.toast.msg":"Glyph2.1-O ships inside Senza 1.0.0 Vivo today. Download Senza to experience metadata intelligence on your music library.",
+    "glyph.toast.open":"Download Senza","glyph.toast.dismiss":"Dismiss",
+    "glyph.get":"Get","glyph.releaseEmpty":"—",
+    "meta.release":"Release",
+
   },
   ru: {
-    "nav.products":"Проекты","nav.releases":"Релизы",
+    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы",
     "hero.tag":"Независимая софт-студия",
     "hero.l1":"Софт, который живёт","hero.l2":"на твоей машине.",
     "hero.sub":"Offline-first. Без облака. Без трекинга. Без компромиссов.\nМы делаем инструменты, которые работают — с сетью и без.",
@@ -544,14 +950,76 @@ const STR = {
     "store.get":"Скачать","store.loading":"Загрузка заметок к релизу…",
     "store.hint":"Скачивание с GitHub Releases. При первом запуске Windows может показать SmartScreen — Подробнее → Выполнить в любом случае.",
     "store.videoBadge":"Видео","store.shotBadge":"Скриншот",
+    "store.videoLabel":"Видео","store.shotLabel":"Скриншот",
     "card.why":"Почему это важно","card.can":"Что можно делать",
     "tag.live":"Live","tag.dev":"В разработке",
     "meta.category":"Категория","meta.dev":"Разработчик","meta.lang":"Язык","meta.platform":"Платформа","meta.ver":"Версия",
     "info.provider":"Поставщик","info.compat":"Совместимость","info.langs":"Языки","info.copy":"Авторские права",
     "status.live":"Live","status.dev":"Dev",
-    "ph.icon":"ICON","ph.video":"VIDEO","ph.shot":"SCREENSHOT"
+    "ph.icon":"ICON","ph.video":"VIDEO","ph.shot":"SCREENSHOT",
+    "glyph.h1a":"Метаданные.","glyph.h1b":"Интеллект.",
+    "glyph.heroSub":"Новый класс локального интеллекта — <strong>Glyph</strong> превращает хаос в структуру. Имена файлов, папки и библиотека становятся метаданными, которым можно доверять. <strong>Приватно. Мгновенно. Ваше.</strong>",
+    "glyph.confidence":"уверенность",
+    "glyph.demo.titleL":"title","glyph.demo.artistL":"artist","glyph.demo.albumL":"album","glyph.demo.genreL":"genre",
+    "glyph.term.off":"выкл","glyph.term.on":"вкл","glyph.term.run":"анализ…","glyph.term.min":"свернуто","glyph.term.hint":"● зелёная — питание · прокрутите для превью · красная — закрыть",
+    "glyph.term.l1":"<span class=\"cmd\">&gt; ingest</span> 01_Artist_-_Song_[Official_Video_4K].mp3",
+    "glyph.term.l2":"<span class=\"cmd\">&gt; parse</span> имя файла → токены",
+    "glyph.term.l3":"<span class=\"cmd\">&gt; knn</span> соседей: 7 · контекст альбома",
+    "glyph.term.l4":"<span class=\"ok\">&gt; apply</span> теги + уверенность 87%",
+    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118",
+    "glyph.statement.h":"Интеллект, который остаётся на вашем устройстве.",
+    "glyph.statement.p":"Без обучения в облаке на вашей библиотеке. Без загрузок. Glyph уже в приложениях Floke — и будет в других продуктах студии.",
+    "glyph.chip1":"На устройстве","glyph.chip2":"Diff до применения","glyph.chip3":"Учится на правках","glyph.chip4":"Пакетная обработка",
+    "glyph.cta":"Попробовать Glyph","glyph.ctaNote":"Уже в Senza 1.0.0 Vivo — музыкальный плеер Floke.",
+    "glyph.spec.sub":"Шесть модулей. Один конвейер на устройстве — от мусорного имени файла до тегов, которым можно доверять.",
+    "glyph.spec.modelLabel":"модель",
+    "glyph.spec.foot":"Порядок конвейера: <strong>rules → knowledge → ML → KNN → опц. онлайн → Ollama</strong> · Glyph2.1-O уже в Senza, дальше — другие продукты Floke.",
+    "glyph.pipe1":"Разбор","glyph.pipe2":"Контекст","glyph.pipe3":"Жанр","glyph.pipe4":"Обучение","glyph.pipe5":"Diff","glyph.pipe6":"AI",
+    "glyph.cap1.code":"PARSE","glyph.cap1.t":"Читает шум. Пишет смысл.","glyph.cap1.p":"Убирает мусор из имён — video tags, битрейт, type beat — и выдаёт чистые title, artist, album.",
+    "glyph.cap1.x":"Скобки, «Official Video», утёкшие треклисты, папки вида Artist - 2024 - Album — Glyph разбирает хаос до запуска моделей. На выходе поля, а не догадки.",
+    "glyph.cap1.tag":"имя файла · папки",
+    "glyph.cap2.code":"CONTEXT","glyph.cap2.t":"Библиотека — контекст.","glyph.cap2.p":"KNN по альбомам и артистам. Glyph догадывается, чего не хватает, из того, что у вас уже есть.",
+    "glyph.cap2.x":"У трека 4 нет альбома? Семь соседей на том же диске уже подсказали ответ. Контекст важнее холодных тегов — и без запросов в облако.",
+    "glyph.cap2.tag":"KNN · offline",
+    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Жанр и mood за миллисекунды.","glyph.cap3.p":"Локальные эвристики и опциональный ONNX оценивают жанр, энергию и настроение без облака.",
+    "glyph.cap3.x":"Типичный проход — меньше 2 мс на файл на современном ПК. ONNX по желанию для более глубокого сигнала — всё ещё только на вашей машине.",
+    "glyph.cap3.tag":"~2 мс · ONNX опц.",
+    "glyph.cap4.code":"LEARN","glyph.cap4.t":"Помнит ваши правки.","glyph.cap4.p":"Каждое принятие, отклонение или ручная правка — правило. В следующий раз Glyph применит ваш вкус.",
+    "glyph.cap4.x":"SQLite-лог событий + экспорт JSONL для дообучения. Библиотека учит Glyph локально — не дата-центр. Чем больше курируете, тем меньше повторяете.",
+    "glyph.cap4.tag":"rules · event log",
+    "glyph.cap5.code":"DIFF","glyph.cap5.t":"Diff. Потом Apply.","glyph.cap5.p":"Превью по каждому полю — до записи на диск.",
+    "glyph.cap5.x":"Заливка всей библиотеки одним действием — но по каждому треку видно, что изменится. Apply all, выборочно или отмена. Без сюрпризов.",
+    "glyph.cap5.tag":"batch · превью",
+    "glyph.cap6.code":"OLLAMA","glyph.cap6.t":"Локальный AI по желанию.","glyph.cap6.p":"Ollama для сложных случаев — на вашей машине, ваши данные.",
+    "glyph.cap6.x":"Когда эвристик и соседей мало — локальный агент. MusicBrainz и AcoustID опциональны, кэшируются на диске, для воспроизведения не нужны.",
+    "glyph.cap6.tag":"Ollama · MB опц.",
+    "glyph.name":"Glyph2.1-O","glyph.tagline":"Интеллект метаданных",
+    "glyph.plat":"Версия 2.1-O","glyph.pitch":"Модель метаданных Floke — приватная, точная, для интеграции во все продукты. Первый опыт — в Senza.",
+    "glyph.category":"Модель метаданных","glyph.version":"2.1-O",
+    "glyph.card.why":"Зачем Glyph","glyph.card.can":"Возможности",
+    "glyph.toast.title":"Попробуйте Glyph в Senza","glyph.toast.msg":"Glyph2.1-O уже в Senza 1.0.0 Vivo. Скачайте Senza, чтобы увидеть интеллект метаданных на своей музыкальной библиотеке.",
+    "glyph.toast.open":"Скачать Senza","glyph.toast.dismiss":"Закрыть",
+    "glyph.get":"Получить","glyph.releaseEmpty":"—",
+    "meta.release":"Релиз",
   }
 };
+
+const GLYPH_CAPS = [
+  { idx: "01", icon: "◈", code: "glyph.cap1.code", t: "glyph.cap1.t", p: "glyph.cap1.p", x: "glyph.cap1.x", tag: "glyph.cap1.tag", wide: true },
+  { idx: "02", icon: "◎", code: "glyph.cap2.code", t: "glyph.cap2.t", p: "glyph.cap2.p", x: "glyph.cap2.x", tag: "glyph.cap2.tag" },
+  { idx: "03", icon: "♪", code: "glyph.cap3.code", t: "glyph.cap3.t", p: "glyph.cap3.p", x: "glyph.cap3.x", tag: "glyph.cap3.tag" },
+  { idx: "04", icon: "↻", code: "glyph.cap4.code", t: "glyph.cap4.t", p: "glyph.cap4.p", x: "glyph.cap4.x", tag: "glyph.cap4.tag" },
+  { idx: "05", icon: "▣", code: "glyph.cap5.code", t: "glyph.cap5.t", p: "glyph.cap5.p", x: "glyph.cap5.x", tag: "glyph.cap5.tag", wide: true },
+  { idx: "06", icon: "◇", code: "glyph.cap6.code", t: "glyph.cap6.t", p: "glyph.cap6.p", x: "glyph.cap6.x", tag: "glyph.cap6.tag" },
+];
+const GLYPH_TERM_LINES = ["glyph.term.l1","glyph.term.l2","glyph.term.l3","glyph.term.l4"];
+const GLYPH_DEMO_TAGS = [
+  ["glyph.demo.titleL","glyph.demo.val.title"],
+  ["glyph.demo.artistL","glyph.demo.val.artist"],
+  ["glyph.demo.albumL","glyph.demo.val.album"],
+  ["glyph.demo.genreL","glyph.demo.val.genre"],
+];
+const SENZA_RELEASE_URL = "https://github.com/FlokeStudio/Senza/releases/latest";
 
 const PROJECTS = {
   cultiva: {
@@ -624,28 +1092,61 @@ const PROJECTS = {
       shots: Array.from({length:10},(_,i)=>"assets/screenshots/senza/"+String(i+1).padStart(2,"0")+".jpg")
     },
     en: {
-      name:"Senza", tagline:"Your library. Your files. Nothing else.", plat:"Windows · v0.1.0 Coda · Free",
+      name:"Senza", tagline:"Your library. Your files. Nothing else.", plat:"Windows · v1.0.0 Vivo · Free",
       category:"Music", compat:"Windows 10 / 11 (x64) · iOS planned",
-      pitch:"Your music library, not a streaming service — import, fix tags, and listen offline.",
-      why:["Files stay yours — local Artist/Album structure","No algorithm feed — your order, your history","Private by design — history never leaves your PC"],
-      can:["Import mp3, flac, wav, ogg, m4a, aac","Tag editor, cover crop, Smart Metadata Assistant","Music Vault, Journal, Time Capsule"],
-      about:"Senza is an offline-first music library and player from Floke. Import your files into a local collection, fix tags and covers, browse albums and artists, and listen without streaming or an account.\n\nFirst release — 0.1.0 Coda — is live on GitHub: installer and portable builds for Windows.",
-      features:["Import mp3, flac, wav, ogg, m4a, aac into Artist/Album folders","Tag editor, cover crop, Smart Metadata Assistant","Music Vault score, Collection mode, playlists as real folders","Listening Journal + Music Time Capsule","Profile with pixel avatar · dark/light · EN/RU"],
-      privacy:"Senza keeps your library and play history on your PC. No sign-in. No upload. Network not required to play."
+      pitch:"Your music library with Glyph2.1-O built in — import, understand tags, Flow, listen offline.",
+      why:["Files stay yours — local Artist/Album structure","Glyph2.1-O — KNN, diff UI, batch, optional MusicBrainz","Private — journal and history never leave your PC"],
+      can:["Import mp3, flac, wav, ogg, m4a, aac","Glyph tag editor, Flow home, Music Vault","Journal, playlists, bulk tags · EN/RU"],
+      about:"Senza 1.0.0 Vivo is an offline-first music library and player with Glyph2.1-O metadata intelligence built in. Import into Artist/Album folders, fix tags with confidence scores and diffs, scan duplicates, build a Flow wave, and listen without streaming or an account.\n\nDownload Windows installer or portable build on GitHub Releases.",
+      features:["Glyph2.1-O pipeline — rules, KNN, ML, optional MB / AcoustID / Ollama","Flow — personal wave, ambient visuals, four discovery modes","Music Vault — score, duplicates, batch fill library","Journal — listening time, top tracks, Time Capsule","Toggle Glyph off for a plain tag editor anytime"],
+      privacy:"Senza keeps your library, Glyph logs, and play history on your PC. No sign-in. No upload. Network not required to play."
     },
     ru: {
-      name:"Senza", tagline:"Твоя библиотека. Твои файлы. Ничего лишнего.", plat:"Windows · v0.1.0 Coda · Бесплатно",
+      name:"Senza", tagline:"Твоя библиотека. Твои файлы. Ничего лишнего.", plat:"Windows · v1.0.0 Vivo · Бесплатно",
       category:"Музыка", compat:"Windows 10 / 11 (x64) · iOS в планах",
-      pitch:"Ваша музыкальная библиотека, а не стриминг — импорт, порядок, теги и прослушивание без сети.",
-      why:["Файлы ваши — локальная структура Артист/Альбом","Без алгоритмической ленты — ваш порядок","Приватно — история только на ПК"],
-      can:["Импорт mp3, flac, wav, ogg, m4a, aac","Редактор тегов, кроп обложки, умный помощник метаданных","Music Vault, журнал, Time Capsule"],
-      about:"Senza — offline-first музыкальная библиотека и плеер от Floke. Импорт в локальную коллекцию, теги и обложки, альбомы и исполнители — без стриминга и аккаунта.\n\nПервый релиз — 0.1.0 Coda — доступен на GitHub: установщик и portable для Windows.",
-      features:["Импорт mp3, flac, wav, ogg, m4a, aac в папки Артист/Альбом","Редактор тегов, кроп обложки, умный помощник метаданных","Music Vault, Коллекция, плейлисты как папки","Журнал прослушиваний + Music Time Capsule","Профиль с пиксель-аватаром · тёмная/светлая · EN/RU"],
-      privacy:"Библиотека и история — только на вашем ПК. Без входа. Музыка не загружается на серверы Floke. Для воспроизведения интернет не нужен."
+      pitch:"Музыкальная библиотека с Glyph2.1-O — импорт, умные теги, Поток, offline.",
+      why:["Файлы ваши — структура Артист/Альбом","Glyph2.1-O — KNN, diff, batch, опционально MusicBrainz","Приватно — журнал и история только на ПК"],
+      can:["Импорт mp3, flac, wav, ogg, m4a, aac","Редактор с Glyph, Поток, Music Vault","Журнал, плейлисты, массовые теги · EN/RU"],
+      about:"Senza 1.0.0 Vivo — offline-first плеер с встроенным Glyph2.1-O. Импорт, теги с баллом и diff, дубликаты, волна Потока — без стриминга и аккаунта.\n\nУстановщик и portable — на GitHub Releases.",
+      features:["Glyph2.1-O — rules, KNN, ML, опц. MB / AcoustID / Ollama","Поток — волна, ambient, четыре режима","Music Vault — оценка, дубликаты, заливка библиотеки","Журнал — время прослушивания, топы, Time Capsule","Glyph можно выключить — останется обычный редактор"],
+      privacy:"Библиотека, логи Glyph и история — только на вашем ПК. Без входа. Для воспроизведения интернет не нужен."
+    }
+  },
+  glyph: {
+    icon: "assets/icons/glyph.svg",
+    bannerCls: "store-head-glyph",
+    repo: null,
+    getUrl: SENZA_RELEASE_URL,
+    integrated: true,
+    version: "2.1-O",
+    media: {
+      video: "assets/media/senza/preview.mp4",
+      shots: ["assets/screenshots/senza/01.jpg"],
+      poster: "assets/screenshots/senza/01.jpg"
+    },
+    en: {
+      name:"Glyph2.1-O", tagline:"Metadata Intelligence", plat:"Version 2.1-O",
+      category:"Metadata Model", compat:"Windows · first in Senza",
+      pitch:"The Floke metadata model — private, precise, and built to integrate across our apps. Experience it today in Senza.",
+      why:["On-device — your files never leave your machine","Library-aware — context from albums, artists, neighbors","Self-improving — learns from every edit you make"],
+      can:["Clean tags from messy filenames & folders","Confidence scores + diff before you apply","Batch entire libraries with per-track preview"],
+      about:"Glyph2.1-O is Metadata Intelligence by Floke — a model that understands files the way you would, if you had infinite patience.\n\nIt decodes filenames, reads folder structure, consults your library for context, scores every suggestion, and learns from what you accept or reject. Optional MusicBrainz, AcoustID, and local Ollama — always cached, always optional.\n\nToday, Glyph lives inside Senza 1.0.0 Vivo. Tomorrow, it will integrate into more Floke products — one intelligence layer across the studio.",
+      features:["Metadata Model category · version 2.1-O","Rules → knowledge → ML → KNN pipeline","Diff UI, batch apply, duplicate intelligence","SQLite event log for learning & export","Try now: included in Senza — download below"],
+      privacy:"Glyph processes everything locally. No training on your data in the cloud. Online lookups are optional and cached on disk."
+    },
+    ru: {
+      name:"Glyph2.1-O", tagline:"Интеллект метаданных", plat:"Версия 2.1-O",
+      category:"Модель метаданных", compat:"Windows · сначала в Senza",
+      pitch:"Модель метаданных Floke — приватная, точная, для всех продуктов студии. Первый опыт — в Senza.",
+      why:["On-device — файлы не покидают вашу машину","Контекст библиотеки — альбомы, артисты, соседи","Самообучение — на каждой вашей правке"],
+      can:["Чистые теги из мусорных имён и папок","Балл уверенности + diff до применения","Batch всей библиотеки с превью"],
+      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.0.0 Vivo. Завтра — в других продуктах Floke.",
+      features:["Категория: модель метаданных · версия 2.1-O","Конвейер rules → knowledge → ML → KNN","Diff, batch, поиск дубликатов","SQLite-лог для обучения","Попробовать: в составе Senza"],
+      privacy:"Всё обрабатывается локально. Без обучения на ваших данных в облаке. Онлайн-запросы опциональны и кэшируются."
     }
   }
 };
-const ORDER = ["cultiva","blip","senza"];
+const ORDER = ["cultiva","blip","glyph","senza"];
 
 let locale = localStorage.getItem("floke-lang") || (navigator.language.startsWith("ru") ? "ru" : "en");
 let theme = localStorage.getItem("floke-theme") || "dark";
@@ -779,16 +1280,352 @@ function applyTheme(){
   localStorage.setItem("floke-theme", theme);
 }
 
+let glyphToastTimer = null;
+
+function showFlokeToast(){
+  const wrap = document.getElementById("flokeToastWrap");
+  if(!wrap) return;
+  document.getElementById("flokeToastTitle").textContent = t("glyph.toast.title");
+  document.getElementById("flokeToastMsg").textContent = t("glyph.toast.msg");
+  document.getElementById("flokeToastActions").innerHTML = `
+    <a class="floke-toast-primary" href="${SENZA_RELEASE_URL}" target="_blank" rel="noopener">${esc(t("glyph.toast.open"))}</a>
+    <button type="button" class="floke-toast-ghost" id="flokeToastDismiss">${esc(t("glyph.toast.dismiss"))}</button>`;
+  wrap.classList.add("is-visible");
+  document.getElementById("flokeToastDismiss")?.addEventListener("click", hideFlokeToast, { once: true });
+  clearTimeout(glyphToastTimer);
+  glyphToastTimer = setTimeout(hideFlokeToast, 12000);
+}
+
+function hideFlokeToast(){
+  document.getElementById("flokeToastWrap")?.classList.remove("is-visible");
+  clearTimeout(glyphToastTimer);
+}
+
+let glyphDemoTimer = null;
+let glyphDemoPlayed = false;
+
+function glyphCapsData(){
+  return GLYPH_CAPS.map(c => ({
+    idx: c.idx, icon: c.icon,
+    code: t(c.code), title: t(c.t), lead: t(c.p), detail: t(c.x)
+  }));
+}
+
+function renderGlyphSlides(){
+  const el = document.getElementById("glyphSlides");
+  if(!el) return;
+  const items = glyphCapsData();
+  el.innerHTML = `
+    <div class="glyph-slides-track" id="glyphSlidesTrack">${items.map(it => `
+      <article class="glyph-slide">
+        <div class="glyph-slide-num">${it.idx}</div>
+        <h4>${esc(it.title)}</h4>
+        <p class="lead">${esc(it.lead)}</p>
+        <p>${esc(it.detail)}</p>
+      </article>`).join("")}</div>
+    <div class="glyph-slides-scrub">
+      <button type="button" class="glyph-slides-scrub-arr" id="glyphSlidesPrev" aria-label="Previous">◂</button>
+      <div class="glyph-slides-scrub-track" id="glyphSlidesScrubTrack"><div class="glyph-slides-scrub-thumb" id="glyphSlidesThumb"></div></div>
+      <button type="button" class="glyph-slides-scrub-arr" id="glyphSlidesNext" aria-label="Next">▸</button>
+    </div>`;
+  initGlyphSlidesScrub();
+}
+
+let glyphSlidesAutoTimer = null;
+let glyphSlidesAutoPaused = false;
+let glyphSlidesAutoResumeTimer = null;
+let glyphSlidesDrag = null;
+
+function stopGlyphSlidesAuto(){
+  clearInterval(glyphSlidesAutoTimer);
+  glyphSlidesAutoTimer = null;
+  clearTimeout(glyphSlidesAutoResumeTimer);
+}
+
+function pauseGlyphSlidesAuto(ms = 5000){
+  glyphSlidesAutoPaused = true;
+  clearTimeout(glyphSlidesAutoResumeTimer);
+  glyphSlidesAutoResumeTimer = setTimeout(() => { glyphSlidesAutoPaused = false; }, ms);
+}
+
+function initGlyphSlidesScrub(){
+  stopGlyphSlidesAuto();
+  const track = document.getElementById("glyphSlidesTrack");
+  const thumb = document.getElementById("glyphSlidesThumb");
+  const scrub = document.getElementById("glyphSlidesScrubTrack");
+  const prev = document.getElementById("glyphSlidesPrev");
+  const next = document.getElementById("glyphSlidesNext");
+  if(!track || !thumb) return;
+
+  const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
+
+  const update = () => {
+    const max = maxScroll();
+    if(max <= 0){ thumb.style.width = "100%"; thumb.style.left = "0"; return; }
+    const ratio = track.clientWidth / track.scrollWidth;
+    const left = (track.scrollLeft / max) * (100 - ratio * 100);
+    thumb.style.width = `${ratio * 100}%`;
+    thumb.style.left = `${left}%`;
+  };
+
+  const scrollBySlide = dir => {
+    const slide = track.querySelector(".glyph-slide");
+    const step = slide ? slide.offsetWidth + 14 : 300;
+    track.scrollBy({ left: dir * step, behavior: "smooth" });
+    pauseGlyphSlidesAuto();
+  };
+
+  prev?.addEventListener("click", () => scrollBySlide(-1));
+  next?.addEventListener("click", () => scrollBySlide(1));
+
+  scrub?.addEventListener("click", e => {
+    const max = maxScroll();
+    if(max <= 0) return;
+    const rect = scrub.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    track.scrollTo({ left: pct * max, behavior: "smooth" });
+    pauseGlyphSlidesAuto();
+  });
+
+  track.addEventListener("wheel", e => {
+    const max = maxScroll();
+    if(max <= 0) return;
+    if(Math.abs(e.deltaY) >= Math.abs(e.deltaX)){
+      e.preventDefault();
+      track.scrollLeft += e.deltaY;
+      pauseGlyphSlidesAuto();
+      update();
+    }
+  }, { passive: false });
+
+  track.addEventListener("mousedown", e => {
+    if(e.button !== 0) return;
+    glyphSlidesDrag = { x: e.pageX, left: track.scrollLeft };
+    track.classList.add("is-dragging");
+    pauseGlyphSlidesAuto(8000);
+  });
+  window.addEventListener("mousemove", e => {
+    if(!glyphSlidesDrag) return;
+    e.preventDefault();
+    track.scrollLeft = glyphSlidesDrag.left - (e.pageX - glyphSlidesDrag.x);
+    update();
+  });
+  window.addEventListener("mouseup", () => {
+    if(!glyphSlidesDrag) return;
+    glyphSlidesDrag = null;
+    track.classList.remove("is-dragging");
+    pauseGlyphSlidesAuto();
+  });
+
+  track.addEventListener("scroll", update, { passive: true });
+  track.addEventListener("touchstart", () => pauseGlyphSlidesAuto(8000), { passive: true });
+
+  const startAuto = () => {
+    stopGlyphSlidesAuto();
+    glyphSlidesAutoPaused = false;
+    glyphSlidesAutoTimer = setInterval(() => {
+      if(glyphSlidesAutoPaused) return;
+      const max = maxScroll();
+      if(max < 8) return;
+      if(track.scrollLeft >= max - 2){
+        track.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        track.scrollLeft += 1.2;
+      }
+      update();
+    }, 28);
+  };
+
+  update();
+  requestAnimationFrame(() => { update(); startAuto(); });
+  if("ResizeObserver" in window){
+    const ro = new ResizeObserver(() => update());
+    ro.observe(track);
+  }
+}
+
+let previewFocus = 0;
+
+function setPreviewFocus(i){
+  previewFocus = i;
+  const duo = document.getElementById("storePreviewDuo");
+  const fill = document.getElementById("previewProgressFill");
+  const dots = document.querySelectorAll("#previewDots .c-dot");
+  if(!duo) return;
+  duo.querySelectorAll(".preview-pane").forEach((p, j) => p.classList.toggle("is-focus", j === i));
+  if(fill) fill.style.width = i === 0 ? "50%" : "100%";
+  dots.forEach((d, j) => d.classList.toggle("on", j === i));
+}
+
+function initGlyphPreviewNav(){
+  const dotsWrap = document.getElementById("previewDots");
+  dotsWrap.innerHTML = `
+    <button type="button" class="c-dot on" data-i="0" aria-label="Video"></button>
+    <button type="button" class="c-dot" data-i="1" aria-label="Screenshot"></button>`;
+  dotsWrap.querySelectorAll(".c-dot").forEach(d => {
+    d.addEventListener("click", () => setPreviewFocus(+d.dataset.i));
+  });
+  document.getElementById("previewPrev")?.addEventListener("click", () => {
+    setPreviewFocus(previewFocus === 0 ? 1 : 0);
+  });
+  document.getElementById("previewNext")?.addEventListener("click", () => {
+    setPreviewFocus(previewFocus === 0 ? 1 : 0);
+  });
+  setPreviewFocus(0);
+}
+
+function renderGlyphTermStatic(){
+  const log = document.getElementById("glyphTermLog");
+  const tags = document.getElementById("glyphTermTags");
+  if(log){
+    log.innerHTML = GLYPH_TERM_LINES.map(k =>
+      `<div class="glyph-term-line">${t(k)}</div>`
+    ).join("");
+  }
+  if(tags){
+    tags.innerHTML = GLYPH_DEMO_TAGS.map(([lk, vk]) =>
+      `<div class="glyph-term-tag"><kbd>${esc(t(lk))}</kbd><span>${esc(t(vk))}</span></div>`
+    ).join("");
+  }
+  updateGlyphTermStatus();
+}
+
+function updateGlyphTermStatus(){
+  const term = document.getElementById("glyphTerm");
+  const st = document.getElementById("glyphTermStatus");
+  if(!term || !st) return;
+  if(term.classList.contains("is-closed")){ st.textContent = t("glyph.term.off"); return; }
+  if(term.classList.contains("is-minimized")){ st.textContent = t("glyph.term.min"); return; }
+  if(term.classList.contains("is-running")){ st.textContent = t("glyph.term.run"); return; }
+  st.textContent = term.classList.contains("is-powered") ? t("glyph.term.on") : t("glyph.term.off");
+}
+
+function resetGlyphDemo(){
+  const term = document.getElementById("glyphTerm");
+  if(!term) return;
+  clearTimeout(glyphDemoTimer);
+  term.classList.remove("is-running","is-demo-done");
+  term.querySelectorAll(".glyph-term-line").forEach(l => l.classList.remove("visible"));
+  const num = document.getElementById("glyphScoreNum");
+  if(num) num.textContent = "—";
+  glyphDemoPlayed = false;
+  updateGlyphTermStatus();
+}
+
+function runGlyphDemo(){
+  const term = document.getElementById("glyphTerm");
+  if(!term || !term.classList.contains("is-powered")) return;
+  if(term.classList.contains("is-closed") || term.classList.contains("is-minimized")) return;
+  if(term.classList.contains("is-running") || glyphDemoPlayed) return;
+
+  clearTimeout(glyphDemoTimer);
+  term.classList.remove("is-demo-done");
+  term.querySelectorAll(".glyph-term-line").forEach(l => l.classList.remove("visible"));
+  const num = document.getElementById("glyphScoreNum");
+  if(num) num.textContent = "—";
+
+  term.classList.add("is-running");
+  updateGlyphTermStatus();
+
+  const lines = [...term.querySelectorAll(".glyph-term-line")];
+  let i = 0;
+  const step = () => {
+    if(!term.classList.contains("is-powered") || term.classList.contains("is-closed")){
+      term.classList.remove("is-running");
+      updateGlyphTermStatus();
+      return;
+    }
+    if(i < lines.length){
+      lines[i].classList.add("visible");
+      i++;
+      glyphDemoTimer = setTimeout(step, 340);
+    } else {
+      term.classList.remove("is-running");
+      term.classList.add("is-demo-done");
+      if(num) num.textContent = "87%";
+      glyphDemoPlayed = true;
+      updateGlyphTermStatus();
+    }
+  };
+  step();
+}
+
+function maybeRunGlyphDemo(){
+  const term = document.getElementById("glyphTerm");
+  const wrap = document.getElementById("glyphTermWrap");
+  if(!term || !wrap || !term.classList.contains("is-powered")) return;
+  if(term.classList.contains("is-closed") || term.classList.contains("is-minimized")) return;
+  const r = wrap.getBoundingClientRect();
+  if(r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.12){
+    runGlyphDemo();
+  }
+}
+
+function initGlyphStage(){
+  const term = document.getElementById("glyphTerm");
+  const wrap = document.getElementById("glyphTermWrap");
+  const mainCta = document.getElementById("glyphMainCta");
+  if(!term) return;
+
+  renderGlyphTermStatic();
+
+  document.getElementById("glyphLightClose")?.addEventListener("click", e => {
+    e.stopPropagation();
+    term.classList.toggle("is-closed");
+    term.classList.remove("is-minimized");
+    if(term.classList.contains("is-closed")) resetGlyphDemo();
+    else maybeRunGlyphDemo();
+    updateGlyphTermStatus();
+  });
+
+  document.getElementById("glyphLightMin")?.addEventListener("click", e => {
+    e.stopPropagation();
+    if(term.classList.contains("is-closed")) return;
+    term.classList.toggle("is-minimized");
+    if(term.classList.contains("is-minimized")) resetGlyphDemo();
+    else maybeRunGlyphDemo();
+    updateGlyphTermStatus();
+  });
+
+  document.getElementById("glyphLightPower")?.addEventListener("click", e => {
+    e.stopPropagation();
+    term.classList.toggle("is-powered");
+    if(!term.classList.contains("is-powered")){
+      resetGlyphDemo();
+    } else {
+      term.classList.remove("is-closed");
+      resetGlyphDemo();
+      maybeRunGlyphDemo();
+    }
+    updateGlyphTermStatus();
+  });
+
+  mainCta?.addEventListener("click", showFlokeToast);
+
+  if("IntersectionObserver" in window && wrap){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => { if(en.isIntersecting) maybeRunGlyphDemo(); });
+    }, { threshold: 0.25, rootMargin: "0px 0px -5% 0px" });
+    io.observe(wrap);
+  }
+}
+
 function applyLocale(){
   document.documentElement.lang = locale;
   document.getElementById("btnEn").classList.toggle("on", locale==="en");
   document.getElementById("btnRu").classList.toggle("on", locale==="ru");
   document.querySelectorAll("[data-k]").forEach(el => {
     const v = t(el.getAttribute("data-k"));
-    if(v.includes("\n")) el.innerHTML = v.replace(/\n/g,"<br>");
-    else if(v) el.textContent = v;
+    if(!v) return;
+    if(v.includes("<strong>") || v.includes("<br>") || v.includes("\n")){
+      el.innerHTML = v.replace(/\n/g,"<br>");
+    } else {
+      el.textContent = v;
+    }
   });
   renderCards();
+  renderGlyphSlides();
+  renderGlyphTermStatic();
   const h = location.hash;
   if(h.startsWith("#project/")){
     const slug = h.replace("#project/","").toLowerCase();
@@ -802,7 +1639,8 @@ function renderCards(){
   grid.innerHTML = ORDER.map((slug,i) => {
     const p = PROJECTS[slug];
     const c = p[locale];
-    const ver = verCache[slug] || "…";
+    const rawVer = verCache[slug] || "…";
+    const ver = slug === "senza" ? formatRelVer(rawVer, "Senza") : rawVer;
     const why = c.why.map(x=>`<li>${esc(x)}</li>`).join("");
     const can = c.can.map(x=>`<li>${esc(x)}</li>`).join("");
     return `<button type="button" class="pcard rv" data-slug="${slug}" style="transition-delay:${i*.07}s" aria-label="Open ${esc(c.name)}">
@@ -815,7 +1653,7 @@ function renderCards(){
       </div>
       <div class="pcard-tags">
         <span class="tag">Windows</span>
-        <span class="tag tag-ver">${esc(ver)}</span>
+        ${slug==="glyph"?`<span class="tag tag-model">${esc(t("glyph.category"))}</span><span class="tag tag-cat">${esc(t("glyph.version"))}</span>`:`<span class="tag tag-ver">${esc(ver)}</span>`}
         <span class="tag tag-live">${t("tag.live")}</span>
       </div>
       <span class="pcard-arr" aria-hidden="true">↗</span>
@@ -840,10 +1678,17 @@ function fmtDate(s){
   return new Date(s).toLocaleDateString(locale==="ru"?"ru-RU":"en-GB",{day:"2-digit",month:"short",year:"numeric"});
 }
 
+function formatRelVer(ver, product){
+  if(!ver) return ver;
+  if(product === "Senza") return String(ver).replace(/^v/i, "");
+  return ver;
+}
+
 const FALLBACK_RELS = {
   cultiva: { ver:"v0.4.0", name:"Coconut · Notifications, Plugins, Ambient Layers" },
   blip: { ver:"v1.1.1", name:"Beacon · large file publishing fix" },
-  senza: { ver:"v0.1.0", name: locale => locale==="ru" ? "0.1.0 Coda · первый релиз" : "0.1.0 Coda · first release" }
+  senza: { ver:"1.0.0", name: locale => locale==="ru" ? "1.0.0 Vivo" : "1.0.0 Vivo" },
+  glyph: { ver:"2.1-O", name: () => "—" }
 };
 
 async function loadReleases(){
@@ -859,35 +1704,41 @@ async function loadReleases(){
     const s = sListRaw.status==="fulfilled" ? sListRaw.value[0] : null;
     if(c) verCache.cultiva = c.tag_name;
     if(b) verCache.blip = b.tag_name;
-    verCache.senza = s ? s.tag_name : "v0.1.0";
+    verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.0.0";
+    verCache.glyph = "2.1-O";
     renderCards();
+    renderGlyphSlides();
 
-    const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"v0.1.0";
+    const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"1.0.0";
     const rel = r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
-      <div class="rel-ver">${esc(r.ver)}</div>
+      <div class="rel-ver">${esc(formatRelVer(r.ver, r.product))}</div>
       <div class="rel-name"><em>${esc(r.name)}</em></div>
       <div class="rel-badge ${r.live?"rb-live":"rb-dev"}">${r.live?t("status.live"):t("status.dev")}</div>
     </div>`;
     relGrid.innerHTML = [
       { product:"Cultiva", ver:cv, name:(c?.name||cv)+(c?` · ${fmtDate(c.published_at)}`:""), live:true },
       { product:"BLIP", ver:bv, name:(b?.name||bv)+(b?` · ${fmtDate(b.published_at)}`:""), live:true },
-      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · 0.1.0 Coda"), live:!!s }
+      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · 1.0.0 Vivo"), live:!!s },
+      { product:"Glyph2.1-O", ver:"2.1-O", name:t("glyph.releaseEmpty"), live:true }
     ].map(rel).join("");
     initReveal(relGrid.querySelectorAll(".rv"));
   } catch(e){
     verCache.cultiva = FALLBACK_RELS.cultiva.ver;
     verCache.blip = FALLBACK_RELS.blip.ver;
     verCache.senza = FALLBACK_RELS.senza.ver;
+    verCache.glyph = FALLBACK_RELS.glyph.ver;
     renderCards();
+    renderGlyphSlides();
     const fb = FALLBACK_RELS;
     relGrid.innerHTML = [
       { product:"Cultiva", ver:fb.cultiva.ver, name:fb.cultiva.name, live:true },
       { product:"BLIP", ver:fb.blip.ver, name:fb.blip.name, live:true },
-      { product:"Senza", ver:fb.senza.ver, name:typeof fb.senza.name==="function"?fb.senza.name(locale):fb.senza.name, live:true }
+      { product:"Senza", ver:fb.senza.ver, name:typeof fb.senza.name==="function"?fb.senza.name(locale):fb.senza.name, live:true },
+      { product:"Glyph2.1-O", ver:fb.glyph.ver, name:typeof fb.glyph.name==="function"?fb.glyph.name(locale):fb.glyph.name, live:true }
     ].map(r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
-      <div class="rel-ver">${esc(r.ver)}</div>
+      <div class="rel-ver">${esc(formatRelVer(r.ver, r.product))}</div>
       <div class="rel-name"><em>${esc(r.name)}</em></div>
       <div class="rel-badge rb-live">${t("status.live")}</div>
     </div>`).join("");
@@ -896,20 +1747,54 @@ async function loadReleases(){
 }
 
 function renderStoreCarousel(slug, media){
+  const wrap = document.getElementById("storeCarouselWrap");
   const car = document.getElementById("storeCarousel");
   const dots = document.getElementById("storeDots");
+  const duo = document.getElementById("storePreviewDuo");
+  const nav = document.getElementById("storePreviewNav");
+  const isGlyph = slug === "glyph";
+
+  wrap?.classList.toggle("carousel-wrap--glyph", isGlyph);
+  if(car){ car.style.removeProperty("display"); car.innerHTML = ""; }
+  if(dots){ dots.style.removeProperty("display"); dots.innerHTML = ""; }
+  if(duo){ duo.hidden = !isGlyph; if(!isGlyph) duo.innerHTML = ""; }
+  if(nav) nav.hidden = !isGlyph;
+
+  if(isGlyph){
+    const shot = (media.shots || [])[0] || "";
+    const poster = media.poster || shot;
+    if(duo){
+      duo.innerHTML = `
+        <div class="preview-pane preview-pane--video media-slot is-focus" data-pane="0">
+          <span class="preview-badge">${esc(t("store.videoLabel"))}</span>
+          <video controls playsinline preload="metadata"${poster ? ` poster="${esc(poster)}"` : ""} onerror="markMissing(this)">
+            <source src="${esc(media.video)}" type="video/mp4">
+          </video>
+          <span class="media-slot-label">${esc(t("ph.video"))}<small>${esc(media.video)}</small></span>
+        </div>
+        <div class="preview-pane preview-pane--shot media-slot" data-pane="1">
+          <span class="preview-badge">${esc(t("store.shotLabel"))}</span>
+          <img src="${esc(shot)}" alt="" loading="lazy" onerror="markMissing(this)">
+          <span class="media-slot-label">${esc(t("ph.shot"))}<small>${esc(shot)}</small></span>
+        </div>`;
+    }
+    initGlyphPreviewNav();
+    return;
+  }
+
   const slides = [];
   slides.push({ type:"video", src:media.video, label:t("ph.video"), path:media.video });
-  media.shots.forEach((src,i) => {
-    const num = String(i+1).padStart(2,"0");
-    slides.push({ type:"img", src, label:t("ph.shot")+" "+num, path:src });
+  (media.shots || []).forEach((src, i) => {
+    const num = String(i + 1).padStart(2, "0");
+    slides.push({ type:"img", src, label:t("ph.shot") + " " + num, path:src });
   });
 
-  car.innerHTML = slides.map((s,i) => {
-    if(s.type==="video"){
+  const poster = media.poster || media.shots?.[0] || "";
+  car.innerHTML = slides.map((s, i) => {
+    if(s.type === "video"){
       return `<div class="c-slide media-slot" data-i="${i}">
         <span class="c-badge">${t("store.videoBadge")}</span>
-        <video controls playsinline preload="metadata"${media.shots[0]?` poster="${esc(media.shots[0])}"`:""} onerror="markMissing(this)">
+        <video controls playsinline preload="metadata"${poster ? ` poster="${esc(poster)}"` : ""} onerror="markMissing(this)">
           <source src="${esc(s.src)}" type="video/mp4">
         </video>
         <span class="media-slot-label">${esc(s.label)}<small>${esc(s.path)}</small></span>
@@ -922,22 +1807,25 @@ function renderStoreCarousel(slug, media){
     </div>`;
   }).join("");
 
-  dots.innerHTML = slides.map((_,i) =>
-    `<button type="button" class="c-dot${i===0?" on":""}" data-i="${i}" aria-label="Slide ${i+1}"></button>`
+  dots.innerHTML = slides.map((_, i) =>
+    `<button type="button" class="c-dot${i === 0 ? " on" : ""}" data-i="${i}" aria-label="Slide ${i + 1}"></button>`
   ).join("");
 
-  car.onscroll = () => {
+  const syncDots = () => {
     const items = [...car.querySelectorAll(".c-slide")];
+    if(!items.length) return;
     const mid = car.scrollLeft + car.clientWidth * .35;
     let best = 0, bestD = Infinity;
-    items.forEach((el,i) => { const d=Math.abs(el.offsetLeft-mid); if(d<bestD){bestD=d;best=i;} });
-    dots.querySelectorAll(".c-dot").forEach((d,i) => d.classList.toggle("on", i===best));
+    items.forEach((el, i) => { const d = Math.abs(el.offsetLeft - mid); if(d < bestD){ bestD = d; best = i; } });
+    dots.querySelectorAll(".c-dot").forEach((d, i) => d.classList.toggle("on", i === best));
   };
+  car.onscroll = syncDots;
+  syncDots();
 
   dots.querySelectorAll(".c-dot").forEach(d => {
     d.addEventListener("click", () => {
       const sl = car.querySelector(`[data-i="${d.dataset.i}"]`);
-      if(sl) car.scrollTo({left:sl.offsetLeft-14, behavior:"smooth"});
+      if(sl) car.scrollTo({ left: sl.offsetLeft - 14, behavior: "smooth" });
     });
   });
 }
@@ -972,21 +1860,42 @@ async function renderStore(slug){
   document.getElementById("storeTitle").textContent = c.name;
   document.getElementById("storeTagline").textContent = c.tagline;
   document.getElementById("storePlat").textContent = c.plat;
-  document.getElementById("storeGhLink").href = `https://github.com/${p.repo}`;
+  const ghRepo = p.repo || "FlokeStudio/Senza";
+  document.getElementById("storeGhLink").href = `https://github.com/${ghRepo}`;
   document.getElementById("storeAbout").textContent = c.about;
   document.getElementById("storeFeatures").innerHTML = c.features.map(f=>`<li>${esc(f)}</li>`).join("");
   document.getElementById("storePrivacy").textContent = c.privacy;
-  document.getElementById("storeNotice").innerHTML = `<div class="notice">${esc(t("store.hint"))}</div>`;
+  document.getElementById("storeNotice").innerHTML = slug==="glyph"
+    ? `<div class="notice">${esc(t("glyph.toast.msg"))}</div>`
+    : `<div class="notice">${esc(t("store.hint"))}</div>`;
 
   const getBtn = document.getElementById("storeGetBtn");
-  getBtn.textContent = t("store.get");
-  getBtn.onclick = () => window.open(p.getUrl, "_blank", "noopener");
+  getBtn.textContent = slug==="glyph" ? t("glyph.get") : t("store.get");
+  if(slug==="glyph"){
+    getBtn.onclick = showFlokeToast;
+  } else {
+    getBtn.onclick = () => window.open(p.getUrl, "_blank", "noopener");
+  }
 
   renderStoreCarousel(slug, p.media);
 
   const metaEl = document.getElementById("storeMeta");
-  const mi = (l,v) => `<div class="smi"><div class="smi-l">${l}</div><div class="smi-v">${esc(v)}</div></div>`;
-  metaEl.innerHTML = mi(t("meta.category"),c.category) + mi(t("meta.dev"),"Floke") + mi(t("meta.lang"),"EN / RU") + mi(t("meta.platform"),"Windows") + mi(t("meta.ver"),"…");
+  const mi = (l,v) => `<div class="smi"><div class="smi-l">${l}</div><div class="smi-v">${v === "" ? "" : esc(v)}</div></div>`;
+  if(slug==="glyph"){
+    metaEl.classList.add("store-meta--glyph");
+    metaEl.innerHTML = mi(t("meta.category"), c.category)
+      + mi(t("meta.dev"), "Floke")
+      + mi(t("meta.lang"), "EN / RU")
+      + mi(t("meta.platform"), "Windows")
+      + mi(t("meta.release"), "");
+  } else {
+    metaEl.classList.remove("store-meta--glyph");
+    metaEl.innerHTML = mi(t("meta.category"), c.category)
+      + mi(t("meta.dev"), "Floke")
+      + mi(t("meta.lang"), "EN / RU")
+      + mi(t("meta.platform"), "Windows")
+      + mi(t("meta.ver"), "…");
+  }
 
   document.getElementById("storeInfo").innerHTML = [
     [t("info.provider"),"Floke Studio"],[t("info.compat"),c.compat],
@@ -994,16 +1903,19 @@ async function renderStore(slug){
   ].map(([l,v])=>`<div class="info-item"><div class="smi-l">${l}</div><div class="smi-v">${esc(v)}</div></div>`).join("");
 
   const clEl = document.getElementById("storeChangelog");
-  clEl.innerHTML = `<div class="cl-item"><div class="cl-body">${t("store.loading")}</div></div>`;
-
-  if(p.repo){
-    try {
-      const list = await fetchRel(p.repo, 8);
-      const ver = list[0]?.tag_name || "—";
-      metaEl.querySelector(".smi:last-child .smi-v").textContent = ver;
-      renderChangelog(list);
-    } catch(e){
-      clEl.innerHTML = `<div class="cl-item"><div class="cl-body">${locale==="ru"?"Не удалось загрузить релизы. Откройте страницу через локальный сервер или GitHub Pages.":"Could not load releases. Try a local server or GitHub Pages."}</div></div>`;
+  if(slug==="glyph"){
+    clEl.innerHTML = `<div class="cl-item"><div class="cl-body"><p>${esc(t("glyph.toast.msg"))}</p></div></div>`;
+  } else {
+    clEl.innerHTML = `<div class="cl-item"><div class="cl-body">${t("store.loading")}</div></div>`;
+    if(p.repo){
+      try {
+        const list = await fetchRel(p.repo, 8);
+        const ver = list[0]?.tag_name || "—";
+        metaEl.querySelector(".smi:nth-child(5) .smi-v").textContent = ver;
+        renderChangelog(list);
+      } catch(e){
+        clEl.innerHTML = `<div class="cl-item"><div class="cl-body">${locale==="ru"?"Не удалось загрузить релизы. Откройте страницу через локальный сервер или GitHub Pages.":"Could not load releases. Try a local server or GitHub Pages."}</div></div>`;
+      }
     }
   }
 
@@ -1015,6 +1927,12 @@ async function renderStore(slug){
 function showMain(){
   document.getElementById("mainView").style.display = "";
   document.getElementById("storePage").style.display = "none";
+  const wrap = document.getElementById("storeCarouselWrap");
+  wrap?.classList.remove("carousel-wrap--glyph");
+  const duo = document.getElementById("storePreviewDuo");
+  const nav = document.getElementById("storePreviewNav");
+  if(duo){ duo.hidden = true; duo.innerHTML = ""; }
+  if(nav) nav.hidden = true;
 }
 
 function routeHash(){
@@ -1049,9 +1967,14 @@ window.addEventListener("hashchange", routeHash);
 
 applyTheme();
 applyLocale();
+renderGlyphSlides();
+initGlyphStage();
 loadReleases();
 routeHash();
-setTimeout(()=>initReveal(),120);
+setTimeout(()=>{
+  initReveal(document.querySelectorAll("#glyph .rv, #glyphSlides"));
+  initReveal(document.querySelectorAll("#products .rv, #releases .rv, .manifesto .rv"));
+},120);
 </script>
 </body>
 </html>
