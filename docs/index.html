@@ -464,6 +464,11 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   flex-shrink:0;
 }
 .store-icon img{width:100%;height:100%;object-fit:contain;padding:12px}
+.floke-icon-host{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--accent2)}
+.floke-icon-host svg{width:62%;height:62%}
+.pcard-ico .floke-icon-host svg{width:56%;height:56%}
+.project-icon-symbol{font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;opacity:.88;color:var(--accent)}
+.pcard-ico .project-icon-symbol{font-size:20px}
 .store-title{font-size:clamp(26px,4.5vw,38px);font-weight:700;line-height:1.08;letter-spacing:-.02em;margin-bottom:6px}
 .store-tagline{font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
 .store-plat{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
@@ -865,7 +870,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 
 <footer>
 <div class="wrap">
-  <div class="foot-l">© 2026 Floke · built by <a href="https://github.com/krwg">krwg</a></div>
+  <div class="foot-l">© 2026 Floke Studio · <a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a></div>
   <div class="foot-links">
     <a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a>
     <a href="https://t.me/flokestudio" target="_blank" rel="noopener">Telegram</a>
@@ -873,6 +878,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 </div>
 </footer>
 
+<script src="assets/floke-icons.js"></script>
 <script>
 const STR = {
   en: {
@@ -1059,45 +1065,50 @@ const GLYPH_DEMO_TAGS = [
 ];
 const SENZA_RELEASE_URL = "https://github.com/FlokeStudio/Senza/releases/latest";
 
+function mediaShots(folder, ext = "png", count = 10){
+  return Array.from({length: count}, (_, i) =>
+    `assets/screenshots/${folder}/${String(i + 1).padStart(2, "0")}.${ext}`);
+}
+
 const PROJECTS = {
   cultiva: {
-    icon: "assets/icons/cultiva.svg",
+    iconKey: "cultiva",
     bannerCls: "store-head-cultiva",
     repo: "FlokeStudio/Cultiva",
     getUrl: "https://github.com/FlokeStudio/Cultiva/releases",
     media: {
       video: "assets/media/cultiva/preview.mp4",
-      shots: Array.from({length:10},(_,i)=>"assets/screenshots/cultiva/"+String(i+1).padStart(2,"0")+".jpg")
+      shots: mediaShots("cultiva", "jpg")
     },
     en: {
       name:"Cultiva", tagline:"Make your own growth rhythm", plat:"Windows · Free",
       category:"Productivity", compat:"Windows 10 / 11",
-      pitch:"A calm habit tracker that grows with you — from seed to tree to legacy, entirely on your device.",
+      pitch:"A calm habit tracker that grows with you — from seed to tree to legacy, entirely on your device. 1.1.0 Cypress adds search, shortcuts, and the Kiparis theme.",
       why:["No account — rituals stay on your PC","Visual growth feels real, not gamified","Plugins & themes without a subscription"],
-      can:["Track habits: seed → tree → legacy","Themes, ambient layers, dark/light","Sandboxed plugins & native notifications"],
+      can:["Track habits: seed → tree → legacy","Cypress theme, ambient layers, accent color","Search, hotkeys, sandboxed plugins"],
       about:"Cultiva is a desktop habit tracker built offline-first. Grow habits visually from seed to legacy, customize themes and ambient layers, and extend the app with a sandboxed plugin system.",
-      features:["Local-first data storage","Plugins, themes, ambient backgrounds","Native notifications, auto-updates via GitHub Releases"],
+      features:["Local-first data storage","Cypress theme & new ambient backgrounds","Search, keyboard shortcuts, ZIP backup"],
       privacy:"Cultiva stores your data locally. No account required. Network is used only for optional plugin registry and update checks."
     },
     ru: {
       name:"Cultiva", tagline:"Выстрой свой ритм роста", plat:"Windows · Бесплатно",
       category:"Продуктивность", compat:"Windows 10 / 11",
-      pitch:"Спокойный трекер привычек с визуальным ростом — от семени к дереву и наследию, только на вашем устройстве.",
+      pitch:"Спокойный трекер привычек с визуальным ростом — от семени к дереву и наследию, только на вашем устройстве. 1.1.0 Cypress — поиск, hotkeys и тема Кипарис.",
       why:["Без аккаунта — ритуалы на вашем ПК","Рост виден глазами, без лишнего шума","Плагины и темы без подписки"],
-      can:["Привычки: семя → дерево → legacy","Темы, ambient-фоны, тёмная/светлая","Плагины в sandbox и нативные уведомления"],
+      can:["Привычки: семя → дерево → legacy","Тема Кипарис, ambient, акцентный цвет","Поиск, hotkeys, sandbox-плагины"],
       about:"Cultiva — desktop-трекер привычек offline-first. Визуальный рост привычек, темы, ambient-слои и расширяемость через sandbox-плагины.",
-      features:["Локальное хранение данных","Плагины, темы, ambient-фоны","Нативные уведомления и автообновления"],
+      features:["Локальное хранение данных","Тема Кипарис и новые ambient-фоны","Поиск, горячие клавиши, ZIP-бэкап"],
       privacy:"Cultiva хранит данные локально. Аккаунт не нужен. Сеть используется только для плагинов и проверки обновлений."
     }
   },
   blip: {
-    icon: "assets/icons/blip.svg",
+    iconKey: "blip",
     bannerCls: "store-head-blip",
     repo: "FlokeStudio/BLIP",
     getUrl: "https://github.com/FlokeStudio/BLIP/releases",
     media: {
       video: "assets/media/blip/preview.mp4",
-      shots: Array.from({length:10},(_,i)=>"assets/screenshots/blip/"+String(i+1).padStart(2,"0")+".jpg")
+      shots: mediaShots("blip", "jpg")
     },
     en: {
       name:"BLIP", tagline:"No cloud. No account. Just peers.", plat:"Windows · Free",
@@ -1121,44 +1132,44 @@ const PROJECTS = {
     }
   },
   senza: {
-    icon: "assets/icons/senza.svg",
+    iconKey: "senza",
     bannerCls: "store-head-senza",
     repo: "FlokeStudio/Senza",
     getUrl: "https://github.com/FlokeStudio/Senza/releases/latest",
     media: {
       video: "assets/media/senza/preview.mp4",
-      shots: Array.from({length:10},(_,i)=>"assets/screenshots/senza/"+String(i+1).padStart(2,"0")+".jpg")
+      shots: mediaShots("senza", "png")
     },
     en: {
-      name:"Senza", tagline:"Your library. Your files. Nothing else.", plat:"Windows · v1.0.0 Vivo · Free",
+      name:"Senza", tagline:"Your library. Your files. Nothing else.", plat:"Windows · 1.1.0 Legato · Free",
       category:"Music", compat:"Windows 10 / 11 (x64) · iOS planned",
-      pitch:"Your music library with Glyph2.1-O built in — import, understand tags, Flow, listen offline.",
+      pitch:"Your music library with Glyph2.1-O built in — import, understand tags, Flow, listen offline. Legato adds smooth crossfade and smarter playlists.",
       why:["Files stay yours — local Artist/Album structure","Glyph2.1-O — KNN, diff UI, batch, optional MusicBrainz","Private — journal and history never leave your PC"],
-      can:["Import mp3, flac, wav, ogg, m4a, aac","Glyph tag editor, Flow home, Music Vault","Journal, playlists, bulk tags · EN/RU"],
-      about:"Senza 1.0.0 Vivo is an offline-first music library and player with Glyph2.1-O metadata intelligence built in. Import into Artist/Album folders, fix tags with confidence scores and diffs, scan duplicates, build a Flow wave, and listen without streaming or an account.\n\nDownload Windows installer or portable build on GitHub Releases.",
-      features:["Glyph2.1-O pipeline — rules, KNN, ML, optional MB / AcoustID / Ollama","Flow — personal wave, ambient visuals, four discovery modes","Music Vault — score, duplicates, batch fill library","Journal — listening time, top tracks, Time Capsule","Toggle Glyph off for a plain tag editor anytime"],
+      can:["Import mp3, flac, wav, ogg, m4a, aac","Glyph tag editor, Flow home, Music Vault","Crossfade playback · EN/RU"],
+      about:"Senza 1.1.0 Legato is an offline-first music library and player with Glyph2.1-O metadata intelligence built in. Import into Artist/Album folders, fix tags with confidence scores and diffs, scan duplicates, build a Flow wave, and listen without streaming or an account.\n\nDownload Windows installer or portable build on GitHub Releases.",
+      features:["Glyph2.1-O pipeline — rules, KNN, ML, optional MB / AcoustID / Ollama","Legato crossfade & Flow discovery modes","Music Vault — score, duplicates, batch fill library","Journal — listening time, top tracks, Time Capsule","Toggle Glyph off for a plain tag editor anytime"],
       privacy:"Senza keeps your library, Glyph logs, and play history on your PC. No sign-in. No upload. Network not required to play."
     },
     ru: {
-      name:"Senza", tagline:"Твоя библиотека. Твои файлы. Ничего лишнего.", plat:"Windows · v1.0.0 Vivo · Бесплатно",
+      name:"Senza", tagline:"Твоя библиотека. Твои файлы. Ничего лишнего.", plat:"Windows · 1.1.0 Legato · Бесплатно",
       category:"Музыка", compat:"Windows 10 / 11 (x64) · iOS в планах",
-      pitch:"Музыкальная библиотека с Glyph2.1-O — импорт, умные теги, Поток, offline.",
+      pitch:"Музыкальная библиотека с Glyph2.1-O — импорт, умные теги, Поток, offline. Legato — плавный crossfade и умнее плейлисты.",
       why:["Файлы ваши — структура Артист/Альбом","Glyph2.1-O — KNN, diff, batch, опционально MusicBrainz","Приватно — журнал и история только на ПК"],
-      can:["Импорт mp3, flac, wav, ogg, m4a, aac","Редактор с Glyph, Поток, Music Vault","Журнал, плейлисты, массовые теги · EN/RU"],
-      about:"Senza 1.0.0 Vivo — offline-first плеер с встроенным Glyph2.1-O. Импорт, теги с баллом и diff, дубликаты, волна Потока — без стриминга и аккаунта.\n\nУстановщик и portable — на GitHub Releases.",
-      features:["Glyph2.1-O — rules, KNN, ML, опц. MB / AcoustID / Ollama","Поток — волна, ambient, четыре режима","Music Vault — оценка, дубликаты, заливка библиотеки","Журнал — время прослушивания, топы, Time Capsule","Glyph можно выключить — останется обычный редактор"],
+      can:["Импорт mp3, flac, wav, ogg, m4a, aac","Редактор с Glyph, Поток, Music Vault","Crossfade · EN/RU"],
+      about:"Senza 1.1.0 Legato — offline-first плеер с встроенным Glyph2.1-O. Импорт, теги с баллом и diff, дубликаты, волна Потока — без стриминга и аккаунта.\n\nУстановщик и portable — на GitHub Releases.",
+      features:["Glyph2.1-O — rules, KNN, ML, опц. MB / AcoustID / Ollama","Legato — crossfade и режимы Потока","Music Vault — оценка, дубликаты, заливка библиотеки","Журнал — время прослушивания, топы, Time Capsule","Glyph можно выключить — останется обычный редактор"],
       privacy:"Библиотека, логи Glyph и история — только на вашем ПК. Без входа. Для воспроизведения интернет не нужен."
     }
   },
   flint: {
-    icon: "assets/icons/flint.svg",
+    iconSymbol: "◆",
     bannerCls: "store-head-flint",
     repo: "FlokeStudio/Flint",
     getUrl: "https://github.com/FlokeStudio/Flint",
     comingSoon: true,
     releaseWindow: "Q3 2026",
     media: {
-      shots: ["assets/icons/flint.svg"]
+      shots: []
     },
     en: {
       name:"Flint", tagline:"Think here. Stay here.", plat:"Windows · Coming Q3 2026",
@@ -1210,7 +1221,7 @@ const PROJECTS = {
     }
   },
   glyph: {
-    icon: "assets/icons/glyph.svg",
+    iconSymbol: "◈",
     bannerCls: "store-head-glyph",
     repo: null,
     getUrl: SENZA_RELEASE_URL,
@@ -1218,8 +1229,8 @@ const PROJECTS = {
     version: "2.1-O",
     media: {
       video: "assets/media/senza/preview.mp4",
-      shots: ["assets/screenshots/senza/01.jpg"],
-      poster: "assets/screenshots/senza/01.jpg"
+      shots: ["assets/screenshots/senza/01.png"],
+      poster: "assets/screenshots/senza/01.png"
     },
     en: {
       name:"Glyph2.1-O", tagline:"Metadata Intelligence", plat:"Version 2.1-O",
@@ -1227,7 +1238,7 @@ const PROJECTS = {
       pitch:"The Floke metadata model — private, precise, and built to integrate across our apps. Experience it today in Senza.",
       why:["On-device — your files never leave your machine","Library-aware — context from albums, artists, neighbors","Self-improving — learns from every edit you make"],
       can:["Clean tags from messy filenames & folders","Confidence scores + diff before you apply","Batch entire libraries with per-track preview"],
-      about:"Glyph2.1-O is Metadata Intelligence by Floke — a model that understands files the way you would, if you had infinite patience.\n\nIt decodes filenames, reads folder structure, consults your library for context, scores every suggestion, and learns from what you accept or reject. Optional MusicBrainz, AcoustID, and local Ollama — always cached, always optional.\n\nToday, Glyph lives inside Senza 1.0.0 Vivo. Tomorrow, it will integrate into more Floke products — one intelligence layer across the studio.",
+      about:"Glyph2.1-O is Metadata Intelligence by Floke — a model that understands files the way you would, if you had infinite patience.\n\nIt decodes filenames, reads folder structure, consults your library for context, scores every suggestion, and learns from what you accept or reject. Optional MusicBrainz, AcoustID, and local Ollama — always cached, always optional.\n\nToday, Glyph lives inside Senza 1.1.0 Legato. Tomorrow, it will integrate into more Floke products — one intelligence layer across the studio.",
       features:["Metadata Model category · version 2.1-O","Rules → knowledge → ML → KNN pipeline","Diff UI, batch apply, duplicate intelligence","SQLite event log for learning & export","Try now: included in Senza — download below"],
       privacy:"Glyph processes everything locally. No training on your data in the cloud. Online lookups are optional and cached on disk."
     },
@@ -1237,13 +1248,13 @@ const PROJECTS = {
       pitch:"Модель метаданных Floke — приватная, точная, для всех продуктов студии. Первый опыт — в Senza.",
       why:["On-device — файлы не покидают вашу машину","Контекст библиотеки — альбомы, артисты, соседи","Самообучение — на каждой вашей правке"],
       can:["Чистые теги из мусорных имён и папок","Балл уверенности + diff до применения","Batch всей библиотеки с превью"],
-      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.0.0 Vivo. Завтра — в Flint и других продуктах Floke.",
+      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.1.0 Legato. Завтра — в Flint и других продуктах Floke.",
       features:["Категория: модель метаданных · версия 2.1-O","Конвейер rules → knowledge → ML → KNN","Diff, batch, поиск дубликатов","SQLite-лог для обучения","Попробовать: в составе Senza"],
       privacy:"Всё обрабатывается локально. Без обучения на ваших данных в облаке. Онлайн-запросы опциональны и кэшируются."
     }
   },
   mnemo: {
-    icon: "assets/icons/mnemo.svg",
+    iconSymbol: "▣",
     bannerCls: "store-head-mnemo",
     repo: "FlokeStudio/Flint",
     getUrl: "https://github.com/FlokeStudio/Flint",
@@ -1252,7 +1263,7 @@ const PROJECTS = {
     version: "1.2-O",
     releaseWindow: "Q3 2026",
     media: {
-      shots: ["assets/icons/mnemo.svg"]
+      shots: []
     },
     en: {
       name:"Mnemo 1.2-O", tagline:"Memory. On device.", plat:"Version 1.2-O · Coming Q3 2026",
@@ -1325,18 +1336,39 @@ function markMissing(el){
   if(slot) slot.classList.add("is-missing");
 }
 
-function iconSlotHtml(src, pathHint){
+function projectIconHint(p){
+  return p.iconKey || p.iconSymbol || p.icon || "";
+}
+
+function projectIconInner(p, size){
+  const hint = projectIconHint(p);
+  if(p.iconKey && typeof FLOKE_ICONS !== "undefined" && FLOKE_ICONS[p.iconKey]){
+    return `<div class="floke-icon-host" title="${esc(hint)}">${FLOKE_ICONS[p.iconKey]}</div>`;
+  }
+  if(p.iconSymbol){
+    return `<span class="project-icon-symbol" aria-hidden="true">${p.iconSymbol}</span>`;
+  }
+  if(p.icon){
+    const px = size || 56;
+    return `<img src="${esc(p.icon)}" alt="" width="${px}" height="${px}" loading="lazy" onerror="markMissing(this)">`;
+  }
+  return `<span class="project-icon-symbol" aria-hidden="true">◇</span>`;
+}
+
+function iconSlotHtml(p){
+  const hint = projectIconHint(p);
   return `<div class="media-slot pcard-ico">
-    <img src="${esc(src)}" alt="" width="56" height="56" loading="lazy" onerror="markMissing(this)">
-    <span class="media-slot-label">${t("ph.icon")}<small>${esc(pathHint)}</small></span>
+    ${projectIconInner(p, 56)}
+    <span class="media-slot-label">${t("ph.icon")}<small>${esc(hint)}</small></span>
   </div>`;
 }
 
-function fillIconSlot(container, src, pathHint){
+function fillIconSlot(container, p){
+  const hint = projectIconHint(p);
   container.className = "store-icon media-slot";
   container.innerHTML = `
-    <img src="${esc(src)}" alt="" width="88" height="88" loading="lazy" onerror="markMissing(this)">
-    <span class="media-slot-label">${t("ph.icon")}<small>${esc(pathHint)}</small></span>`;
+    ${projectIconInner(p, 88)}
+    <span class="media-slot-label">${t("ph.icon")}<small>${esc(hint)}</small></span>`;
 }
 
 /* Lightweight Markdown → HTML (GitHub release notes) */
@@ -1843,7 +1875,7 @@ function buildCardHtml(slug, delayIdx){
   const why = c.why.map(x=>`<li>${esc(x)}</li>`).join("");
   const can = c.can.map(x=>`<li>${esc(x)}</li>`).join("");
   return `<button type="button" class="pcard rv" data-slug="${slug}" style="transition-delay:${delayIdx*.07}s" aria-label="Open ${esc(c.name)}">
-    ${iconSlotHtml(p.icon, p.icon)}
+    ${iconSlotHtml(p)}
     <div class="pcard-name">${esc(c.name)}</div>
     <p class="pcard-pitch">${esc(c.pitch)}</p>
     <div class="pcard-row">
@@ -1891,9 +1923,9 @@ function formatRelVer(ver, product){
 }
 
 const FALLBACK_RELS = {
-  cultiva: { ver:"v0.4.0", name:"Coconut · Notifications, Plugins, Ambient Layers" },
-  blip: { ver:"v1.1.1", name:"Beacon · large file publishing fix" },
-  senza: { ver:"1.0.0", name: locale => locale==="ru" ? "1.0.0 Vivo" : "1.0.0 Vivo" },
+  cultiva: { ver:"v1.1.0", name:"Cypress · theme, search, shortcuts" },
+  blip: { ver:"v1.1.1", name:"Beacon · mesh library & chat polish" },
+  senza: { ver:"1.1.0", name: locale => locale==="ru" ? "Legato · crossfade & Flow" : "Legato · crossfade & Flow" },
   flint: { ver:"v0.6", name: locale === "ru" ? "В разработке · релиз Q3 2026" : "In development · public Q3 2026" },
   glyph: { ver:"2.1-O", name: () => "—" },
   mnemo: { ver:"1.2-O", name: () => locale === "ru" ? "С Flint · Q3 2026" : "With Flint · Q3 2026" }
@@ -1912,14 +1944,14 @@ async function loadReleases(){
     const s = sListRaw.status==="fulfilled" ? sListRaw.value[0] : null;
     if(c) verCache.cultiva = c.tag_name;
     if(b) verCache.blip = b.tag_name;
-    verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.0.0";
+    verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.1.0";
     verCache.flint = "v0.6";
     verCache.glyph = "2.1-O";
     verCache.mnemo = "1.2-O";
     renderCards();
     renderGlyphSlides();
 
-    const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"1.0.0";
+    const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"1.1.0";
     const fv = verCache.flint||"v0.6";
     const rel = r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
@@ -1930,7 +1962,7 @@ async function loadReleases(){
     relGrid.innerHTML = [
       { product:"Cultiva", ver:cv, name:(c?.name||cv)+(c?` · ${fmtDate(c.published_at)}`:""), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"BLIP", ver:bv, name:(b?.name||bv)+(b?` · ${fmtDate(b.published_at)}`:""), badge:t("status.live"), badgeCls:"rb-live" },
-      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · 1.0.0 Vivo"), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · Legato"), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Flint", ver:fv, name:t("flint.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" },
       { product:"Glyph2.1-O", ver:"2.1-O", name:t("glyph.releaseEmpty"), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Mnemo 1.2-O", ver:"1.2-O", name:t("mnemo.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" }
@@ -2075,7 +2107,7 @@ async function renderStore(slug){
   const c = p[locale];
 
   document.getElementById("storeHead").className = "store-head " + p.bannerCls;
-  fillIconSlot(document.getElementById("storeIco"), p.icon, p.icon);
+  fillIconSlot(document.getElementById("storeIco"), p);
   document.getElementById("storeTitle").textContent = c.name;
   document.getElementById("storeTagline").textContent = c.tagline;
   document.getElementById("storePlat").textContent = c.plat;
@@ -2109,14 +2141,14 @@ async function renderStore(slug){
   if(slug==="glyph" || slug==="mnemo"){
     metaEl.classList.add("store-meta--glyph");
     metaEl.innerHTML = mi(t("meta.category"), c.category)
-      + mi(t("meta.dev"), "Floke")
+      + mi(t("meta.dev"), "Floke Studio")
       + mi(t("meta.lang"), "EN / RU")
       + mi(t("meta.platform"), "Windows")
       + mi(t("meta.release"), slug==="mnemo" ? t("mnemo.version") : "");
   } else {
     metaEl.classList.remove("store-meta--glyph");
     metaEl.innerHTML = mi(t("meta.category"), c.category)
-      + mi(t("meta.dev"), "Floke")
+      + mi(t("meta.dev"), "Floke Studio")
       + mi(t("meta.lang"), "EN / RU")
       + mi(t("meta.platform"), "Windows")
       + mi(t("meta.ver"), "…");
