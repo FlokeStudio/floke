@@ -8,7 +8,13 @@ GitHub Pages serves from **`docs/`**. Media paths in `docs/index.html` are relat
 docs/
 ├── index.html
 └── assets/
-    ├── floke-icons.js      # inline SVG icons for Cultiva, BLIP, Senza
+    ├── icons/
+    │   ├── cultiva.svg   ← add your icon files here
+    │   ├── blip.svg
+    │   ├── senza.svg
+    │   ├── flint.svg
+    │   ├── glyph.svg
+    │   └── mnemo.svg
     ├── media/
     │   ├── cultiva/preview.mp4
     │   ├── blip/preview.mp4
@@ -19,7 +25,7 @@ docs/
         └── senza/01.png … 10.png     (shipped)
 ```
 
-Product card icons use **`floke-icons.js`** (stroke SVG, no emoji). Screenshots use **`.png` for Senza** and **`.jpg` for Cultiva/BLIP** when you add them.
+Product card icons load from **`assets/icons/<product>.svg`** (paths shown on empty slots until files exist).
 
 ## Sync from apps
 

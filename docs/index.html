@@ -166,6 +166,7 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
   grid-row:1/span 4;align-self:start;
 }
 .pcard-ico img{width:100%;height:100%;object-fit:contain;padding:8px}
+.pcard-ico.is-missing,.store-icon.is-missing{background:var(--bg2)}
 .pcard-name{font-size:17px;font-weight:700;letter-spacing:.01em;margin-bottom:6px;padding-right:32px}
 .pcard-pitch{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px}
 .pcard-row{display:flex;gap:28px;flex-wrap:wrap}
@@ -464,11 +465,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   flex-shrink:0;
 }
 .store-icon img{width:100%;height:100%;object-fit:contain;padding:12px}
-.floke-icon-host{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--accent2)}
-.floke-icon-host svg{width:62%;height:62%}
-.pcard-ico .floke-icon-host svg{width:56%;height:56%}
-.project-icon-symbol{font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;opacity:.88;color:var(--accent)}
-.pcard-ico .project-icon-symbol{font-size:20px}
+.store-icon.is-missing{background:var(--bg2)}
 .store-title{font-size:clamp(26px,4.5vw,38px);font-weight:700;line-height:1.08;letter-spacing:-.02em;margin-bottom:6px}
 .store-tagline{font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
 .store-plat{font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
@@ -878,7 +875,6 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 </div>
 </footer>
 
-<script src="assets/floke-icons.js"></script>
 <script>
 const STR = {
   en: {
@@ -1072,7 +1068,7 @@ function mediaShots(folder, ext = "png", count = 10){
 
 const PROJECTS = {
   cultiva: {
-    iconKey: "cultiva",
+    icon: "assets/icons/cultiva.svg",
     bannerCls: "store-head-cultiva",
     repo: "FlokeStudio/Cultiva",
     getUrl: "https://github.com/FlokeStudio/Cultiva/releases",
@@ -1102,7 +1098,7 @@ const PROJECTS = {
     }
   },
   blip: {
-    iconKey: "blip",
+    icon: "assets/icons/blip.svg",
     bannerCls: "store-head-blip",
     repo: "FlokeStudio/BLIP",
     getUrl: "https://github.com/FlokeStudio/BLIP/releases",
@@ -1132,7 +1128,7 @@ const PROJECTS = {
     }
   },
   senza: {
-    iconKey: "senza",
+    icon: "assets/icons/senza.svg",
     bannerCls: "store-head-senza",
     repo: "FlokeStudio/Senza",
     getUrl: "https://github.com/FlokeStudio/Senza/releases/latest",
@@ -1162,7 +1158,7 @@ const PROJECTS = {
     }
   },
   flint: {
-    iconSymbol: "◆",
+    icon: "assets/icons/flint.svg",
     bannerCls: "store-head-flint",
     repo: "FlokeStudio/Flint",
     getUrl: "https://github.com/FlokeStudio/Flint",
@@ -1221,7 +1217,7 @@ const PROJECTS = {
     }
   },
   glyph: {
-    iconSymbol: "◈",
+    icon: "assets/icons/glyph.svg",
     bannerCls: "store-head-glyph",
     repo: null,
     getUrl: SENZA_RELEASE_URL,
@@ -1254,7 +1250,7 @@ const PROJECTS = {
     }
   },
   mnemo: {
-    iconSymbol: "▣",
+    icon: "assets/icons/mnemo.svg",
     bannerCls: "store-head-mnemo",
     repo: "FlokeStudio/Flint",
     getUrl: "https://github.com/FlokeStudio/Flint",
@@ -1336,39 +1332,31 @@ function markMissing(el){
   if(slot) slot.classList.add("is-missing");
 }
 
-function projectIconHint(p){
-  return p.iconKey || p.iconSymbol || p.icon || "";
+function projectIconPath(p){
+  return p.icon || "";
 }
 
 function projectIconInner(p, size){
-  const hint = projectIconHint(p);
-  if(p.iconKey && typeof FLOKE_ICONS !== "undefined" && FLOKE_ICONS[p.iconKey]){
-    return `<div class="floke-icon-host" title="${esc(hint)}">${FLOKE_ICONS[p.iconKey]}</div>`;
-  }
-  if(p.iconSymbol){
-    return `<span class="project-icon-symbol" aria-hidden="true">${p.iconSymbol}</span>`;
-  }
-  if(p.icon){
-    const px = size || 56;
-    return `<img src="${esc(p.icon)}" alt="" width="${px}" height="${px}" loading="lazy" onerror="markMissing(this)">`;
-  }
-  return `<span class="project-icon-symbol" aria-hidden="true">◇</span>`;
+  const src = projectIconPath(p);
+  if(!src) return "";
+  const px = size || 56;
+  return `<img src="${esc(src)}" alt="" width="${px}" height="${px}" loading="lazy" onerror="markMissing(this)" onload="this.closest('.media-slot')?.classList.remove('is-missing')">`;
 }
 
 function iconSlotHtml(p){
-  const hint = projectIconHint(p);
-  return `<div class="media-slot pcard-ico">
+  const path = projectIconPath(p);
+  return `<div class="media-slot pcard-ico is-missing">
     ${projectIconInner(p, 56)}
-    <span class="media-slot-label">${t("ph.icon")}<small>${esc(hint)}</small></span>
+    <span class="media-slot-label">${t("ph.icon")}<small>${esc(path)}</small></span>
   </div>`;
 }
 
 function fillIconSlot(container, p){
-  const hint = projectIconHint(p);
-  container.className = "store-icon media-slot";
+  const path = projectIconPath(p);
+  container.className = "store-icon media-slot is-missing";
   container.innerHTML = `
     ${projectIconInner(p, 88)}
-    <span class="media-slot-label">${t("ph.icon")}<small>${esc(hint)}</small></span>`;
+    <span class="media-slot-label">${t("ph.icon")}<small>${esc(path)}</small></span>`;
 }
 
 /* Lightweight Markdown → HTML (GitHub release notes) */
