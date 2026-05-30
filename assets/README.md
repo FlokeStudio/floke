@@ -18,11 +18,13 @@ docs/
     ├── media/
     │   ├── cultiva/preview.mp4
     │   ├── blip/preview.mp4
-    │   └── senza/preview.mp4
+    │   ├── senza/preview.mp4
+    │   └── glyph/preview.mp4
     └── screenshots/
         ├── cultiva/01.jpg … 10.jpg   (optional — add captures)
         ├── blip/01.jpg … 10.jpg      (optional)
-        └── senza/01.png … 10.png     (shipped)
+        ├── senza/01.png … 10.png     (shipped)
+        └── glyph/01.png … 10.png     (Glyph UI — Flow, Vault, Settings)
 ```
 
 Product card icons load from **`assets/icons/<product>.svg`** (paths shown on empty slots until files exist).
@@ -32,6 +34,7 @@ Product card icons load from **`assets/icons/<product>.svg`** (paths shown on em
 | Product | Source in dev repo | Target |
 |---------|-------------------|--------|
 | Senza screenshots | `Senza Dev` captures | `docs/assets/screenshots/senza/` |
+| Glyph screenshots | Glyph UI in Senza (Flow, Vault, Settings) | `docs/assets/screenshots/glyph/` |
 | Cultiva | `Cultiva Dev` | `docs/assets/screenshots/cultiva/` |
 | BLIP | `BLIP Dev` | `docs/assets/screenshots/blip/` |
 

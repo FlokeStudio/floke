@@ -1,0 +1,5 @@
+Add Glyph 2.2-O screenshots here:
+  01.png … 10.png
+
+Capture Flow (GLYPH 2.2-O badge), Vault, Settings — not Senza-only UI.
+Paths used by docs/index.html: assets/screenshots/glyph/NN.png

@@ -724,7 +724,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
             <button type="button" class="glyph-light glyph-light--min" id="glyphLightMin" aria-label="Minimize"></button>
             <button type="button" class="glyph-light glyph-light--power" id="glyphLightPower" aria-label="Power"></button>
           </div>
-          <span class="glyph-term-title">glyph2.1-o — senza://metadata</span>
+          <span class="glyph-term-title">glyph2.2-o — senza://metadata</span>
           <span class="glyph-term-status" id="glyphTermStatus" data-k="glyph.term.off">off</span>
         </div>
         <div class="glyph-term-body" id="glyphTermBody">
@@ -752,7 +752,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 
     <div class="glyph-cta-bar rv">
       <button type="button" class="btn btn-solid" id="glyphMainCta" data-k="glyph.cta">Experience Glyph</button>
-      <p class="glyph-cta-note" data-k="glyph.ctaNote">Available now in Senza 1.0.0 Vivo — our music player.</p>
+      <p class="glyph-cta-note" data-k="glyph.ctaNote">Available now in Senza 1.1.0 Legato — Flow, Vault, and Settings show Glyph2.2-O.</p>
     </div>
   </div>
 </section>
@@ -858,7 +858,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   <div class="floke-toast">
     <div class="floke-toast-icon" aria-hidden="true">◇</div>
     <div class="floke-toast-body">
-      <div class="floke-toast-title" id="flokeToastTitle">Glyph2.1-O</div>
+      <div class="floke-toast-title" id="flokeToastTitle">Glyph2.2-O</div>
       <p class="floke-toast-msg" id="flokeToastMsg"></p>
       <div class="floke-toast-actions" id="flokeToastActions"></div>
     </div>
@@ -912,16 +912,17 @@ const STR = {
     "glyph.term.off":"off","glyph.term.on":"on","glyph.term.run":"running…","glyph.term.min":"minimized","glyph.term.hint":"● green = power · scroll to preview · red closes panel",
     "glyph.term.l1":"<span class=\"cmd\">&gt; ingest</span> 01_Artist_-_Song_[Official_Video_4K].mp3",
     "glyph.term.l2":"<span class=\"cmd\">&gt; parse</span> filename → tokens",
-    "glyph.term.l3":"<span class=\"cmd\">&gt; knn</span> neighbors: 7 · album context",
-    "glyph.term.l4":"<span class=\"ok\">&gt; apply</span> tags + confidence 87%",
-    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118",
+    "glyph.term.l3":"<span class=\"cmd\">&gt; genre</span> BPM 118 · mood · source: librosa",
+    "glyph.term.l4":"<span class=\"cmd\">&gt; knn</span> neighbors: 7 · album context",
+    "glyph.term.l5":"<span class=\"ok\">&gt; apply</span> tags + confidence 87%",
+    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118 · librosa",
     "glyph.statement.h":"Intelligence that stays on your machine.",
     "glyph.statement.p":"No cloud training on your library. No upload. Glyph ships inside Floke apps today — and will power more products across the studio tomorrow.",
     "glyph.chip1":"On-device","glyph.chip2":"Diff before apply","glyph.chip3":"Learns from edits","glyph.chip4":"Batch at scale",
-    "glyph.cta":"Try Glyph","glyph.ctaNote":"Available now in Senza 1.0.0 Vivo — our music player.",
+    "glyph.cta":"Try Glyph","glyph.ctaNote":"Available now in Senza 1.1.0 Legato — Flow, Vault, and Settings show Glyph2.2-O.",
     "glyph.spec.sub":"Six modules. One on-device pipeline — from messy filenames to tags you trust.",
     "glyph.spec.modelLabel":"model",
-    "glyph.spec.foot":"Pipeline order: <strong>rules → knowledge → ML → KNN → optional online → Ollama</strong> · Glyph2.1-O ships in Senza today, more Floke apps next.",
+    "glyph.spec.foot":"Pipeline order: <strong>rules → knowledge → ML → KNN → optional online → Ollama</strong> · Glyph2.2-O ships in Senza today, more Floke apps next.",
     "glyph.pipe1":"Parse","glyph.pipe2":"Context","glyph.pipe3":"Genre","glyph.pipe4":"Learn","glyph.pipe5":"Diff","glyph.pipe6":"AI",
     "glyph.cap1.code":"PARSE","glyph.cap1.t":"Reads the noise. Writes the signal.","glyph.cap1.p":"Strips junk from filenames — video tags, bitrate labels, type beats — and surfaces clean title, artist, album.",
     "glyph.cap1.x":"Bracket spam, “Official Video”, leaked tracklists, folder names like Artist - 2024 - Album — Glyph tokenizes the mess before any model runs. You get readable fields, not guesswork.",
@@ -929,9 +930,9 @@ const STR = {
     "glyph.cap2.code":"CONTEXT","glyph.cap2.t":"Your library is context.","glyph.cap2.p":"K-nearest neighbors across albums and artists. Glyph infers what’s missing from what you already own.",
     "glyph.cap2.x":"Track 4 has no album tag? Seven neighbors on the same disc already told Glyph the answer. Context beats cold metadata — and it never phones home.",
     "glyph.cap2.tag":"KNN · offline",
-    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Genre & mood in milliseconds.","glyph.cap3.p":"Local heuristics and optional ONNX score genre, energy, and mood without the cloud.",
-    "glyph.cap3.x":"Typical pass completes in under 2 ms per file on a modern PC. Optional ONNX when you want deeper signal — still entirely on your machine.",
-    "glyph.cap3.tag":"~2 ms · ONNX opt.",
+    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Genre from BPM, mood, and source.","glyph.cap3.p":"ML heuristics score genre and mood using BPM analysis — librosa when Python is available, music-tempo as the on-device fallback.",
+    "glyph.cap3.x":"BPM lands at import and feeds genre heuristics; track.glyph records the source (librosa or music-tempo). Optional ONNX still available — everything stays on your machine.",
+    "glyph.cap3.tag":"BPM · librosa / music-tempo",
     "glyph.cap4.code":"LEARN","glyph.cap4.t":"It remembers how you edit.","glyph.cap4.p":"Every accept, reject, or manual fix becomes a rule. Next time, Glyph applies your taste.",
     "glyph.cap4.x":"SQLite event log + JSONL export for fine-tune. Your library trains Glyph locally — not a datacenter. The more you curate, the less you repeat yourself.",
     "glyph.cap4.tag":"rules · event log",
@@ -941,9 +942,9 @@ const STR = {
     "glyph.cap6.code":"OLLAMA","glyph.cap6.t":"Optional local AI.","glyph.cap6.p":"Ollama on demand for hard cases — still on your machine, still your data.",
     "glyph.cap6.x":"When heuristics and neighbors aren’t enough, summon a local agent. MusicBrainz and AcoustID are optional enrichments — cached on disk, never required to play.",
     "glyph.cap6.tag":"Ollama · MB opt.",
-    "glyph.name":"Glyph2.1-O","glyph.tagline":"Metadata Intelligence for your files",
-    "glyph.plat":"Version 2.1-O","glyph.pitch":"The Floke metadata model — private, precise, and built to integrate across our apps. Try it first in Senza.",
-    "glyph.category":"Metadata Model","glyph.version":"2.1-O",
+    "glyph.name":"Glyph2.2-O","glyph.tagline":"Metadata Intelligence for your files",
+    "glyph.plat":"Version 2.2-O","glyph.pitch":"The Floke metadata model — private, precise, and built to integrate across our apps. Version badge in Flow, Vault, and Settings. Try it first in Senza.",
+    "glyph.category":"Metadata Model","glyph.version":"2.2-O",
     "mnemo.category":"Local AI Engine","mnemo.version":"1.2-O",
     "flint.get":"Coming Q3 2026","flint.toast.title":"Flint is almost ready.",
     "flint.toast.msg":"Local agent modes — General, Writer, and Code. Propose file changes and fetches; you approve every step. Document memory, streaming replies, zero cloud. One installer on your PC, Q3 2026. You'll want this the day it drops.",
@@ -954,7 +955,7 @@ const STR = {
     "mnemo.releaseNote":"Public release · Q3 2026",
     "flint.releaseNote":"Public release · Q3 2026",
     "glyph.card.why":"Why Glyph","glyph.card.can":"Capabilities",
-    "glyph.toast.title":"Try Glyph in Senza","glyph.toast.msg":"Glyph2.1-O ships inside Senza 1.0.0 Vivo today. Download Senza to experience metadata intelligence on your music library.",
+    "glyph.toast.title":"Try Glyph in Senza","glyph.toast.msg":"Glyph2.2-O ships inside Senza 1.1.0 Legato today — see it in Flow, Vault, and Settings. Download Senza to experience metadata intelligence on your music library.",
     "glyph.toast.open":"Download Senza","glyph.toast.dismiss":"Dismiss",
     "glyph.get":"Get","glyph.releaseEmpty":"—",
     "meta.release":"Release",
@@ -995,16 +996,17 @@ const STR = {
     "glyph.term.off":"выкл","glyph.term.on":"вкл","glyph.term.run":"анализ…","glyph.term.min":"свернуто","glyph.term.hint":"● зелёная — питание · прокрутите для превью · красная — закрыть",
     "glyph.term.l1":"<span class=\"cmd\">&gt; ingest</span> 01_Artist_-_Song_[Official_Video_4K].mp3",
     "glyph.term.l2":"<span class=\"cmd\">&gt; parse</span> имя файла → токены",
-    "glyph.term.l3":"<span class=\"cmd\">&gt; knn</span> соседей: 7 · контекст альбома",
-    "glyph.term.l4":"<span class=\"ok\">&gt; apply</span> теги + уверенность 87%",
-    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118",
+    "glyph.term.l3":"<span class=\"cmd\">&gt; genre</span> BPM 118 · mood · source: librosa",
+    "glyph.term.l4":"<span class=\"cmd\">&gt; knn</span> соседей: 7 · контекст альбома",
+    "glyph.term.l5":"<span class=\"ok\">&gt; apply</span> теги + уверенность 87%",
+    "glyph.demo.val.title":"Song Title","glyph.demo.val.artist":"Artist Name","glyph.demo.val.album":"Album Name · 2024","glyph.demo.val.genre":"Indie · BPM 118 · librosa",
     "glyph.statement.h":"Интеллект, который остаётся на вашем устройстве.",
     "glyph.statement.p":"Без обучения в облаке на вашей библиотеке. Без загрузок. Glyph уже в приложениях Floke — и будет в других продуктах студии.",
     "glyph.chip1":"На устройстве","glyph.chip2":"Diff до применения","glyph.chip3":"Учится на правках","glyph.chip4":"Пакетная обработка",
-    "glyph.cta":"Попробовать Glyph","glyph.ctaNote":"Уже в Senza 1.0.0 Vivo — музыкальный плеер Floke.",
+    "glyph.cta":"Попробовать Glyph","glyph.ctaNote":"Уже в Senza 1.1.0 Legato — Flow, Vault и Settings показывают Glyph2.2-O.",
     "glyph.spec.sub":"Шесть модулей. Один конвейер на устройстве — от мусорного имени файла до тегов, которым можно доверять.",
     "glyph.spec.modelLabel":"модель",
-    "glyph.spec.foot":"Порядок конвейера: <strong>rules → knowledge → ML → KNN → опц. онлайн → Ollama</strong> · Glyph2.1-O уже в Senza, дальше — другие продукты Floke.",
+    "glyph.spec.foot":"Порядок конвейера: <strong>rules → knowledge → ML → KNN → опц. онлайн → Ollama</strong> · Glyph2.2-O уже в Senza, дальше — другие продукты Floke.",
     "glyph.pipe1":"Разбор","glyph.pipe2":"Контекст","glyph.pipe3":"Жанр","glyph.pipe4":"Обучение","glyph.pipe5":"Diff","glyph.pipe6":"AI",
     "glyph.cap1.code":"PARSE","glyph.cap1.t":"Читает шум. Пишет смысл.","glyph.cap1.p":"Убирает мусор из имён — video tags, битрейт, type beat — и выдаёт чистые title, artist, album.",
     "glyph.cap1.x":"Скобки, «Official Video», утёкшие треклисты, папки вида Artist - 2024 - Album — Glyph разбирает хаос до запуска моделей. На выходе поля, а не догадки.",
@@ -1012,9 +1014,9 @@ const STR = {
     "glyph.cap2.code":"CONTEXT","glyph.cap2.t":"Библиотека — контекст.","glyph.cap2.p":"KNN по альбомам и артистам. Glyph догадывается, чего не хватает, из того, что у вас уже есть.",
     "glyph.cap2.x":"У трека 4 нет альбома? Семь соседей на том же диске уже подсказали ответ. Контекст важнее холодных тегов — и без запросов в облако.",
     "glyph.cap2.tag":"KNN · offline",
-    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Жанр и mood за миллисекунды.","glyph.cap3.p":"Локальные эвристики и опциональный ONNX оценивают жанр, энергию и настроение без облака.",
-    "glyph.cap3.x":"Типичный проход — меньше 2 мс на файл на современном ПК. ONNX по желанию для более глубокого сигнала — всё ещё только на вашей машине.",
-    "glyph.cap3.tag":"~2 мс · ONNX опц.",
+    "glyph.cap3.code":"GENRE","glyph.cap3.t":"Жанр из BPM, mood и источника.","glyph.cap3.p":"ML-эвристики оценивают жанр и mood по BPM — librosa при наличии Python, music-tempo как fallback на устройстве.",
+    "glyph.cap3.x":"BPM считается при импорте и питает жанровые эвристики; track.glyph хранит источник (librosa или music-tempo). ONNX по желанию — всё только на вашей машине.",
+    "glyph.cap3.tag":"BPM · librosa / music-tempo",
     "glyph.cap4.code":"LEARN","glyph.cap4.t":"Помнит ваши правки.","glyph.cap4.p":"Каждое принятие, отклонение или ручная правка — правило. В следующий раз Glyph применит ваш вкус.",
     "glyph.cap4.x":"SQLite-лог событий + экспорт JSONL для дообучения. Библиотека учит Glyph локально — не дата-центр. Чем больше курируете, тем меньше повторяете.",
     "glyph.cap4.tag":"rules · event log",
@@ -1024,9 +1026,9 @@ const STR = {
     "glyph.cap6.code":"OLLAMA","glyph.cap6.t":"Локальный AI по желанию.","glyph.cap6.p":"Ollama для сложных случаев — на вашей машине, ваши данные.",
     "glyph.cap6.x":"Когда эвристик и соседей мало — локальный агент. MusicBrainz и AcoustID опциональны, кэшируются на диске, для воспроизведения не нужны.",
     "glyph.cap6.tag":"Ollama · MB опц.",
-    "glyph.name":"Glyph2.1-O","glyph.tagline":"Интеллект метаданных",
-    "glyph.plat":"Версия 2.1-O","glyph.pitch":"Модель метаданных Floke — приватная, точная, для интеграции во все продукты. Первый опыт — в Senza.",
-    "glyph.category":"Модель метаданных","glyph.version":"2.1-O",
+    "glyph.name":"Glyph2.2-O","glyph.tagline":"Интеллект метаданных",
+    "glyph.plat":"Версия 2.2-O","glyph.pitch":"Модель метаданных Floke — приватная, точная, для интеграции во все продукты. Бейдж версии в Flow, Vault и Settings. Первый опыт — в Senza.",
+    "glyph.category":"Модель метаданных","glyph.version":"2.2-O",
     "mnemo.category":"Локальный AI-движок","mnemo.version":"1.2-O",
     "flint.get":"Q3 2026","flint.toast.title":"Flint уже на финишной прямой.",
     "flint.toast.msg":"Локальные режимы агента — General, Writer и Code. Предложения по файлам и URL; каждый шаг — ваше Y/N. Память документов, стриминг, без облака. Один установщик на ваш ПК, Q3 2026. В день релиза захотите поставить сразу.",
@@ -1037,7 +1039,7 @@ const STR = {
     "mnemo.releaseNote":"Публичный релиз · Q3 2026",
     "flint.releaseNote":"Публичный релиз · Q3 2026",
     "glyph.card.why":"Зачем Glyph","glyph.card.can":"Возможности",
-    "glyph.toast.title":"Попробуйте Glyph в Senza","glyph.toast.msg":"Glyph2.1-O уже в Senza 1.0.0 Vivo. Скачайте Senza, чтобы увидеть интеллект метаданных на своей музыкальной библиотеке.",
+    "glyph.toast.title":"Попробуйте Glyph в Senza","glyph.toast.msg":"Glyph2.2-O уже в Senza 1.1.0 Legato — Flow, Vault и Settings. Скачайте Senza, чтобы увидеть интеллект метаданных на своей музыкальной библиотеке.",
     "glyph.toast.open":"Скачать Senza","glyph.toast.dismiss":"Закрыть",
     "glyph.get":"Получить","glyph.releaseEmpty":"—",
     "meta.release":"Релиз",
@@ -1052,7 +1054,7 @@ const GLYPH_CAPS = [
   { idx: "05", icon: "▣", code: "glyph.cap5.code", t: "glyph.cap5.t", p: "glyph.cap5.p", x: "glyph.cap5.x", tag: "glyph.cap5.tag", wide: true },
   { idx: "06", icon: "◇", code: "glyph.cap6.code", t: "glyph.cap6.t", p: "glyph.cap6.p", x: "glyph.cap6.x", tag: "glyph.cap6.tag" },
 ];
-const GLYPH_TERM_LINES = ["glyph.term.l1","glyph.term.l2","glyph.term.l3","glyph.term.l4"];
+const GLYPH_TERM_LINES = ["glyph.term.l1","glyph.term.l2","glyph.term.l3","glyph.term.l4","glyph.term.l5"];
 const GLYPH_DEMO_TAGS = [
   ["glyph.demo.titleL","glyph.demo.val.title"],
   ["glyph.demo.artistL","glyph.demo.val.artist"],
@@ -1139,21 +1141,21 @@ const PROJECTS = {
     en: {
       name:"Senza", tagline:"Your library. Your files. Nothing else.", plat:"Windows · 1.1.0 Legato · Free",
       category:"Music", compat:"Windows 10 / 11 (x64) · iOS planned",
-      pitch:"Your music library with Glyph2.1-O built in — import, understand tags, Flow, listen offline. Legato adds smooth crossfade and smarter playlists.",
-      why:["Files stay yours — local Artist/Album structure","Glyph2.1-O — KNN, diff UI, batch, optional MusicBrainz","Private — journal and history never leave your PC"],
+      pitch:"Your music library with Glyph2.2-O built in — import, understand tags, Flow, listen offline. Legato adds smooth crossfade and smarter playlists.",
+      why:["Files stay yours — local Artist/Album structure","Glyph2.2-O — KNN, diff UI, batch, optional MusicBrainz","Private — journal and history never leave your PC"],
       can:["Import mp3, flac, wav, ogg, m4a, aac","Glyph tag editor, Flow home, Music Vault","Crossfade playback · EN/RU"],
-      about:"Senza 1.1.0 Legato is an offline-first music library and player with Glyph2.1-O metadata intelligence built in. Import into Artist/Album folders, fix tags with confidence scores and diffs, scan duplicates, build a Flow wave, and listen without streaming or an account.\n\nDownload Windows installer or portable build on GitHub Releases.",
-      features:["Glyph2.1-O pipeline — rules, KNN, ML, optional MB / AcoustID / Ollama","Legato crossfade & Flow discovery modes","Music Vault — score, duplicates, batch fill library","Journal — listening time, top tracks, Time Capsule","Toggle Glyph off for a plain tag editor anytime"],
+      about:"Senza 1.1.0 Legato is an offline-first music library and player with Glyph2.2-O metadata intelligence built in. Import into Artist/Album folders, fix tags with confidence scores and diffs, scan duplicates, build a Flow wave, and listen without streaming or an account.\n\nDownload Windows installer or portable build on GitHub Releases.",
+      features:["Glyph2.2-O pipeline — rules, KNN, ML, optional MB / AcoustID / Ollama","Legato crossfade & Flow discovery modes","Music Vault — score, duplicates, batch fill library","Journal — listening time, top tracks, Time Capsule","Toggle Glyph off for a plain tag editor anytime"],
       privacy:"Senza keeps your library, Glyph logs, and play history on your PC. No sign-in. No upload. Network not required to play."
     },
     ru: {
       name:"Senza", tagline:"Твоя библиотека. Твои файлы. Ничего лишнего.", plat:"Windows · 1.1.0 Legato · Бесплатно",
       category:"Музыка", compat:"Windows 10 / 11 (x64) · iOS в планах",
-      pitch:"Музыкальная библиотека с Glyph2.1-O — импорт, умные теги, Поток, offline. Legato — плавный crossfade и умнее плейлисты.",
-      why:["Файлы ваши — структура Артист/Альбом","Glyph2.1-O — KNN, diff, batch, опционально MusicBrainz","Приватно — журнал и история только на ПК"],
+      pitch:"Музыкальная библиотека с Glyph2.2-O — импорт, умные теги, Поток, offline. Legato — плавный crossfade и умнее плейлисты.",
+      why:["Файлы ваши — структура Артист/Альбом","Glyph2.2-O — KNN, diff, batch, опционально MusicBrainz","Приватно — журнал и история только на ПК"],
       can:["Импорт mp3, flac, wav, ogg, m4a, aac","Редактор с Glyph, Поток, Music Vault","Crossfade · EN/RU"],
-      about:"Senza 1.1.0 Legato — offline-first плеер с встроенным Glyph2.1-O. Импорт, теги с баллом и diff, дубликаты, волна Потока — без стриминга и аккаунта.\n\nУстановщик и portable — на GitHub Releases.",
-      features:["Glyph2.1-O — rules, KNN, ML, опц. MB / AcoustID / Ollama","Legato — crossfade и режимы Потока","Music Vault — оценка, дубликаты, заливка библиотеки","Журнал — время прослушивания, топы, Time Capsule","Glyph можно выключить — останется обычный редактор"],
+      about:"Senza 1.1.0 Legato — offline-first плеер с встроенным Glyph2.2-O. Импорт, теги с баллом и diff, дубликаты, волна Потока — без стриминга и аккаунта.\n\nУстановщик и portable — на GitHub Releases.",
+      features:["Glyph2.2-O — rules, KNN, ML, опц. MB / AcoustID / Ollama","Legato — crossfade и режимы Потока","Music Vault — оценка, дубликаты, заливка библиотеки","Журнал — время прослушивания, топы, Time Capsule","Glyph можно выключить — останется обычный редактор"],
       privacy:"Библиотека, логи Glyph и история — только на вашем ПК. Без входа. Для воспроизведения интернет не нужен."
     }
   },
@@ -1222,30 +1224,30 @@ const PROJECTS = {
     repo: null,
     getUrl: SENZA_RELEASE_URL,
     integrated: true,
-    version: "2.1-O",
+    version: "2.2-O",
     media: {
-      video: "assets/media/senza/preview.mp4",
-      shots: ["assets/screenshots/senza/01.png"],
-      poster: "assets/screenshots/senza/01.png"
+      video: "assets/media/glyph/preview.mp4",
+      shots: mediaShots("glyph", "png"),
+      poster: "assets/screenshots/glyph/01.png"
     },
     en: {
-      name:"Glyph2.1-O", tagline:"Metadata Intelligence", plat:"Version 2.1-O",
+      name:"Glyph2.2-O", tagline:"Metadata Intelligence", plat:"Version 2.2-O",
       category:"Metadata Model", compat:"Windows · first in Senza",
-      pitch:"The Floke metadata model — private, precise, and built to integrate across our apps. Experience it today in Senza.",
+      pitch:"The Floke metadata model — private, precise, and built to integrate across our apps. Version badge in Flow, Vault, and Settings. Experience it today in Senza.",
       why:["On-device — your files never leave your machine","Library-aware — context from albums, artists, neighbors","Self-improving — learns from every edit you make"],
       can:["Clean tags from messy filenames & folders","Confidence scores + diff before you apply","Batch entire libraries with per-track preview"],
-      about:"Glyph2.1-O is Metadata Intelligence by Floke — a model that understands files the way you would, if you had infinite patience.\n\nIt decodes filenames, reads folder structure, consults your library for context, scores every suggestion, and learns from what you accept or reject. Optional MusicBrainz, AcoustID, and local Ollama — always cached, always optional.\n\nToday, Glyph lives inside Senza 1.1.0 Legato. Tomorrow, it will integrate into more Floke products — one intelligence layer across the studio.",
-      features:["Metadata Model category · version 2.1-O","Rules → knowledge → ML → KNN pipeline","Diff UI, batch apply, duplicate intelligence","SQLite event log for learning & export","Try now: included in Senza — download below"],
+      about:"Glyph2.2-O is Metadata Intelligence by Floke — a model that understands files the way you would, if you had infinite patience.\n\nIt decodes filenames, reads folder structure, consults your library for context, scores every suggestion, and learns from what you accept or reject. Optional MusicBrainz, AcoustID, and local Ollama — always cached, always optional.\n\nToday, Glyph lives inside Senza 1.1.0 Legato. Tomorrow, it will integrate into more Floke products — one intelligence layer across the studio.",
+      features:["Metadata Model · version 2.2-O · badge in Flow, Vault, Settings","BPM-aware genre heuristics — librosa / music-tempo","Rules → knowledge → ML → KNN pipeline","Diff UI, batch apply, duplicate intelligence","Try now: included in Senza — download below"],
       privacy:"Glyph processes everything locally. No training on your data in the cloud. Online lookups are optional and cached on disk."
     },
     ru: {
-      name:"Glyph2.1-O", tagline:"Интеллект метаданных", plat:"Версия 2.1-O",
+      name:"Glyph2.2-O", tagline:"Интеллект метаданных", plat:"Версия 2.2-O",
       category:"Модель метаданных", compat:"Windows · сначала в Senza",
-      pitch:"Модель метаданных Floke — приватная, точная, для всех продуктов студии. Первый опыт — в Senza.",
+      pitch:"Модель метаданных Floke — приватная, точная, для всех продуктов студии. Бейдж версии в Flow, Vault и Settings. Первый опыт — в Senza.",
       why:["On-device — файлы не покидают вашу машину","Контекст библиотеки — альбомы, артисты, соседи","Самообучение — на каждой вашей правке"],
       can:["Чистые теги из мусорных имён и папок","Балл уверенности + diff до применения","Batch всей библиотеки с превью"],
-      about:"Glyph2.1-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.1.0 Legato. Завтра — в Flint и других продуктах Floke.",
-      features:["Категория: модель метаданных · версия 2.1-O","Конвейер rules → knowledge → ML → KNN","Diff, batch, поиск дубликатов","SQLite-лог для обучения","Попробовать: в составе Senza"],
+      about:"Glyph2.2-O — Metadata Intelligence от Floke: модель, которая понимает файлы так, как поняли бы вы — если бы у вас было бесконечное терпение.\n\nРазбирает имена, читает структуру папок, использует контекст библиотеки, оценивает каждую подсказку и учится на ваших решениях. MusicBrainz, AcoustID и локальный Ollama — опционально и с кэшем.\n\nСегодня Glyph — в Senza 1.1.0 Legato. Завтра — в Flint и других продуктах Floke.",
+      features:["Модель метаданных · версия 2.2-O · бейдж в Flow, Vault, Settings","Жанр с учётом BPM — librosa / music-tempo","Конвейер rules → knowledge → ML → KNN","Diff, batch, поиск дубликатов","Попробовать: в составе Senza"],
       privacy:"Всё обрабатывается локально. Без обучения на ваших данных в облаке. Онлайн-запросы опциональны и кэшируются."
     }
   },
@@ -1915,7 +1917,7 @@ const FALLBACK_RELS = {
   blip: { ver:"v1.1.1", name:"Beacon · mesh library & chat polish" },
   senza: { ver:"1.1.0", name: locale => locale==="ru" ? "Legato · crossfade & Flow" : "Legato · crossfade & Flow" },
   flint: { ver:"v0.6", name: locale === "ru" ? "В разработке · релиз Q3 2026" : "In development · public Q3 2026" },
-  glyph: { ver:"2.1-O", name: () => "—" },
+  glyph: { ver:"2.2-O", name: () => "—" },
   mnemo: { ver:"1.2-O", name: () => locale === "ru" ? "С Flint · Q3 2026" : "With Flint · Q3 2026" }
 };
 
@@ -1934,7 +1936,7 @@ async function loadReleases(){
     if(b) verCache.blip = b.tag_name;
     verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.1.0";
     verCache.flint = "v0.6";
-    verCache.glyph = "2.1-O";
+    verCache.glyph = "2.2-O";
     verCache.mnemo = "1.2-O";
     renderCards();
     renderGlyphSlides();
@@ -1952,7 +1954,7 @@ async function loadReleases(){
       { product:"BLIP", ver:bv, name:(b?.name||bv)+(b?` · ${fmtDate(b.published_at)}`:""), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Senza", ver:sv, name:(s?.name||sv)+(s?` · ${fmtDate(s.published_at)}`:" · Legato"), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Flint", ver:fv, name:t("flint.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" },
-      { product:"Glyph2.1-O", ver:"2.1-O", name:t("glyph.releaseEmpty"), badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Glyph2.2-O", ver:"2.2-O", name:t("glyph.releaseEmpty"), badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Mnemo 1.2-O", ver:"1.2-O", name:t("mnemo.releaseNote"), badge:t("tag.soon"), badgeCls:"rb-dev" }
     ].map(rel).join("");
     initReveal(relGrid.querySelectorAll(".rv"));
@@ -1971,7 +1973,7 @@ async function loadReleases(){
       { product:"BLIP", ver:fb.blip.ver, name:fb.blip.name, live:true },
       { product:"Senza", ver:fb.senza.ver, name:typeof fb.senza.name==="function"?fb.senza.name(locale):fb.senza.name, badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Flint", ver:fb.flint.ver, name:fb.flint.name, badge:t("tag.soon"), badgeCls:"rb-dev" },
-      { product:"Glyph2.1-O", ver:fb.glyph.ver, name:typeof fb.glyph.name==="function"?fb.glyph.name(locale):fb.glyph.name, badge:t("status.live"), badgeCls:"rb-live" },
+      { product:"Glyph2.2-O", ver:fb.glyph.ver, name:typeof fb.glyph.name==="function"?fb.glyph.name(locale):fb.glyph.name, badge:t("status.live"), badgeCls:"rb-live" },
       { product:"Mnemo 1.2-O", ver:fb.mnemo.ver, name:typeof fb.mnemo.name==="function"?fb.mnemo.name(locale):fb.mnemo.name, badge:t("tag.soon"), badgeCls:"rb-dev" }
     ].map(r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
