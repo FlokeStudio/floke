@@ -13,7 +13,7 @@ Independent software studio — offline-first desktop tools.
 | BLIP | 1.1.x · Beacon | [FlokeStudio/BLIP](https://github.com/FlokeStudio/BLIP) |
 | Senza | 1.1.0 · Legato | [FlokeStudio/Senza](https://github.com/FlokeStudio/Senza) |
 
-Pages are built from **`docs/index.html`**. See [`assets/README.md`](assets/README.md) for media paths.
+Pages are built from **`docs/index.html`**. See [`docs/assets/README.md`](docs/assets/README.md) for media paths.
 
 ## License
 
