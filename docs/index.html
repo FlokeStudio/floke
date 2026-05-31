@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#080808">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="Floke Studio News" href="feed.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Floke Studio">
 <meta property="og:title" content="Floke — Software that lives on your machine">
@@ -38,6 +39,13 @@
   --nav-bg: rgba(8,8,8,0.82);
   --radius: 14px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sub-canvas-fade: rgba(8,8,12,0.14);
+  --sub-node-alpha: 0.28;
+  --gh-bg: #0d1117;
+  --gh-border: #30363d;
+  --gh-text: #c9d1d9;
+  --gh-muted: #8b949e;
+  --gh-panel: #161b22;
 }
 [data-theme="light"] {
   --bg: #faf9f6;
@@ -53,6 +61,47 @@
   --accent-dim: rgba(143,115,64,0.12);
   --accent2: #3d6b4a;
   --nav-bg: rgba(250,249,246,0.86);
+  --sub-canvas-fade: rgba(250,249,246,0.16);
+  --sub-node-alpha: 0.22;
+  --gh-bg: #ffffff;
+  --gh-border: #d0d7de;
+  --gh-text: #24292f;
+  --gh-muted: #57606a;
+  --gh-panel: #f6f8fa;
+}
+[data-theme="paper"] {
+  --bg: #f4f0e6;
+  --bg2: #ebe6da;
+  --bg3: #e0dacb;
+  --bg4: #d5cec0;
+  --border: #c8c0b0;
+  --border2: #b8b0a0;
+  --text: #2a261c;
+  --muted: #6a6458;
+  --muted2: #8a8478;
+  --accent: #7a6230;
+  --accent-dim: rgba(122,98,48,0.14);
+  --accent2: #4a6b52;
+  --nav-bg: rgba(244,240,230,0.92);
+  --sub-canvas-fade: rgba(244,240,230,0.18);
+  --sub-node-alpha: 0.2;
+  --gh-bg: #f4f0e6;
+  --gh-border: #c8c0b0;
+  --gh-text: #2a261c;
+  --gh-muted: #6a6458;
+  --gh-panel: #ebe6da;
+}
+body.crt-mode::after{opacity:.65;mix-blend-mode:overlay}
+body.crt-mode::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px);
+  opacity:.35;
+}
+body.crt-mode .hero-blob,.body.crt-mode .hero-blob2{filter:blur(1px) saturate(1.2)}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .hero-mesh-canvas,.scroll-story-orbit,.feedback-code-canvas,.sub-page__canvas{display:none!important}
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -60,11 +109,16 @@ html{scroll-behavior:smooth}
 body{
   background:var(--bg);color:var(--text);
   font-family:'Space Mono',monospace;font-size:13px;line-height:1.7;
-  min-height:100vh;overflow-x:hidden;
+  min-height:100dvh;overflow-x:hidden;
   display:flex;flex-direction:column;
-  padding-bottom:72px;
+  padding-bottom:env(safe-area-inset-bottom,0);
   -webkit-font-smoothing:antialiased;
 }
+#mainView{flex:1 0 auto;width:100%}
+body.page-sub .sub-page.page-sub-active{
+  flex:1 0 auto;min-height:calc(100dvh - 220px);
+}
+body.page-store #storePage,body.page-graph #graphPage{flex:1 0 auto;min-height:calc(100dvh - 220px)}
 
 body::after{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.45;
@@ -162,6 +216,8 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 .cmd-item-body{flex:1;min-width:0}
 .cmd-item-title{font-size:12px;font-weight:700;color:var(--text);line-height:1.35}
 .cmd-item-sub{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmd-item-snippet{font-size:9px;color:var(--muted2);margin-top:4px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cmd-item-snippet mark{background:var(--accent-dim);color:var(--accent);padding:0 2px;border-radius:2px}
 .cmd-item-score{font-size:9px;color:var(--accent2);letter-spacing:.06em;flex-shrink:0}
 .cmd-item-key{font-size:9px;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
 .cmd-foot{
@@ -323,8 +379,8 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 
 @media(max-width:700px){
   .nav-menu-btn{display:block}
-  .release-rhythm{grid-template-columns:1fr;text-align:left}
-  .release-rhythm-count{text-align:left;margin-top:8px}
+  .release-rhythm{grid-template-columns:1fr}
+  .release-rhythm-clocks{min-width:0}
   .nav-right{gap:4px;flex-wrap:nowrap}
   .nav-btn{padding:5px 8px;font-size:9px}
   .nav-cmd-hint{display:none}
@@ -399,6 +455,11 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
   background:radial-gradient(circle,rgba(74,124,89,.12) 0%,transparent 68%);
   pointer-events:none;animation:blob 14s ease-in-out infinite alternate-reverse;
 }
+.hero-mesh-canvas{
+  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5;z-index:0;
+}
+.hero .wrap{position:relative;z-index:1}
+.store-icon,.pcard-ico{view-transition-name:var(--vt-icon, none)}
 @keyframes blob{from{transform:scale(1) translate(0,0)}to{transform:scale(1.08) translate(-16px,18px)}}
 .hero-tag{
   display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.2em;
@@ -506,9 +567,25 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 
 /* FOOTER */
 footer{
-  border-top:1px solid var(--border);padding:48px 0 36px;margin-top:auto;
-  flex-shrink:0;width:100%;background:var(--bg2);
+  border-top:1px solid var(--border);padding:48px 0 32px;margin-top:auto;
+  flex-shrink:0;width:100%;background:var(--bg2);position:relative;z-index:50;
 }
+.foot-geek{
+  grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;
+  padding:14px 16px;margin-bottom:8px;border:1px solid var(--border);border-radius:10px;
+  background:var(--bg3);font-size:10px;color:var(--muted);
+}
+.foot-geek-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent2);
+  box-shadow:0 0 8px var(--accent2);animation:footPulse 2.4s ease-in-out infinite;
+}
+@keyframes footPulse{0%,100%{opacity:.45}50%{opacity:1}}
+.foot-geek-btn{
+  font-family:inherit;font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 10px;border:1px solid var(--border2);background:var(--bg2);color:var(--muted);
+  border-radius:4px;cursor:pointer;transition:all .2s;
+}
+.foot-geek-btn:hover{border-color:var(--accent);color:var(--text)}
 .foot-grid{
   display:grid;grid-template-columns:1.4fr repeat(4,minmax(0,1fr));gap:28px 20px;
 }
@@ -1072,22 +1149,47 @@ footer{
 }
 .news-open-ext:hover{color:var(--accent)}
 
+[data-theme="light"] .sub-page__orb--1{
+  background:radial-gradient(circle,rgba(143,115,64,.2) 0%,transparent 68%);
+}
+[data-theme="light"] .sub-page__orb--2{
+  background:radial-gradient(circle,rgba(61,107,74,.14) 0%,transparent 70%);
+}
+
 /* Release rhythm + compare teaser on main */
 .release-rhythm{
   border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);
-  padding:24px 22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+  padding:28px 24px;display:grid;grid-template-columns:1fr auto;gap:24px 20px;align-items:start;
+  position:relative;overflow:hidden;
 }
-.release-rhythm-copy h3{font-size:15px;margin-bottom:6px}
-.release-rhythm-copy p{font-size:11px;color:var(--muted);line-height:1.75;max-width:52ch}
-.release-rhythm-count{
-  text-align:right;font-variant-numeric:tabular-nums;
+.release-rhythm::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,var(--accent-dim) 0%,transparent 42%,transparent 100%);
 }
-.release-rhythm-count strong{display:block;font-size:clamp(22px,4vw,32px);color:var(--accent);letter-spacing:-.02em}
-.release-rhythm-count span{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
-.release-rhythm-patch{
-  grid-column:1/-1;padding-top:14px;border-top:1px solid var(--border);
-  font-size:10px;color:var(--muted);line-height:1.7;
+.release-rhythm-copy{position:relative;z-index:1}
+.release-rhythm-copy h3{font-size:16px;margin-bottom:8px;letter-spacing:-.02em}
+.release-rhythm-copy p{font-size:11px;color:var(--muted);line-height:1.8;max-width:52ch}
+.release-rhythm-clocks{
+  display:flex;flex-direction:column;gap:10px;position:relative;z-index:1;min-width:min(100%,280px);
 }
+.rhythm-clock{
+  border:1px solid var(--border);background:var(--bg3);border-radius:10px;padding:12px 14px;
+  font-variant-numeric:tabular-nums;
+}
+.rhythm-clock--main{border-color:color-mix(in srgb,var(--accent) 45%,var(--border))}
+.rhythm-clock-label{
+  display:block;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px;
+}
+.rhythm-clock-digits{
+  font-size:clamp(11px,2.2vw,13px);font-weight:700;color:var(--accent);line-height:1.35;letter-spacing:.02em;
+}
+.rhythm-clock-digits.done{color:var(--accent2)}
+.release-rhythm-foot{
+  grid-column:1/-1;padding-top:16px;border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.release-rhythm-patch{font-size:10px;color:var(--muted);line-height:1.7;margin:0;max-width:48ch}
 .release-rhythm-patch em{font-style:normal;color:var(--accent)}
 
 /* Compare table */
@@ -1161,33 +1263,48 @@ footer{
 /* Feedback + giscus */
 .feedback-page{background:var(--bg)}
 .feedback-hero{
-  position:relative;padding:48px 0 32px;overflow:hidden;
+  position:relative;padding:48px 0 48px;overflow:hidden;flex:1;
 }
+.feedback-hero .wrap{position:relative;z-index:3}
+.feedback-code-canvas{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.72;
+}
+[data-theme="light"] .feedback-code-canvas{opacity:.45}
 .feedback-hero__grid{
-  position:absolute;inset:0;background:
+  position:absolute;inset:0;pointer-events:none;
+  background:
     linear-gradient(90deg,var(--border) 1px,transparent 1px) 0 0/48px 48px,
     linear-gradient(var(--border) 1px,transparent 1px) 0 0/48px 48px;
-  opacity:.35;mask-image:radial-gradient(ellipse at 50% 20%,#000 0%,transparent 70%);
+  opacity:.28;mask-image:radial-gradient(ellipse at 50% 20%,#000 0%,transparent 72%);
+  z-index:1;
 }
 .feedback-hero__glow{
   position:absolute;top:-20%;left:50%;transform:translateX(-50%);
-  width:min(800px,120vw);height:400px;
-  background:radial-gradient(circle,rgba(200,169,110,.15) 0%,transparent 65%);
-  pointer-events:none;
+  width:min(800px,120vw);height:400px;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(200,169,110,.12) 0%,transparent 65%);
 }
+[data-theme="light"] .feedback-hero__glow{background:radial-gradient(circle,rgba(143,115,64,.1) 0%,transparent 65%)}
 .feedback-card{
-  position:relative;border:1px solid #30363d;background:#161b22;
-  border-radius:var(--radius);padding:22px 20px;margin-bottom:20px;color:#c9d1d9;
+  position:relative;border:1px solid var(--gh-border);background:var(--gh-panel);
+  border-radius:12px;padding:22px 20px;margin-bottom:20px;color:var(--gh-text);
 }
 .feedback-card__head{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
-.feedback-gh-mark{color:#c9d1d9;flex-shrink:0;margin-top:4px}
-.feedback-card .sub-hero-pre{color:#8b949e}
-.feedback-card .sub-hero-h1{color:#f0f6fc}
+.feedback-gh-mark{color:var(--gh-text);flex-shrink:0;margin-top:4px}
+.feedback-card .sub-hero-pre{color:var(--gh-muted)}
+.feedback-card .sub-hero-h1{color:var(--gh-text)}
+.feedback-card .graph-lead{color:var(--gh-muted)!important}
 .giscus-shell{
-  border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-  background:#0d1117;padding:16px;min-height:320px;
+  position:relative;z-index:4;pointer-events:auto;
+  border:1px solid var(--gh-border);border-radius:12px;
+  background:var(--gh-bg);padding:20px 18px 24px;min-height:360px;
+  box-shadow:0 8px 32px rgba(0,0,0,.12);
 }
-.giscus-shell .giscus,.giscus-shell .giscus-frame{width:100%!important}
+.giscus-shell .giscus,.giscus-shell .giscus-frame{width:100%!important;pointer-events:auto!important}
+.giscus-shell iframe{pointer-events:auto!important;color-scheme:light dark}
+.giscus-fallback-link{
+  display:inline-flex;margin-top:14px;font-size:11px;color:#58a6ff;text-decoration:none;
+}
+.giscus-fallback-link:hover{text-decoration:underline}
 .giscus-fallback{
   padding:28px 20px;text-align:center;font-size:11px;color:var(--muted);line-height:1.8;
 }
@@ -1213,8 +1330,10 @@ footer{
 /* Sub-page animated backgrounds */
 .sub-page--rich{position:relative;overflow:hidden}
 .sub-page__canvas{
-  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+  position:fixed;inset:0;z-index:0;pointer-events:none;
 }
+[data-theme="light"] .sub-page__canvas{opacity:.42}
+[data-theme="dark"] .sub-page__canvas,:root:not([data-theme="light"]) .sub-page__canvas{opacity:.5}
 .sub-page--rich > .wrap{position:relative;z-index:1}
 .sub-prose{
   max-width:680px;font-size:12px;color:var(--muted);line-height:1.85;margin:0 0 28px;
@@ -1436,6 +1555,158 @@ footer{
 .about-mline:hover,.about-mline.hi{color:var(--text)}
 .about-solo{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:28px}
 
+/* Scroll story · compare slider · flint · shell · errors · arcade */
+.scroll-story{padding:0 0 48px}
+.scroll-story-rail{
+  position:relative;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2);
+  padding:20px 18px 24px;overflow:hidden;
+}
+.scroll-story-track{
+  display:flex;gap:0;height:3px;background:var(--border);border-radius:3px;margin-bottom:22px;overflow:hidden;
+}
+.scroll-story-fill{
+  height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .1s var(--ease);
+}
+.scroll-story-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.scroll-story-step{
+  padding:16px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);
+  transition:background .25s,box-shadow .25s,transform .25s;
+}
+.scroll-story-step.is-active{background:var(--bg3);box-shadow:inset 3px 0 0 var(--accent);transform:translateY(-2px)}
+.scroll-story-step strong{display:block;font-size:12px;margin-bottom:6px}
+.scroll-story-step span{font-size:10px;color:var(--muted);line-height:1.65}
+.scroll-story-orbit{
+  position:absolute;right:12px;top:12px;width:88px;height:88px;border-radius:50%;
+  border:1px solid var(--border2);opacity:.55;pointer-events:none;
+}
+.scroll-story-orbit i{
+  position:absolute;inset:8px;border-radius:50%;border:1px dashed var(--accent-dim);
+  animation:orbitSpin 18s linear infinite;
+}
+@keyframes orbitSpin{to{transform:rotate(360deg)}}
+.flint-landing{
+  margin:0 0 24px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);position:relative;
+}
+.flint-landing__spark{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 20% 30%,rgba(200,169,110,.18),transparent 45%),
+    radial-gradient(circle at 80% 70%,rgba(74,124,89,.12),transparent 40%);
+}
+.flint-landing__inner{
+  position:relative;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
+  padding:28px 24px;
+}
+.flint-landing__kicker{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.flint-landing__h{font-size:clamp(22px,4vw,32px);font-weight:700;margin-bottom:8px}
+.flint-landing__p{font-size:12px;color:var(--muted);line-height:1.8;max-width:52ch}
+.flint-landing__meter{
+  width:min(220px,100%);padding:16px;border:1px solid var(--border2);border-radius:12px;background:var(--bg);
+}
+.flint-meter-bar{height:6px;background:var(--border);border-radius:6px;overflow:hidden;margin:10px 0}
+.flint-meter-fill{height:100%;width:62%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.flint-sparks{font-family:inherit;font-size:10px;color:var(--accent);letter-spacing:.08em}
+.compare-slider-wrap{margin:24px 0 32px;padding:22px 20px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2)}
+.compare-slider-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;font-size:11px}
+.compare-slider-head span{color:var(--muted)}
+.compare-slider-head .floke-side{color:var(--accent2);font-weight:700}
+.compare-slider-head .cloud-side{color:var(--muted2);font-weight:700}
+.compare-slider{width:100%;accent-color:var(--accent);margin:8px 0 18px}
+.compare-slider-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compare-card{
+  padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:var(--bg3);
+  font-size:11px;line-height:1.7;color:var(--muted);transition:opacity .2s,border-color .2s;
+}
+.compare-card.is-dim{opacity:.45}
+.compare-card.is-active{border-color:var(--accent);color:var(--text)}
+.compare-card-icon{font-size:18px;margin-bottom:8px}
+.privacy-contract{margin:20px 0}
+.privacy-contract-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.privacy-contract-fill{height:100%;width:0;background:var(--accent2);transition:width .15s}
+.privacy-line.signed{border-left:3px solid var(--accent2);padding-left:12px;color:var(--text)}
+.privacy-promise{
+  margin-top:18px;padding:14px 16px;border:1px dashed var(--accent);border-radius:10px;
+  font-size:11px;color:var(--accent);opacity:0;transform:translateY(6px);transition:all .35s var(--ease);
+}
+.privacy-promise.show{opacity:1;transform:none}
+.floke-shell{
+  position:fixed;inset:0;z-index:10004;display:flex;align-items:flex-end;justify-content:center;
+  padding:0 16px 72px;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.floke-shell.open{opacity:1;pointer-events:auto}
+.floke-shell-panel{
+  width:min(720px,100%);border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+.floke-shell-bar{
+  display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  background:var(--bg3);border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);
+}
+.floke-shell-out{
+  min-height:140px;max-height:220px;overflow-y:auto;padding:12px 14px;font-size:11px;line-height:1.65;
+  color:var(--muted);white-space:pre-wrap;
+}
+.floke-shell-input-wrap{display:flex;border-top:1px solid var(--border);background:var(--bg3)}
+.floke-shell-input{
+  flex:1;border:none;background:transparent;font-family:inherit;font-size:12px;color:var(--text);
+  padding:12px 14px;outline:none;
+}
+.floke-shell-input::before{content:'> '}
+.error-page{display:none;flex:1;flex-direction:column;padding:120px 0 80px;text-align:center}
+.error-code{font-size:clamp(48px,12vw,96px);font-weight:700;color:var(--accent);line-height:1;margin-bottom:12px}
+.error-msg{font-size:13px;color:var(--muted);max-width:42ch;margin:0 auto 24px;line-height:1.75}
+.error-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.flint-spark-page .flint-terminal{
+  margin-top:24px;border:1px solid var(--border);border-radius:var(--radius);background:#0d0d0d;
+  padding:16px;font-size:11px;color:#8cf;line-height:1.7;text-align:left;max-width:560px;
+}
+.status-grid{display:grid;gap:10px;margin-top:24px}
+.status-row{
+  display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--border);
+  border-radius:8px;background:var(--bg3);font-size:11px;
+}
+.status-row span:last-child{color:var(--accent2);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.arcade-cabinet{border:3px solid var(--border2);border-radius:12px;overflow:hidden;background:#0a0a0e}
+.arcade-marquee{
+  padding:8px 12px;background:linear-gradient(90deg,#1a1020,#2a1810);color:var(--accent);
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-align:center;
+  border-bottom:1px solid var(--border);
+}
+.arcade-meta{
+  display:flex;justify-content:space-between;gap:8px;padding:8px 12px;font-size:9px;color:var(--muted2);
+  border-bottom:1px solid var(--border);background:var(--bg3);flex-wrap:wrap;
+}
+.gamepad-badge{color:var(--accent2);font-size:9px}
+.pixel-editor-modal{
+  position:fixed;inset:0;z-index:10005;display:grid;place-items:center;padding:20px;
+  background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.pixel-editor-modal.open{opacity:1;pointer-events:auto}
+.pixel-editor-card{
+  width:min(360px,100%);border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);padding:20px;
+}
+.pixel-grid{display:grid;grid-template-columns:repeat(16,1fr);gap:1px;margin:12px 0;border:1px solid var(--border)}
+.pixel-cell{aspect-ratio:1;background:var(--bg4);cursor:pointer;border:none;padding:0}
+.pixel-cell.on{background:var(--accent)}
+.giscus-inline-fallback{
+  margin-top:16px;padding:18px;border:1px solid var(--gh-border);border-radius:10px;background:var(--gh-panel);
+  display:none;
+}
+.giscus-inline-fallback.show{display:block}
+.giscus-inline-fallback input,.giscus-inline-fallback textarea{
+  width:100%;font-family:inherit;font-size:12px;padding:10px 12px;margin:8px 0;
+  border:1px solid var(--gh-border);border-radius:6px;background:var(--gh-bg);color:var(--gh-text);
+}
+.cmd-section-label{
+  padding:8px 12px 4px;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);
+}
+.cmd-pin{font-size:9px;color:var(--accent);margin-left:6px}
+.pwa-badge{font-size:9px;padding:3px 8px;border:1px solid var(--border2);border-radius:999px;color:var(--muted)}
+.pwa-badge.ready{border-color:var(--accent2);color:var(--accent2)}
+.foot-geek-links{font-size:9px;color:var(--muted2)}
+.foot-geek-links a{color:var(--accent);text-decoration:none;margin:0 4px}
+.foot-geek-links a:hover{text-decoration:underline}
+
 @media(max-width:900px){
   .engine-landing__box{grid-template-columns:1fr}
   .engine-landing__actions{align-items:flex-start;flex-direction:row;flex-wrap:wrap}
@@ -1472,6 +1743,8 @@ footer{
     <li><a href="#glyph" data-k="nav.glyph">Glyph</a></li>
     <li><a href="#releases" data-k="nav.releases">Releases</a></li>
     <li><a href="#engine" data-k="nav.engine">Engine</a></li>
+    <li><a href="#flint" data-k="nav.flint">Flint</a></li>
+    <li><a href="#status" data-k="nav.status">Status</a></li>
     <li><a href="#about" data-k="nav.about">About</a></li>
     <li><a href="#graph" data-k="nav.graph">Graph</a></li>
     <li><a href="#news" data-k="nav.news">News</a></li>
@@ -1493,6 +1766,8 @@ footer{
     <li><a href="#glyph" data-k="nav.glyph" data-drawer-close>Glyph</a></li>
     <li><a href="#releases" data-k="nav.releases" data-drawer-close>Releases</a></li>
     <li><a href="#engine" data-k="nav.engine" data-drawer-close>Engine</a></li>
+    <li><a href="#flint" data-k="nav.flint" data-drawer-close>Flint</a></li>
+    <li><a href="#status" data-k="nav.status" data-drawer-close>Status</a></li>
     <li><a href="#about" data-k="nav.about" data-drawer-close>About</a></li>
     <li><a href="#graph" data-k="nav.graph" data-drawer-close>Graph</a></li>
     <li><a href="#news" data-k="nav.news" data-drawer-close>News</a></li>
@@ -1504,6 +1779,7 @@ footer{
 <main id="mainView">
 
 <section class="hero">
+  <canvas class="hero-mesh-canvas" id="heroMeshCanvas" aria-hidden="true"></canvas>
   <div class="hero-blob" aria-hidden="true"></div>
   <div class="hero-blob2" aria-hidden="true"></div>
   <div class="wrap">
@@ -1553,6 +1829,45 @@ footer{
     </div>
   </div>
   <hr class="div">
+</div>
+</section>
+
+<section id="scroll-story" class="scroll-story">
+<div class="wrap wrap--wide">
+  <div class="sec-label rv" data-k="story.label">One timeline</div>
+  <p class="sec-hint rv" data-k="story.hint">Pet projects → Glyph intelligence → Floke Engine — scroll the landing and watch the orbit sync.</p>
+  <div class="scroll-story-rail rv">
+    <div class="scroll-story-orbit" aria-hidden="true"><i></i></div>
+    <div class="scroll-story-track"><div class="scroll-story-fill" id="scrollStoryFill"></div></div>
+    <div class="scroll-story-steps" id="scrollStorySteps">
+      <div class="scroll-story-step" data-story="0"><strong data-k="story.s1t">Pet projects</strong><span data-k="story.s1p">Senza, Cultiva, BLIP — built alone, offline-first.</span></div>
+      <div class="scroll-story-step" data-story="1"><strong data-k="story.s2t">Glyph layer</strong><span data-k="story.s2p">Metadata intelligence ties the library together on-device.</span></div>
+      <div class="scroll-story-step" data-story="2"><strong data-k="story.s3t">Floke Engine</strong><span data-k="story.s3p">Same studio, same hands — small games worth finishing.</span></div>
+    </div>
+  </div>
+  <hr class="div">
+</div>
+</section>
+
+<section id="flint-landing" class="flint-landing rv">
+<div class="flint-landing__spark" aria-hidden="true"></div>
+<div class="wrap">
+  <div class="flint-landing__inner">
+    <div>
+      <div class="flint-landing__kicker" data-k="flint.landing.kicker">Local agent · Q3 2026</div>
+      <h2 class="flint-landing__h" data-k="flint.landing.h">Flint</h2>
+      <p class="flint-landing__p" data-k="flint.landing.p">Think here. Stay here. A workstation stub on the landing — v0.6 in the forge, public release on the horizon.</p>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" class="btn btn-solid" id="flintWaitlistLanding" data-k="waitlist.flint.btn">Join waitlist →</button>
+        <a href="#flint" class="btn btn-outline" data-k="flint.landing.more">Explore Flint →</a>
+      </div>
+    </div>
+    <div class="flint-landing__meter">
+      <div class="flint-sparks" data-k="flint.landing.spark">forge pulse · offline</div>
+      <div class="flint-meter-bar"><div class="flint-meter-fill" id="flintMeterFill"></div></div>
+      <div style="font-size:10px;color:var(--muted)" data-k="flint.landing.meter">v0.6 compile · Mnemo 1.2-O · agent tools</div>
+    </div>
+  </div>
 </div>
 </section>
 
@@ -1627,15 +1942,23 @@ footer{
   <div class="sec-label rv" data-k="rhythm.label">Release rhythm</div>
   <div class="release-rhythm rv">
     <div class="release-rhythm-copy">
-      <h3 data-k="rhythm.h">Next drop · July 2026</h3>
+      <h3 data-k="rhythm.h">Next drop · June 2026</h3>
       <p data-k="rhythm.p">Monthly patches. Quarterly features. One big Floke release every June — predictable, offline-first, no surprise paywalls.</p>
     </div>
-    <div class="release-rhythm-count" id="releaseCountdown" aria-live="polite">
-      <strong id="releaseCountdownNum">—</strong>
-      <span data-k="rhythm.until">until July 1</span>
+    <div class="release-rhythm-clocks">
+      <div class="rhythm-clock">
+        <span class="rhythm-clock-label" data-k="rhythm.patchLabel">Studio patch · June 20</span>
+        <div class="rhythm-clock-digits" id="countdownPatch" aria-live="polite">—</div>
+      </div>
+      <div class="rhythm-clock rhythm-clock--main">
+        <span class="rhythm-clock-label" data-k="rhythm.mainLabel">Floke release · June 30</span>
+        <div class="rhythm-clock-digits" id="countdownMain" aria-live="polite">—</div>
+      </div>
     </div>
-    <p class="release-rhythm-patch" data-k="rhythm.patch"><em>June 20</em> — patch release across the studio. Follow Telegram for notes.</p>
-    <p style="margin-top:12px"><a href="#compare" class="btn btn-outline" data-k="compare.short">Floke vs cloud →</a></p>
+    <div class="release-rhythm-foot">
+      <p class="release-rhythm-patch" data-k="rhythm.patch"><em>June 20</em> — patch across the studio. <em>June 30</em> — release day. Follow Telegram for notes.</p>
+      <a href="#compare" class="btn btn-outline" data-k="compare.short">Floke vs cloud →</a>
+    </div>
   </div>
   <hr class="div">
 </div>
@@ -1853,15 +2176,23 @@ footer{
     </div>
   </div>
   <hr class="div" style="margin-top:0">
-  <div class="sec-label sec-label--page rv" data-k="engine.teaser.label">While you wait · Playable teaser</div>
-  <p class="engine-teaser-note rv" data-k="engine.teaser.note">This isn't the game we're building at Floke Engine — but you're welcome to play while development continues.</p>
-  <div class="engine-teaser rv" style="margin-top:18px">
+  <div class="sec-label sec-label--page rv" data-k="engine.teaser.label">Void Signal · arcade cabinet</div>
+  <p class="engine-teaser-note rv" data-k="engine.teaser.note">Mock arcade to pass time — not the real Floke Engine title. Daily seed · local hi-score · optional gist export.</p>
+  <div class="engine-teaser arcade-cabinet rv" style="margin-top:18px">
+    <div class="arcade-marquee" data-k="engine.game.name">◆ VOID SIGNAL ◆ floke-engine mock ◆</div>
+    <div class="arcade-meta">
+      <span id="arcadeDailySeed">seed: —</span>
+      <span id="arcadeHiScore">hi: 0</span>
+      <span id="gamepadBadge" class="gamepad-badge" hidden data-k="engine.gamepad">🎮 controller</span>
+      <button type="button" class="graph-tool" id="engineExportScore" data-k="engine.exportScore">Export score</button>
+    </div>
     <div class="engine-teaser-bar">
       <div class="engine-teaser-light r"></div>
       <div class="engine-teaser-light y"></div>
       <div class="engine-teaser-light g"></div>
-      <div class="engine-teaser-bar-title">floke-engine · teaser · build 0.0.1</div>
+      <div class="engine-teaser-bar-title">void-signal · cabinet · build 0.0.1</div>
       <div class="engine-teaser-actions">
+        <button type="button" class="graph-tool" id="enginePixelBtn" data-k="engine.pixel">16×16</button>
         <button type="button" class="graph-tool" id="engineFullscreenBtn" data-k="engine.teaser.fullscreen">Fullscreen →</button>
       </div>
     </div>
@@ -1964,6 +2295,24 @@ footer{
     <p class="graph-lead" data-k="compare.lead">A calm comparison — we build for people who want software on their machine. Cloud tools have their place. This is ours.</p>
   </header>
   <div class="sub-prose rv" data-k="compare.prose">We are not anti-internet — we are pro-ownership. Floke apps sync releases through GitHub, not through a vendor lock-in dashboard. Your library, habits, and chats stay on disk you control.</div>
+  <div class="compare-slider-wrap rv">
+    <div class="compare-slider-head">
+      <span class="floke-side">Floke</span>
+      <span data-k="compare.sliderHint">drag</span>
+      <span class="cloud-side" data-k="compare.cloud">Cloud</span>
+    </div>
+    <input type="range" class="compare-slider" id="compareSlider" min="0" max="100" value="15" aria-label="Floke vs cloud">
+    <div class="compare-slider-cards">
+      <div class="compare-card is-active" id="compareCardFloke">
+        <div class="compare-card-icon">🔒</div>
+        <span id="compareFlokeText" data-k="compare.r1f">Core features · local data</span>
+      </div>
+      <div class="compare-card is-dim" id="compareCardCloud">
+        <div class="compare-card-icon">☁️</div>
+        <span id="compareCloudText" data-k="compare.r1c">Often limited or read-only</span>
+      </div>
+    </div>
+  </div>
   <div class="deep-feature rv" data-k="compare.note">No dunking on competitors. Just what Floke optimizes for — and what we deliberately don't chase.</div>
   <table class="compare-table rv">
     <thead><tr><th data-k="compare.col">Topic</th><th>Floke</th><th data-k="compare.cloud">Typical cloud app</th></tr></thead>
@@ -2046,7 +2395,7 @@ footer{
 </section>
 
 <section class="sub-page feedback-page sub-page--rich" id="feedbackPage">
-<canvas class="sub-page__canvas" id="feedbackBgCanvas" aria-hidden="true"></canvas>
+<canvas class="feedback-code-canvas" id="feedbackCodeCanvas" aria-hidden="true"></canvas>
 <div class="feedback-hero">
   <div class="feedback-hero__grid" aria-hidden="true"></div>
   <div class="feedback-hero__glow" aria-hidden="true"></div>
@@ -2056,16 +2405,74 @@ footer{
       <div class="feedback-card__head">
         <svg class="feedback-gh-mark" viewBox="0 0 16 16" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
         <div>
-          <div class="sub-hero-pre" data-k="feedback.pre">GitHub Discussions · General</div>
+          <div class="sub-hero-pre" data-k="feedback.pre">GitHub Discussions · General #1</div>
           <h1 class="sub-hero-h1" style="margin-bottom:6px" data-k="feedback.h1">Feedback</h1>
         </div>
       </div>
-      <p class="graph-lead" style="margin:0" data-k="feedback.lead">One thread for the whole site — sign in with GitHub to comment. Styled like GitHub, hosted by giscus.</p>
+      <p class="graph-lead" style="margin:0" data-k="feedback.lead">One thread for the whole site — sign in with GitHub to comment. Same thread as Discussion #1.</p>
     </div>
     <div class="giscus-shell rv" id="giscusShell">
       <div class="giscus" id="giscusContainer"></div>
+      <div class="giscus-inline-fallback" id="giscusInlineFallback">
+        <p style="font-size:11px;color:var(--gh-muted);margin-bottom:10px" data-k="feedback.fallback">Embed blocked? Post via GitHub — we copy your draft and open Discussion #1.</p>
+        <input type="text" id="giscusFallbackTitle" placeholder="Title" data-k-placeholder="feedback.fallbackTitle">
+        <textarea id="giscusFallbackBody" rows="4" placeholder="Your feedback…" data-k-placeholder="feedback.fallbackBody"></textarea>
+        <button type="button" class="btn btn-solid" id="giscusFallbackSubmit" style="margin-top:8px" data-k="feedback.fallbackBtn">Open Discussion #1 →</button>
+      </div>
+      <a class="giscus-fallback-link" href="https://github.com/FlokeStudio/Floke/discussions/1" target="_blank" rel="noopener" data-k="feedback.openGh">Open on GitHub if embed is blocked →</a>
     </div>
   </div>
+</div>
+</section>
+
+<section class="sub-page sub-page--rich flint-spark-page" id="flintPage">
+<div class="sub-page__bg" aria-hidden="true"><div class="sub-page__orb sub-page__orb--1"></div></div>
+<div class="wrap">
+  <a href="#" class="btn btn-outline sub-page-back" id="flintBack" data-k="flint.back">← Back to Floke</a>
+  <header class="sub-hero rv">
+    <div class="sub-hero-pre" data-k="flint.pre">Local agent · stub</div>
+    <h1 class="sub-hero-h1">Flint</h1>
+    <p class="graph-lead" data-k="flint.lead">Think here. Stay here. v0.6 in the forge — Code, Writer, General agents with Y/N on every file touch.</p>
+  </header>
+  <div class="flint-landing__meter rv" style="max-width:320px">
+    <div class="flint-sparks">forge · mnemo 1.2-o · q3 2026</div>
+    <div class="flint-meter-bar"><div class="flint-meter-fill" style="width:62%"></div></div>
+  </div>
+  <div class="flint-terminal rv" id="flintTerminal" aria-live="polite">
+    <span data-k="flint.term">flint&gt; await public_release(Q3_2026)</span><br>
+    <span data-k="flint.term2">mnemo&gt; agent_modes: [code, writer, general]</span><br>
+    <span data-k="flint.term3">status&gt; no cloud relay · no telemetry · your disk</span>
+  </div>
+  <div class="sub-hero-cta rv" style="margin-top:24px">
+    <button type="button" class="btn btn-solid" onclick="openWaitlist('flint')" data-k="waitlist.flint.btn">Join waitlist →</button>
+    <a href="#project/flint" class="btn btn-outline" data-k="flint.store">Product page →</a>
+  </div>
+</div>
+</section>
+
+<section class="sub-page" id="statusPage">
+<div class="sub-page__bg" aria-hidden="true"><div class="sub-page__orb sub-page__orb--2"></div></div>
+<div class="wrap">
+  <a href="#" class="btn btn-outline sub-page-back" id="statusBack" data-k="status.back">← Back to Floke</a>
+  <header class="sub-hero rv">
+    <div class="sub-hero-pre" data-k="status.pre">Studio pulse</div>
+    <h1 class="sub-hero-h1" data-k="status.h1">Status</h1>
+    <p class="graph-lead" data-k="status.lead">Live-ish snapshot — products, site, and release rhythm. No status page vendor.</p>
+  </header>
+  <div class="status-grid rv" id="statusGrid"></div>
+  <p style="margin-top:20px;font-size:10px;color:var(--muted2)" data-k="status.foot">Updated on load · GitHub for ground truth.</p>
+</div>
+</section>
+
+<section class="error-page" id="errorPage">
+<div class="wrap">
+  <div class="error-code" id="errorCode">404</div>
+  <p class="error-msg" id="errorMsg" data-k="error.404">This hash route does not exist on the Floke landing.</p>
+  <div class="error-links">
+    <a href="#" class="btn btn-solid" id="errorHome" data-k="error.home">← Home</a>
+    <button type="button" class="btn btn-outline" id="errorSearch" data-k="error.search">⌘K Search</button>
+  </div>
+  <p style="margin-top:32px;font-size:10px;color:var(--muted2)" data-k="error.testHint">Test: #error/404 · #error/400 · #error/403 · #error/500 · #error/503</p>
 </div>
 </section>
 
@@ -2133,14 +2540,37 @@ footer{
 
 <div class="floke-dock" id="flokeDock" aria-label="Quick actions">
   <button type="button" class="floke-dock-btn" id="dockSearch" title="Search">⌘K</button>
+  <button type="button" class="floke-dock-btn" id="dockShell" title="Floke shell">$_</button>
   <button type="button" class="floke-dock-btn" id="dockShortcuts" title="Shortcuts">?</button>
   <button type="button" class="floke-dock-btn" id="dockAmbient" title="Ambient">🎧</button>
   <button type="button" class="floke-dock-btn" id="dockTheme" title="Theme">◐</button>
+  <button type="button" class="floke-dock-btn" id="dockTop" title="Top">↑</button>
+</div>
+
+<div class="floke-shell" id="flokeShell" role="dialog" aria-modal="true" aria-label="Floke shell" hidden>
+  <div class="floke-shell-panel">
+    <div class="floke-shell-bar"><span>floke shell · type help</span><button type="button" class="graph-tool" id="flokeShellClose">esc</button></div>
+    <div class="floke-shell-out" id="flokeShellOut">Floke shell — second UI for CLI people. Try: help · open senza · grep releases cultiva · theme dark · graph · play</div>
+    <div class="floke-shell-input-wrap"><input type="text" class="floke-shell-input" id="flokeShellInput" autocomplete="off" spellcheck="false" aria-label="Shell input"></div>
+  </div>
+</div>
+
+<div class="pixel-editor-modal" id="pixelEditorModal" aria-hidden="true">
+  <div class="pixel-editor-card">
+    <h3 style="font-size:14px;margin-bottom:6px" data-k="engine.pixelTitle">16×16 · easter egg</h3>
+    <p style="font-size:10px;color:var(--muted);margin-bottom:8px" data-k="engine.pixelHint">Click pixels · export favicon data URL</p>
+    <div class="pixel-grid" id="pixelGrid"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button type="button" class="btn btn-outline" id="pixelClear" data-k="engine.pixelClear">Clear</button>
+      <button type="button" class="btn btn-solid" id="pixelExport" data-k="engine.pixelExport">Export PNG</button>
+      <button type="button" class="btn btn-outline" id="pixelClose" data-k="waitlist.close">Close</button>
+    </div>
+  </div>
 </div>
 
 <div class="engine-modal" id="engineGameModal" aria-hidden="true">
   <div class="engine-modal-bar">
-    <span>floke-engine · pixel teaser · ESC to exit</span>
+    <span>void-signal · arcade mock · ESC to exit</span>
     <button type="button" class="engine-modal-close" id="engineModalClose" data-k="engine.modal.close">Close</button>
   </div>
   <div class="engine-modal-body">
@@ -2173,6 +2603,19 @@ footer{
 
 <footer>
 <div class="wrap foot-grid">
+  <div class="foot-geek">
+    <span class="foot-geek-dot" aria-hidden="true"></span>
+    <span class="pwa-badge" id="pwaBadge" data-k="pwa.pending">PWA · checking…</span>
+    <button type="button" class="foot-geek-btn" id="footInstall" hidden data-k="pwa.install">Add to desktop</button>
+    <button type="button" class="foot-geek-btn" id="footCopyLink" data-k="foot.copyLink">Copy page link</button>
+    <button type="button" class="foot-geek-btn" id="footViewSource" data-k="foot.viewSource">View source</button>
+    <button type="button" class="foot-geek-btn" id="footSoundPack" data-k="foot.soundPack">Sound pack</button>
+    <a class="foot-geek-btn" href="feed.xml" data-k="foot.rss">RSS</a>
+    <span class="foot-geek-links">
+      <span data-k="foot.errors">Errors:</span>
+      <a href="#error/404">404</a><a href="#error/400">400</a><a href="#error/403">403</a><a href="#error/500">500</a><a href="#error/503">503</a>
+    </span>
+  </div>
   <div class="foot-brand">
     <div class="foot-logo">FL<b>O</b>KE</div>
     <p class="foot-tag" data-k="foot.tag">Independent studio · offline-first desktop apps, Glyph intelligence, indie games.</p>
@@ -2196,6 +2639,8 @@ footer{
     <a href="#engine" data-k="nav.engine">Engine</a>
     <a href="#news" data-k="nav.news">News</a>
     <a href="#graph" data-k="nav.graph">Graph</a>
+    <a href="#status" data-k="nav.status">Status</a>
+    <a href="#flint" data-k="nav.flint">Flint</a>
   </div>
   <div class="foot-col">
     <span class="foot-col-t" data-k="foot.col.help">Help & legal</span>
@@ -2217,7 +2662,7 @@ footer{
 <script>
 const STR = {
   en: {
-    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases","nav.engine":"Engine","nav.about":"About","nav.graph":"Graph","nav.news":"News",
+    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases","nav.engine":"Engine","nav.flint":"Flint","nav.status":"Status","nav.about":"About","nav.graph":"Graph","nav.news":"News",
     "nav.compare":"Compare","nav.privacy":"Privacy","nav.support":"Support","nav.feedback":"Feedback",
     "hero.tag":"Independent software studio",
     "hero.l1":"Software that lives","hero.l2":"on your machine.",
@@ -2285,6 +2730,7 @@ const STR = {
     "graph.node.news":"News","graph.node.graph":"Graph",
     "graph.node.compare":"Compare","graph.node.privacy":"Privacy","graph.node.support":"Support",
     "graph.node.feedback":"Feedback","graph.node.glyphSpec":"Glyph spec",
+    "graph.node.flint":"Flint","graph.node.status":"Status",
     "graph.node.senza":"Senza","graph.node.cultiva":"Cultiva","graph.node.blip":"BLIP","graph.node.flint":"Flint",
     "graph.node.glyph":"Glyph2.2-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Open →",
@@ -2319,6 +2765,27 @@ const STR = {
     "waitlist.save":"Save locally","waitlist.tg":"Notify on Telegram →","waitlist.close":"Close",
     "waitlist.ok":"Saved locally. Follow Telegram for launch day.",
     "foot.tag":"Independent studio · offline-first desktop apps, Glyph intelligence, indie games.",
+    "foot.geek":"Glyph 2.2-On · offline-first · no analytics on this site",
+    "foot.copyLink":"Copy page link","foot.viewSource":"View source","foot.soundPack":"Sound pack","foot.rss":"RSS","foot.errors":"Errors:",
+    "foot.soundPackOk":"Floke Studio sound preset copied as JSON",
+    "pwa.pending":"PWA · checking…","pwa.ready":"Works offline","pwa.install":"Add to desktop","pwa.installed":"Installed",
+    "story.label":"One timeline","story.hint":"Pet projects → Glyph intelligence → Floke Engine — scroll the landing and watch the orbit sync.",
+    "story.s1t":"Pet projects","story.s1p":"Senza, Cultiva, BLIP — built alone, offline-first.",
+    "story.s2t":"Glyph layer","story.s2p":"Metadata intelligence ties the library together on-device.",
+    "story.s3t":"Floke Engine","story.s3p":"Same studio, same hands — small games worth finishing.",
+    "flint.landing.kicker":"Local agent · Q3 2026","flint.landing.h":"Flint","flint.landing.p":"Think here. Stay here. A workstation stub on the landing — v0.6 in the forge, public release on the horizon.",
+    "flint.landing.more":"Explore Flint →","flint.landing.spark":"forge pulse · offline","flint.landing.meter":"v0.6 compile · Mnemo 1.2-O · agent tools",
+    "flint.back":"← Back to Floke","flint.pre":"Local agent · stub","flint.lead":"Think here. Stay here. v0.6 in the forge — Code, Writer, General agents with Y/N on every file touch.",
+    "flint.term":"flint&gt; await public_release(Q3_2026)","flint.term2":"mnemo&gt; agent_modes: [code, writer, general]","flint.term3":"status&gt; no cloud relay · no telemetry · your disk","flint.store":"Product page →",
+    "status.back":"← Back to Floke","status.pre":"Studio pulse","status.h1":"Status","status.lead":"Live-ish snapshot — products, site, and release rhythm. No status page vendor.","status.foot":"Updated on load · GitHub for ground truth.",
+    "error.400":"Bad request — that hash or query is malformed.","error.403":"Forbidden — this route is not exposed on the landing.","error.404":"This hash route does not exist on the Floke landing.","error.500":"Internal error — something broke in the single-file router.","error.503":"Service unavailable — try again when GitHub Pages is back.",
+    "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Test: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
+    "compare.sliderHint":"drag",
+    "feedback.fallback":"Embed blocked? Post via GitHub — we copy your draft and open Discussion #1.","feedback.fallbackTitle":"Title","feedback.fallbackBody":"Your feedback…","feedback.fallbackBtn":"Open Discussion #1 →",
+    "engine.game.name":"◆ VOID SIGNAL ◆ floke-engine mock ◆","engine.gamepad":"🎮 controller","engine.exportScore":"Export score","engine.pixel":"16×16","engine.pixelTitle":"16×16 · easter egg","engine.pixelHint":"Click pixels · export favicon data URL","engine.pixelClear":"Clear","engine.pixelExport":"Export PNG",
+    "cmd.history":"Recent","cmd.pinned":"Pinned","shortcuts.shell":"Floke shell","shortcuts.products":"Products (vim g p)","shortcuts.focusSearch":"Focus search /",
+    "shell.help":"Commands: help · open <app> · grep releases <app> · theme dark|light|paper · graph · play · pixel · soundpack",
+    "privacy.promise":"You've read the promise — no cookie, just scroll.","foot.copied":"Link copied",
     "foot.col.apps":"Apps","foot.col.intel":"Intelligence","foot.col.studio":"Studio","foot.col.help":"Help & legal",
     "cmd.cat.page":"Page","cmd.cat.app":"App","cmd.cat.action":"Action","cmd.cat.news":"News","cmd.cat.release":"Release",
     "cmd.theme":"Toggle theme","cmd.graph":"Open graph view",
@@ -2336,8 +2803,10 @@ const STR = {
     "finale.c1l":"Glyph 2.2-O","finale.c1p":"Offline metadata intelligence — in Senza today, across Floke apps tomorrow.",
     "finale.c2l":"Glyph 2.2-On","finale.c2p":"This site search runs online on 2.2-On — fuzzy match across pages, apps, and news.",
     "finale.c3l":"Your machine","finale.c3p":"No accounts to browse. No tracking. Press ? for shortcuts — ⌘K to jump anywhere.",
-    "rhythm.label":"Release rhythm","rhythm.h":"Next drop · July 2026","rhythm.p":"Monthly patches. Quarterly features. One big Floke release every June — predictable, offline-first, no surprise paywalls.",
-    "rhythm.until":"until July 1","rhythm.patch":"June 20 — patch release across the studio. Follow Telegram for notes.",
+    "rhythm.label":"Release rhythm","rhythm.h":"Next drop · June 2026","rhythm.p":"Monthly patches. Quarterly features. One big Floke release every June — predictable, offline-first, no surprise paywalls.",
+    "rhythm.patchLabel":"Studio patch · June 20","rhythm.mainLabel":"Floke release · June 30",
+    "rhythm.until":"until July 1","rhythm.patch":"June 20 — patch across the studio. June 30 — release day. Follow Telegram for notes.",
+    "rhythm.live":"Live now","rhythm.soon":"soon",
     "compare.short":"Floke vs cloud →",
     "compare.back":"← Back to Floke","compare.pre":"Philosophy · not a fight","compare.h1":"Floke vs cloud",
     "compare.lead":"A calm comparison — we build for people who want software on their machine. Cloud tools have their place. This is ours.",
@@ -2373,6 +2842,12 @@ const STR = {
     "support.q4":"Where are release notes?","support.a4":"GitHub Releases per app, studio posts on Telegraph, and the News section here.",
     "support.q5":"Contact email?","support.a5":"getfloke@gmail.com — general mail. GitHub Issues for reproducible bugs with logs.",
     "support.q6":"Is Glyph sending my files to the cloud?","support.a6":"Glyph2.2-O runs on-device. This site's ⌘K search uses Glyph2.2-On in your browser tab only — no upload.",
+    "support.q7":"Which OS are supported?","support.a7":"Windows builds ship first for Senza, Cultiva, and BLIP. macOS and Linux are on the roadmap — follow News and Telegram.",
+    "support.q8":"Can I contribute or fork?","support.a8":"Yes — GPL-3.0 on GitHub. Forks welcome; upstream merges when they match Floke philosophy and code quality.",
+    "support.q9":"Where is the changelog?","support.a9":"GitHub Releases per repo, the Latest releases block on the landing, and Telegraph posts linked from News.",
+    "support.q10":"Why no auto-update?","support.a10":"You download from GitHub Releases — no silent background updater, no vendor channel. You decide when to upgrade.",
+    "support.q11":"Flint and Mnemo timeline?","support.a11":"Flint public Q3 2026. Mnemo 1.2-O ships with Flint integration — same window, watch Telegram.",
+    "support.q12":"Can I use Floke apps commercially?","support.a12":"Check GPL-3.0 for each repo. Personal and commercial use of the apps themselves is fine; redistribution follows the license.",
     "spec.back":"← Back to Floke","spec.h1":"Pipeline spec","spec.lead":"Six modules. One on-device conveyor — scroll to highlight each stage.",
     "spec.featureTitle":"Live in Senza","spec.feature":"Rules → KNN → optional MusicBrainz — all before anything leaves your PC. Glyph2.2-On powers site search only.",
     "spec.s1t":"Rules","spec.s1p":"Parse filenames and folder context into tokens.",
@@ -2381,7 +2856,8 @@ const STR = {
     "spec.s4t":"KNN","spec.s4p":"Neighbour votes from your corrections.",
     "spec.s5t":"Diff","spec.s5p":"Review changes before apply — no silent overwrites.",
     "spec.s6t":"Ollama","spec.s6p":"Optional local LLM pass — still on your hardware.",
-    "feedback.back":"← Back to Floke","feedback.pre":"GitHub Discussions · General","feedback.h1":"Feedback","feedback.lead":"One thread for the whole site — sign in with GitHub to comment. Styled like GitHub, hosted by giscus.",
+    "feedback.back":"← Back to Floke","feedback.pre":"GitHub Discussions · General #1","feedback.h1":"Feedback","feedback.lead":"One thread for the whole site — sign in with GitHub to comment. Same thread as Discussion #1.",
+    "feedback.openGh":"Open on GitHub if embed is blocked →",
     "feedback.loading":"Loading comments from GitHub…",
     "feedback.fallback":"Could not load giscus — open Discussions on GitHub or try again after granting the app access to FlokeStudio/Floke.",
     "graph.filter.all":"All","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Pages",
@@ -2455,7 +2931,7 @@ const STR = {
 
   },
   ru: {
-    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы","nav.engine":"Engine","nav.about":"О студии","nav.graph":"Граф","nav.news":"Новости",
+    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы","nav.engine":"Engine","nav.flint":"Flint","nav.status":"Status","nav.about":"О студии","nav.graph":"Граф","nav.news":"Новости",
     "nav.compare":"Сравнение","nav.privacy":"Приватность","nav.support":"Поддержка","nav.feedback":"Feedback",
     "hero.tag":"Независимая софт-студия",
     "hero.l1":"Софт, который живёт","hero.l2":"на твоей машине.",
@@ -2523,6 +2999,7 @@ const STR = {
     "graph.node.news":"Новости","graph.node.graph":"Graph",
     "graph.node.compare":"Сравнение","graph.node.privacy":"Приватность","graph.node.support":"Поддержка",
     "graph.node.feedback":"Feedback","graph.node.glyphSpec":"Glyph spec",
+    "graph.node.flint":"Flint","graph.node.status":"Status",
     "graph.node.senza":"Senza","graph.node.cultiva":"Cultiva","graph.node.blip":"BLIP","graph.node.flint":"Flint",
     "graph.node.glyph":"Glyph2.2-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Открыть →",
@@ -2571,8 +3048,10 @@ const STR = {
     "finale.c1l":"Glyph 2.2-O","finale.c1p":"Офлайн-интеллект метаданных — уже в Senza, дальше во всех приложениях Floke.",
     "finale.c2l":"Glyph 2.2-On","finale.c2p":"Поиск на сайте на 2.2-On — нечёткий match по страницам, приложениям и новостям.",
     "finale.c3l":"Ваша машина","finale.c3p":"Без аккаунтов и трекинга. ? — shortcuts, ⌘K — переход куда угодно.",
-    "rhythm.label":"Ритм релизов","rhythm.h":"Следующий drop · июль 2026","rhythm.p":"Ежемесячные патчи. Квартальные фичи. Большой Floke-релиз каждый июнь — предсказуемо, offline-first.",
-    "rhythm.until":"до 1 июля","rhythm.patch":"20 июня — патч-релиз по студии. Детали в Telegram.",
+    "rhythm.label":"Ритм релизов","rhythm.h":"Следующий drop · июнь 2026","rhythm.p":"Ежемесячные патчи. Квартальные фичи. Большой Floke-релиз каждый июнь — предсказуемо, offline-first.",
+    "rhythm.patchLabel":"Патч студии · 20 июня","rhythm.mainLabel":"Релиз Floke · 30 июня",
+    "rhythm.until":"до 1 июля","rhythm.patch":"20 июня — патч по студии. 30 июня — день релиза. Детали в Telegram.",
+    "rhythm.live":"Уже вышло","rhythm.soon":"скоро",
     "compare.short":"Floke vs облако →",
     "compare.back":"← Назад к Floke","compare.pre":"Философия · не битва","compare.h1":"Floke vs облако",
     "compare.lead":"Спокойное сравнение — мы делаем софт на вашей машине. Облаку тоже есть место. Это наше.",
@@ -2608,6 +3087,12 @@ const STR = {
     "support.q4":"Где release notes?","support.a4":"GitHub Releases, Telegraph и раздел News здесь.",
     "support.q5":"Почта для связи?","support.a5":"getfloke@gmail.com — общие вопросы. GitHub Issues для багов с логами.",
     "support.q6":"Glyph отправляет файлы в облако?","support.a6":"Glyph2.2-O на устройстве. ⌘K на сайте — Glyph2.2-On только во вкладке, без upload.",
+    "support.q7":"Какие ОС поддерживаются?","support.a7":"Сначала Windows для Senza, Cultiva, BLIP. macOS и Linux в планах — следите за News и Telegram.",
+    "support.q8":"Можно форкнуть или контрибутить?","support.a8":"Да — GPL-3.0 на GitHub. Форки приветствуются; merge в upstream по философии и качеству.",
+    "support.q9":"Где changelog?","support.a9":"GitHub Releases, блок Latest releases на лендинге и Telegraph в News.",
+    "support.q10":"Почему нет auto-update?","support.a10":"Вы качаете с GitHub Releases — без фоновых апдейтов. Сами решаете, когда обновляться.",
+    "support.q11":"Сроки Flint и Mnemo?","support.a11":"Flint — Q3 2026. Mnemo 1.2-O с интеграцией Flint — тот же горизонт, Telegram.",
+    "support.q12":"Коммерческое использование?","support.a12":"Смотрите GPL-3.0 в каждом репо. Использовать приложения можно; redistribution — по лицензии.",
     "spec.back":"← Назад к Floke","spec.h1":"Спека pipeline","spec.lead":"Шесть модулей. Один конвейер на устройстве — прокрутите для подсветки этапов.",
     "spec.featureTitle":"Уже в Senza","spec.feature":"Rules → KNN → опц. MusicBrainz — до любого upload. Glyph2.2-On — только поиск на сайте.",
     "spec.s1t":"Rules","spec.s1p":"Разбор имён файлов и папок в токены.",
@@ -2616,10 +3101,34 @@ const STR = {
     "spec.s4t":"KNN","spec.s4p":"Голоса соседей из ваших правок.",
     "spec.s5t":"Diff","spec.s5p":"Просмотр изменений до apply.",
     "spec.s6t":"Ollama","spec.s6p":"Опциональный локальный LLM — всё ещё на вашем железе.",
-    "feedback.back":"← Назад к Floke","feedback.pre":"GitHub Discussions · General","feedback.h1":"Обратная связь","feedback.lead":"Один тред на весь сайт — войдите через GitHub. Стиль GitHub, хостинг giscus.",
+    "feedback.back":"← Назад к Floke","feedback.pre":"GitHub Discussions · General #1","feedback.h1":"Обратная связь","feedback.lead":"Один тред на весь сайт — войдите через GitHub. Тот же тред, что Discussion #1.",
+    "feedback.openGh":"Открыть на GitHub, если embed заблокирован →",
     "feedback.loading":"Загрузка комментариев с GitHub…",
     "feedback.fallback":"Не удалось загрузить giscus — откройте Discussions на GitHub или проверьте доступ app к FlokeStudio/Floke.",
     "foot.tag":"Независимая студия · offline-first приложения, Glyph, инди-игры.",
+    "foot.geek":"Glyph 2.2-On · offline-first · без analytics на сайте",
+    "foot.copyLink":"Скопировать ссылку","foot.viewSource":"Исходник","foot.copied":"Ссылка скопирована",
+    "foot.soundPack":"Sound pack","foot.rss":"RSS","foot.errors":"Ошибки:",
+    "foot.soundPackOk":"Sound preset Floke Studio скопирован как JSON",
+    "pwa.pending":"PWA · проверка…","pwa.ready":"Работает offline","pwa.install":"На рабочий стол","pwa.installed":"Установлено",
+    "story.label":"Один timeline","story.hint":"Pet projects → Glyph → Engine — скролл главной синхронизирует orbit.",
+    "story.s1t":"Pet projects","story.s1p":"Senza, Cultiva, BLIP — по отдельности, offline-first.",
+    "story.s2t":"Слой Glyph","story.s2p":"Metadata intelligence связывает библиотеку на устройстве.",
+    "story.s3t":"Floke Engine","story.s3p":"Та же студия — небольшие игры до конца.",
+    "flint.landing.kicker":"Локальный агент · Q3 2026","flint.landing.h":"Flint","flint.landing.p":"Думай здесь. Оставайся здесь. Заглушка на лендинге — v0.6 в forge, релиз на горизонте.",
+    "flint.landing.more":"Flint →","flint.landing.spark":"forge pulse · offline","flint.landing.meter":"v0.6 · Mnemo 1.2-O · agent tools",
+    "flint.back":"← Назад","flint.pre":"Локальный агент · stub","flint.lead":"Code, Writer, General — Y/N на каждое действие с файлами.",
+    "flint.term":"flint&gt; await public_release(Q3_2026)","flint.term2":"mnemo&gt; agent_modes: [code, writer, general]","flint.term3":"status&gt; no cloud · no telemetry",
+    "flint.store":"Страница продукта →",
+    "status.back":"← Назад","status.pre":"Пульс студии","status.h1":"Status","status.lead":"Снимок продуктов и ритма релизов — без стороннего status page.","status.foot":"Обновляется при загрузке · GitHub — источник правды.",
+    "error.400":"Bad request — hash или query некорректны.","error.403":"Forbidden — маршрут не открыт.","error.404":"Такого hash-маршрута нет на лендинге.","error.500":"Internal error — сломался single-file router.","error.503":"Service unavailable — попробуйте позже.",
+    "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Тест: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
+    "compare.sliderHint":"тяните",
+    "feedback.fallback":"Embed заблокирован? Черновик в буфер + Discussion #1.","feedback.fallbackTitle":"Заголовок","feedback.fallbackBody":"Feedback…","feedback.fallbackBtn":"Открыть Discussion #1 →",
+    "engine.game.name":"◆ VOID SIGNAL ◆ mock ◆","engine.gamepad":"🎮 геймпад","engine.exportScore":"Export score","engine.pixel":"16×16","engine.pixelTitle":"16×16 easter egg","engine.pixelHint":"Клик · export PNG","engine.pixelClear":"Clear","engine.pixelExport":"Export PNG",
+    "cmd.history":"Недавние","cmd.pinned":"Закреплённые","shortcuts.shell":"Floke shell","shortcuts.products":"Products (g p)","shortcuts.focusSearch":"Поиск /",
+    "shell.help":"help · open senza · grep releases cultiva · theme dark · graph · play · pixel",
+    "privacy.promise":"Вы прочитали promise — без cookie, только scroll.",
     "foot.col.apps":"Приложения","foot.col.intel":"Интеллект","foot.col.studio":"Студия","foot.col.help":"Помощь и legal",
     "cmd.cat.release":"Релиз",
     "graph.filter.all":"Все","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Страницы",
@@ -2728,7 +3237,9 @@ const GISCUS_CFG = {
   categoryId: "DIC_kwDOSqXZec4C-O_R",
   discussionNumber: 1
 };
-const RELEASE_JULY = new Date("2026-07-01T12:00:00");
+const RELEASE_PATCH = new Date("2026-06-20T12:00:00");
+const RELEASE_MAIN = new Date("2026-06-30T23:59:59");
+const RELEASE_JULY = RELEASE_MAIN;
 
 const TELEGRAPH_API = "https://api.telegra.ph";
 const NEWS_CACHE_URL = "assets/data/news-cache.json";
@@ -2834,7 +3345,7 @@ function setSiteTitle(suffix){
 }
 
 function hideSubPages(){
-  ["newsPage","enginePage","aboutPage","graphPage","comparePage","privacyPage","supportPage","glyphSpecPage","feedbackPage"].forEach(id => {
+  ["newsPage","enginePage","aboutPage","graphPage","comparePage","privacyPage","supportPage","glyphSpecPage","feedbackPage","flintPage","statusPage","errorPage"].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
@@ -2846,6 +3357,7 @@ function hideSubPages(){
   closeEngineModal();
   document.getElementById("engineGameModal")?.classList.remove("open");
   stopAllSubPageCanvas();
+  document.querySelectorAll(".page-sub-active").forEach(el => el.classList.remove("page-sub-active"));
 }
 function hideNewsPage(){ hideSubPages(); }
 
@@ -2990,11 +3502,20 @@ function showAboutPage(){
   if(focus) setTimeout(() => setAboutChip(focus), 180);
 }
 
+function setPageShell(mode, activeId){
+  document.body.classList.remove("page-main","page-sub","page-store","page-graph");
+  document.body.classList.add("page-" + mode);
+  document.querySelectorAll(".page-sub-active").forEach(el => el.classList.remove("page-sub-active"));
+  if(activeId) document.getElementById(activeId)?.classList.add("page-sub-active");
+}
+
 function showSubPage(id, title, initFn){
   document.getElementById("mainView").style.display = "none";
   document.getElementById("storePage").style.display = "none";
   hideSubPages();
-  document.getElementById(id).style.display = "flex";
+  const page = document.getElementById(id);
+  page.style.display = "flex";
+  setPageShell("sub", id);
   setSiteTitle(title);
   window.scrollTo({ top: 0, behavior: "smooth" });
   if(initFn) initFn();
@@ -3005,14 +3526,20 @@ function initPrivacyPage(){
   const box = document.getElementById("privacyManifesto");
   if(!box || box.dataset.ready) return;
   box.dataset.ready = "1";
-  box.innerHTML = [1,2,3,4,5].map(i => `<div class="privacy-line">${esc(t("privacy.l"+i))}</div>`).join("");
+  box.innerHTML = [1,2,3,4,5].map(i => `<div class="privacy-line" data-pl="${i}">${esc(t("privacy.l"+i))}</div>`).join("");
+  const promise = document.createElement("div");
+  promise.className = "privacy-promise";
+  promise.id = "privacyPromise";
+  promise.textContent = t("privacy.promise");
+  box.after(promise);
+  initPrivacyContract();
 }
 
 function initSupportPage(){
   const list = document.getElementById("faqList");
   if(!list || list.dataset.ready) return;
   list.dataset.ready = "1";
-  list.innerHTML = [1,2,3,4,5,6].map(i =>
+  list.innerHTML = [1,2,3,4,5,6,7,8,9,10,11,12].map(i =>
     `<div class="faq-item"><button type="button" class="faq-q"><span>${esc(t("support.q"+i))}</span><span>+</span></button><div class="faq-a">${esc(t("support.a"+i))}</div></div>`
   ).join("");
   list.querySelectorAll(".faq-q").forEach(btn => btn.addEventListener("click", () => btn.parentElement.classList.toggle("open")));
@@ -3070,23 +3597,43 @@ async function initGiscus(){
   if(!host) return;
   if(host.dataset.loaded){
     syncGiscusTheme();
+    checkGiscusFallback();
     return;
   }
   host.dataset.loaded = "1";
   mountGiscus(host, GISCUS_CFG.repoId, GISCUS_CFG.categoryId, GISCUS_CFG.category);
+  setTimeout(checkGiscusFallback, 8000);
+}
+
+function formatCountdown(target){
+  const diff = target - Date.now();
+  if(diff <= 0) return { done: true, text: t("rhythm.live") };
+  const sec = Math.floor(diff / 1000);
+  const d = Math.floor(sec / 86400);
+  const h = Math.floor((sec % 86400) / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  const pad = n => String(n).padStart(2, "0");
+  if(locale === "ru"){
+    return { done: false, text: `${d}д ${pad(h)}:${pad(m)}:${pad(s)}` };
+  }
+  return { done: false, text: `${d}d ${pad(h)}h ${pad(m)}m ${pad(s)}s` };
 }
 
 function initReleaseCountdown(){
-  const el = document.getElementById("releaseCountdownNum");
-  if(!el) return;
+  const patchEl = document.getElementById("countdownPatch");
+  const mainEl = document.getElementById("countdownMain");
+  if(!patchEl || !mainEl) return;
   const tick = () => {
-    const diff = RELEASE_JULY - Date.now();
-    if(diff <= 0){ el.textContent = locale === "ru" ? "скоро" : "soon"; return; }
-    const d = Math.ceil(diff / 86400000);
-    el.textContent = d + (locale === "ru" ? " дн." : " days");
+    const p = formatCountdown(RELEASE_PATCH);
+    const m = formatCountdown(RELEASE_MAIN);
+    patchEl.textContent = p.text;
+    patchEl.classList.toggle("done", p.done);
+    mainEl.textContent = m.text;
+    mainEl.classList.toggle("done", m.done);
   };
   tick();
-  setInterval(tick, 60000);
+  setInterval(tick, 1000);
 }
 
 let sfxCtx = null;
@@ -3113,6 +3660,14 @@ function initFlokeSfx(){
       o.type = "sine"; o.frequency.setValueAtTime(220, now); o.frequency.linearRampToValueAtTime(330, now + 0.12);
       g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.03, now + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
       o.start(now); o.stop(now + 0.15);
+    } else if(type === "store"){
+      o.type = "triangle"; o.frequency.setValueAtTime(392, now); o.frequency.linearRampToValueAtTime(494, now + 0.1);
+      g.gain.setValueAtTime(0.025, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+      o.start(now); o.stop(now + 0.13);
+    } else if(type === "graph"){
+      o.type = "sine"; o.frequency.setValueAtTime(165, now); o.frequency.linearRampToValueAtTime(220, now + 0.15);
+      g.gain.setValueAtTime(0.02, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+      o.start(now); o.stop(now + 0.17);
     } else if(type === "success"){
       o.type = "square"; o.frequency.setValueAtTime(523, now); o.frequency.setValueAtTime(659, now + 0.08);
       g.gain.setValueAtTime(0.02, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
@@ -3168,7 +3723,22 @@ function routeCompare(){ showSubPage("comparePage", locale === "ru" ? "Срав�
 function routePrivacy(){ showSubPage("privacyPage", "Privacy", initPrivacyPage); startSubPageCanvas("privacyBgCanvas", 145); window.flokeSfx?.("nav"); }
 function routeSupport(){ showSubPage("supportPage", locale === "ru" ? "Поддержка" : "Support", initSupportPage); startSubPageCanvas("supportBgCanvas", 28); window.flokeSfx?.("nav"); }
 function routeGlyphSpec(){ showSubPage("glyphSpecPage", "Glyph spec", initGlyphSpecPage); }
-function routeFeedback(){ showSubPage("feedbackPage", locale === "ru" ? "Feedback" : "Feedback", initGiscus); startSubPageCanvas("feedbackBgCanvas", 210); window.flokeSfx?.("nav"); }
+function routeFeedback(){ showSubPage("feedbackPage", locale === "ru" ? "Feedback" : "Feedback", initGiscus); startCodeRainCanvas("feedbackCodeCanvas"); window.flokeSfx?.("nav"); checkGiscusFallback(); }
+function routeFlint(){ showSubPage("flintPage", "Flint"); window.flokeSfx?.("nav"); initFlintTerminalAnim(); }
+function routeStatus(){ showSubPage("statusPage", t("status.h1"), initStatusPage); window.flokeSfx?.("nav"); }
+function routeError(code){
+  document.getElementById("mainView").style.display = "none";
+  document.getElementById("storePage").style.display = "none";
+  hideSubPages();
+  const page = document.getElementById("errorPage");
+  page.style.display = "flex";
+  setPageShell("sub", "errorPage");
+  const c = String(code || "404");
+  document.getElementById("errorCode").textContent = c;
+  document.getElementById("errorMsg").textContent = t("error." + c) || t("error.404");
+  setSiteTitle("Error " + c);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 function routeEngine(){ showEnginePage(); }
 function routeAbout(){ showAboutPage(); }
@@ -3178,6 +3748,7 @@ function showGraphPage(){
   document.getElementById("storePage").style.display = "none";
   hideSubPages();
   document.getElementById("graphPage").style.display = "flex";
+  setPageShell("graph", null);
   setSiteTitle("Graph");
   window.scrollTo({ top: 0, behavior: "smooth" });
   initGraphView();
@@ -3448,7 +4019,9 @@ const SITE_PAGES = [
   { id: "privacy", hash: "#privacy", group: "page", r: 8 },
   { id: "support", hash: "#support", group: "page", r: 8 },
   { id: "feedback", hash: "#feedback", group: "page", r: 8 },
-  { id: "glyphSpec", hash: "#glyph/spec", group: "page", r: 8 }
+  { id: "glyphSpec", hash: "#glyph/spec", group: "page", r: 8 },
+  { id: "flint", hash: "#flint", group: "page", r: 9 },
+  { id: "status", hash: "#status", group: "page", r: 8 }
 ];
 
 function hashBase(h){ return (h || "").split("?")[0]; }
@@ -3506,6 +4079,8 @@ function isIntegratedSlug(slug){ return slug==="glyph" || slug==="mnemo"; }
 
 let locale = localStorage.getItem("floke-lang") || (navigator.language.startsWith("ru") ? "ru" : "en");
 let theme = localStorage.getItem("floke-theme") || "dark";
+let crtMode = localStorage.getItem("floke-crt") === "1";
+const THEMES = ["dark", "light", "paper"];
 const relCache = {};
 const verCache = {};
 
@@ -3672,11 +4247,40 @@ function renderMarkdown(md){
 
 function applyTheme(){
   document.documentElement.setAttribute("data-theme", theme);
-  document.getElementById("themeBtn").textContent = theme==="dark"?"◐":"◑";
+  document.body.classList.toggle("crt-mode", crtMode);
+  const icon = theme === "dark" ? "◐" : theme === "light" ? "◑" : "◈";
+  document.getElementById("themeBtn").textContent = icon;
   const dockTheme = document.getElementById("dockTheme");
-  if(dockTheme) dockTheme.textContent = theme==="dark"?"◐":"◑";
+  if(dockTheme) dockTheme.textContent = icon + (crtMode ? "▤" : "");
   localStorage.setItem("floke-theme", theme);
   syncGiscusTheme();
+  refreshActiveSubCanvas();
+}
+
+function cycleTheme(){
+  const i = THEMES.indexOf(theme);
+  theme = THEMES[(i + 1) % THEMES.length];
+  applyTheme();
+  if(graphSim?.active) graphSim.refreshLabels();
+}
+
+function toggleCrt(){
+  crtMode = !crtMode;
+  localStorage.setItem("floke-crt", crtMode ? "1" : "0");
+  applyTheme();
+  showFlokeToast(crtMode ? "CRT" : "CRT off", crtMode ? "Scanlines + phosphor easter egg" : "", 2200);
+}
+
+function refreshActiveSubCanvas(){
+  const map = {
+    comparePage: ["compareBgCanvas", 38],
+    privacyPage: ["privacyBgCanvas", 145],
+    supportPage: ["supportBgCanvas", 28]
+  };
+  Object.entries(map).forEach(([id, cfg]) => {
+    if(document.getElementById(id)?.classList.contains("page-sub-active")) startSubPageCanvas(cfg[0], cfg[1]);
+  });
+  if(document.getElementById("feedbackPage")?.classList.contains("page-sub-active")) startCodeRainCanvas("feedbackCodeCanvas");
 }
 
 let glyphToastTimer = null;
@@ -4056,6 +4660,12 @@ function applyLocale(){
     routeGlyphSpec();
   } else if(hashBase(h) === "#feedback"){
     routeFeedback();
+  } else if(hashBase(h) === "#flint"){
+    routeFlint();
+  } else if(hashBase(h) === "#status"){
+    routeStatus();
+  } else if(h.startsWith("#error/")){
+    routeError(h.replace("#error/", "").split("?")[0]);
   }
   syncEngineTitleUI();
   initWorkspace();
@@ -4119,8 +4729,17 @@ function buildCardHtml(slug, delayIdx){
 
 function bindCardGrid(grid){
   grid.querySelectorAll(".pcard").forEach(el => {
-    el.addEventListener("click", () => { window.flokeSfx?.("nav"); location.hash = "#project/" + el.dataset.slug; });
-    el.addEventListener("mouseenter", () => prefetchProject(el.dataset.slug), { passive: true });
+    el.addEventListener("click", () => {
+      const slug = el.dataset.slug;
+      const ico = el.querySelector(".pcard-ico");
+      if(ico) ico.style.setProperty("--vt-icon", "product-icon-" + slug);
+      window.flokeSfx?.("nav");
+      location.hash = "#project/" + slug;
+    });
+    el.addEventListener("mouseenter", () => {
+      prefetchProject(el.dataset.slug);
+      playDiskSpin();
+    }, { passive: true });
   });
   initReveal(grid.querySelectorAll(".rv"));
 }
@@ -4147,6 +4766,10 @@ function projectSearchBody(slug){
 
 function pageSearchBody(keys){
   return keys.map(k => t(k)).join(" ");
+}
+
+function faqSearchBody(){
+  return Array.from({ length: 12 }, (_, i) => t("support.q" + (i + 1)) + " " + t("support.a" + (i + 1))).join(" ");
 }
 
 async function fetchRel(repo, n=8){
@@ -4194,6 +4817,7 @@ async function loadReleases(){
     releaseSearchCache.mnemo = projectSearchBody("mnemo");
     releaseSearchCache.flint = projectSearchBody("flint");
     if(cmdPaletteOpen) cmdItems = buildCmdItems();
+    persistSearchCorpus({ releases: { ...releaseSearchCache }, faq: faqSearchBody() });
     if(c) verCache.cultiva = String(c.tag_name).replace(/^v/i, "");
     if(b) verCache.blip = String(b.tag_name).replace(/^v/i, "");
     verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.1.0";
@@ -4360,6 +4984,7 @@ async function renderStore(slug){
 
   document.getElementById("storeHead").className = "store-head " + p.bannerCls;
   fillIconSlot(document.getElementById("storeIco"), p);
+  document.getElementById("storeIco").style.setProperty("--vt-icon", "product-icon-" + slug);
   document.getElementById("storeTitle").textContent = c.name;
   document.getElementById("storeTagline").textContent = c.tagline;
   document.getElementById("storePlat").textContent = c.plat;
@@ -4385,7 +5010,7 @@ async function renderStore(slug){
     }
   } else if(slug==="glyph"){
     getBtn.textContent = t("glyph.get");
-    getBtn.onclick = showFlokeToast;
+    getBtn.onclick = () => showProductToast("glyph");
   } else {
     getBtn.textContent = t("store.get");
     getBtn.onclick = () => window.open(p.getUrl, "_blank", "noopener");
@@ -4439,6 +5064,7 @@ async function renderStore(slug){
   document.getElementById("mainView").style.display = "none";
   document.getElementById("storePage").style.display = "flex";
   hideNewsPage();
+  setPageShell("store", null);
   window.flokeSfx?.("nav");
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -4447,6 +5073,7 @@ function showMain(){
   document.getElementById("mainView").style.display = "";
   document.getElementById("storePage").style.display = "none";
   hideNewsPage();
+  setPageShell("main", null);
   setSiteTitle("");
   const wrap = document.getElementById("storeCarouselWrap");
   wrap?.classList.remove("carousel-wrap--glyph");
@@ -4459,15 +5086,24 @@ function showMain(){
 function routeHash(){
   const h = location.hash || "";
   const base = hashBase(h);
+  if(h.startsWith("#error/")){
+    const code = h.replace("#error/", "").split("?")[0];
+    navTransition(() => routeError(code));
+    return;
+  }
   if(h.startsWith("#project/")){
     const slug = h.replace("#project/","").split("?")[0].toLowerCase().trim();
     if(PROJECTS[slug]){ navTransition(() => renderStore(slug)); return; }
+    navTransition(() => routeError("404"));
+    return;
   }
   if(base === "#news" || h.startsWith("#news/")){
     navTransition(() => routeNews(h.startsWith("#news/") ? h.slice(6) : ""));
     return;
   }
   if(base === "#engine"){ navTransition(() => routeEngine()); return; }
+  if(base === "#flint"){ navTransition(() => routeFlint()); return; }
+  if(base === "#status"){ navTransition(() => routeStatus()); return; }
   if(base === "#about"){ navTransition(() => routeAbout()); return; }
   if(base === "#graph"){ navTransition(() => routeGraph()); return; }
   if(base === "#compare"){ navTransition(() => routeCompare()); return; }
@@ -4475,6 +5111,13 @@ function routeHash(){
   if(base === "#support"){ navTransition(() => routeSupport()); return; }
   if(base === "#glyph/spec"){ navTransition(() => routeGlyphSpec()); return; }
   if(base === "#feedback"){ navTransition(() => routeFeedback()); return; }
+  if(h && h !== "#" && !["#products","#glyph","#releases","#origin","#workspace"].includes(base)){
+    const known = ["","#products","#glyph","#releases","#engine","#about","#graph","#news","#compare","#privacy","#support","#feedback","#glyph/spec","#flint","#status"];
+    if(!known.includes(base) && !h.startsWith("#news/") && !h.startsWith("#project/") && !h.startsWith("#error/")){
+      navTransition(() => routeError("404"));
+      return;
+    }
+  }
   navTransition(() => showMain());
 }
 
@@ -4584,7 +5227,9 @@ function startSubPageCanvas(canvasId, hue){
   window.addEventListener("resize", onResize, { passive: true });
   subPageCanvasRaf[canvasId + "_rs"] = onResize;
   function loop(){
-    ctx.fillStyle = "rgba(8,8,12,0.15)";
+    const fade = getComputedStyle(document.documentElement).getPropertyValue("--sub-canvas-fade").trim() || "rgba(8,8,12,0.14)";
+    const alpha = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sub-node-alpha")) || 0.28;
+    ctx.fillStyle = fade;
     ctx.fillRect(0, 0, W, H);
     nodes.forEach(n => {
       n.x += n.vx; n.y += n.vy;
@@ -4592,13 +5237,14 @@ function startSubPageCanvas(canvasId, hue){
       if(n.y < 0 || n.y > 1) n.vy *= -1;
       const x = n.x * W, y = n.y * H;
       ctx.beginPath(); ctx.arc(x, y, n.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${hue},42%,58%,0.28)`; ctx.fill();
+      ctx.fillStyle = `hsla(${hue},38%,${theme === "light" ? "42" : "58"}%,${alpha})`;
+      ctx.fill();
     });
     for(let i = 0; i < nodes.length; i++){
       for(let j = i + 1; j < nodes.length; j++){
         const dx = (nodes[i].x - nodes[j].x) * W, dy = (nodes[i].y - nodes[j].y) * H;
         if(dx * dx + dy * dy < 140 * 140){
-          ctx.strokeStyle = `hsla(${hue},35%,50%,0.06)`;
+          ctx.strokeStyle = `hsla(${hue},30%,50%,${alpha * 0.35})`;
           ctx.beginPath();
           ctx.moveTo(nodes[i].x * W, nodes[i].y * H);
           ctx.lineTo(nodes[j].x * W, nodes[j].y * H);
@@ -4606,6 +5252,67 @@ function startSubPageCanvas(canvasId, hue){
         }
       }
     }
+    subPageCanvasRaf[canvasId] = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+const CODE_RAIN_SNIPPETS = [
+  "function initGiscus(){",
+  "  mountGiscus(host, repoId);",
+  "}",
+  "const releaseSearchCache = {};",
+  "async function loadReleases(){",
+  "  persistSearchCorpus(data);",
+  "document.startViewTransition(fn);",
+  "navigator.serviceWorker.register('sw.js');",
+  "function buildSiteGraph(){",
+  "  return { nodes, edges };",
+  "}",
+  "theme = localStorage.getItem('floke-theme');",
+  "location.hash = '#project/senza';"
+];
+function codeRainColor(line, accent){
+  if(/function|async|const|let|return/.test(line)) return accent ? "rgba(88,166,255,0.5)" : "rgba(120,180,255,0.45)";
+  if(/'.+'|".+"/.test(line)) return accent ? "rgba(200,169,110,0.55)" : "rgba(200,169,110,0.4)";
+  return accent ? (theme === "light" ? "rgba(61,107,74,0.55)" : "rgba(200,169,110,0.22)") : (theme === "light" ? "rgba(143,115,64,0.28)" : "rgba(200,169,110,0.18)");
+}
+
+function startCodeRainCanvas(canvasId){
+  stopSubPageCanvas(canvasId);
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let W, H;
+  const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+  resize();
+  const onResize = () => resize();
+  window.addEventListener("resize", onResize, { passive: true });
+  subPageCanvasRaf[canvasId + "_rs"] = onResize;
+  const colW = 18;
+  const cols = Math.ceil(W / colW) + 2;
+  const drops = Array.from({ length: cols }, (_, i) => ({
+    x: i * colW,
+    y: Math.random() * H,
+    speed: 0.35 + Math.random() * 1.1,
+    text: CODE_RAIN_SNIPPETS[Math.floor(Math.random() * CODE_RAIN_SNIPPETS.length)],
+    accent: Math.random() > 0.82
+  }));
+  function loop(){
+    const fade = theme === "light" ? "rgba(250,249,246,0.08)" : "rgba(8,8,14,0.12)";
+    ctx.fillStyle = fade;
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = "11px 'Space Mono', monospace";
+    drops.forEach(d => {
+      d.y += d.speed;
+      if(d.y > H + 40){
+        d.y = -Math.random() * H * 0.4;
+        d.text = CODE_RAIN_SNIPPETS[Math.floor(Math.random() * CODE_RAIN_SNIPPETS.length)];
+        d.accent = Math.random() > 0.82;
+      }
+      ctx.fillStyle = codeRainColor(d.text, d.accent);
+      ctx.fillText(d.text.slice(0, 28), d.x, d.y);
+    });
     subPageCanvasRaf[canvasId] = requestAnimationFrame(loop);
   }
   loop();
@@ -4661,8 +5368,13 @@ function startFlokePixelGame(canvas, hostEl, opts){
   const scoreEl = opts?.scoreEl;
   const overlay = opts?.overlay;
   const PX = 4;
+  const seed = dailySeed();
   let gW, gH, running = true, paused = false, score = 0, combo = 0, wave = 1, lives = 3;
-  let hi = +localStorage.getItem("floke-void-hi") || 0;
+  let hi = +localStorage.getItem("floke-void-signal-hi") || 0;
+  const saved = JSON.parse(localStorage.getItem("floke-void-signal-save") || "null");
+  if(saved && saved.seed === seed){ score = saved.score || 0; wave = saved.wave || 1; lives = saved.lives || 3; }
+  document.getElementById("arcadeDailySeed") && (document.getElementById("arcadeDailySeed").textContent = "seed: " + seed);
+  document.getElementById("arcadeHiScore") && (document.getElementById("arcadeHiScore").textContent = "hi: " + hi);
   let player = { x: 0, y: 0, shield: 0, spread: 0, rapid: 0, bomb: 0 };
   let bullets = [], enemies = [], drops = [], parts = [], stars = [];
   let lastShot = 0, spawnT = 0, waveT = 0, boss = null, keys = {};
@@ -4733,21 +5445,23 @@ function startFlokePixelGame(canvas, hostEl, opts){
 
   function drawShip(){
     const {x,y}=player;
-    pxFill(x-PX*1.5, y, 3, 1, "#ececec");
-    pxFill(x-PX*.5, y-PX, 1, 1, "#d7bc87");
-    pxFill(x-PX*1.5, y+PX, 1, 1, "#a07050");
-    pxFill(x+PX*.5, y+PX, 1, 1, "#a07050");
-    if(player.shield>0){ gCtx.strokeStyle="rgba(120,200,255,.5)"; gCtx.lineWidth=2; gCtx.strokeRect(x-PX*3,y-PX*3,PX*6,PX*6); }
+    pxFill(x-PX*2, y-PX, 4, 2, "#1a1a2e");
+    pxFill(x-PX*1.5, y-PX*2, 3, 1, "#d7bc87");
+    pxFill(x-PX*.5, y-PX*3, 1, 2, "#8cf");
+    pxFill(x-PX*1.5, y+PX, 1, 1, "#4a7c59");
+    pxFill(x+PX*.5, y+PX, 1, 1, "#4a7c59");
+    if(player.shield>0){ gCtx.strokeStyle="rgba(120,200,255,.55)"; gCtx.lineWidth=2; gCtx.strokeRect(x-PX*3,y-PX*3,PX*6,PX*6); }
   }
   function drawEnemy(e){
-    const c = e.type==="tank"?"#6a8a6a":e.type==="shooter"?"#8a7ec8":e.type==="diver"?"#c08862":"#b05050";
-    pxFill(e.x-PX*1.5, e.y-PX, 3, 2, c);
-    if(e.hp>1) pxFill(e.x-PX*.5, e.y-PX*2, 1, 1, "#fff");
+    const c = e.type==="tank"?"#3d5a4a":e.type==="shooter"?"#6a5a9a":e.type==="diver"?"#c08862":"#9a4048";
+    pxFill(e.x-PX*2, e.y-PX, 4, 2, c);
+    pxFill(e.x-PX, e.y-PX*2, 2, 1, "#2a2a2a");
+    if(e.hp>1) pxFill(e.x-PX*.5, e.y-PX*3, 1, 1, "#d7bc87");
   }
   function drawBoss(b){
-    pxFill(b.x-PX*4, b.y-PX*2, 8, 4, "#4a2040");
-    pxFill(b.x-PX*2, b.y-PX, 4, 2, "#d7bc87");
-    pxFill(b.x-PX*.5, b.y, 1, 1, "#f00");
+    pxFill(b.x-PX*5, b.y-PX*2, 10, 4, "#2a1030");
+    pxFill(b.x-PX*3, b.y-PX, 6, 2, "#d7bc87");
+    pxFill(b.x-PX, b.y, 2, 1, "#f44");
   }
 
   function loop(ts){
@@ -4762,6 +5476,11 @@ function startFlokePixelGame(canvas, hostEl, opts){
     stars.forEach(s=>{ gCtx.fillStyle="rgba(200,169,110,.3)"; gCtx.fillRect(s.x,s.y,s.s,s.s); s.y+=s.sp; if(s.y>gH)s.y=0; });
     if(keys["a"]) player.x-=4; if(keys["d"]) player.x+=4;
     if(keys["w"]) player.y-=3; if(keys["s"]) player.y+=3;
+    const gp = navigator.getGamepads?.()?.[0];
+    if(gp){
+      player.x += (gp.axes[0] || 0) * 5;
+      player.y += (gp.axes[1] || 0) * 4;
+    }
     player.x=Math.max(PX*3,Math.min(gW-PX*3,player.x));
     player.y=Math.max(gH*0.4,Math.min(gH-PX*6,player.y));
 
@@ -4815,10 +5534,10 @@ function startFlokePixelGame(canvas, hostEl, opts){
       if(Math.abs(e.x-player.x)<PX*4 && Math.abs(e.y-player.y)<PX*4){
         if(player.shield>0) burst(player.x,player.y,"#8cf",6);
         else { lives--; combo=0; burst(player.x,player.y,"#f44",12); window.flokeSfx?.("gameover");
-          if(lives<=0){ running=false; if(score>hi){ hi=score; localStorage.setItem("floke-void-hi",hi); }
+          if(lives<=0){ running=false; if(score>hi){ hi=score; localStorage.setItem("floke-void-signal-hi",hi); document.getElementById("arcadeHiScore") && (document.getElementById("arcadeHiScore").textContent = "hi: " + hi); }
             gCtx.fillStyle="rgba(0,0,0,.7)"; gCtx.fillRect(0,0,gW,gH);
             gCtx.fillStyle="#d7bc87"; gCtx.font="14px monospace"; gCtx.textAlign="center";
-            gCtx.fillText(`GAME OVER · ${score} · HI ${hi}`, gW/2, gH/2-8);
+            gCtx.fillText(`VOID SIGNAL · ${score} · HI ${hi}`, gW/2, gH/2-8);
             gCtx.fillStyle="#aaa"; gCtx.font="11px monospace";
             gCtx.fillText("click to restart", gW/2, gH/2+14);
           }
@@ -4854,7 +5573,8 @@ function startFlokePixelGame(canvas, hostEl, opts){
     parts=parts.filter(p=>{ p.x+=p.vx; p.y+=p.vy; p.life--; gCtx.fillStyle=p.c; gCtx.globalAlpha=p.life/30; gCtx.fillRect(p.x,p.y,PX,PX); gCtx.globalAlpha=1; return p.life>0; });
     drawShip();
     gCtx.fillStyle="rgba(200,169,110,.6)"; gCtx.font="10px monospace"; gCtx.textAlign="left";
-    gCtx.fillText(`HI ${hi}`, 8, 14);
+    gCtx.fillText(`HI ${hi} · seed ${seed}`, 8, 14);
+    if(running && ts % 1200 < 20) localStorage.setItem("floke-void-signal-save", JSON.stringify({ seed, score, wave, lives }));
     engineGameLoop=requestAnimationFrame(loop);
   }
   engineGameRunning=true;
@@ -4876,6 +5596,19 @@ function initEngineGame(){
   const overlay = document.getElementById("engineTeaserOverlay");
   const scoreEl = document.getElementById("engineTeaserScore");
   if(!screen || !gc || screen._bound) return;
+  document.getElementById("engineExportScore")?.addEventListener("click", () => {
+    const hi = localStorage.getItem("floke-void-signal-hi") || "0";
+    const md = `# Void Signal score\n\nhi: ${hi}\nseed: ${dailySeed()}\n\`flokestudio.github.io/Floke/#engine\``;
+    if(navigator.clipboard?.writeText) navigator.clipboard.writeText(md);
+    showFlokeToast("Score", "Markdown copied — paste into a Gist if you want", 2800);
+  });
+  if(navigator.getGamepads){
+    setInterval(() => {
+      const gp = [...navigator.getGamepads()].find(g => g && g.connected);
+      const badge = document.getElementById("gamepadBadge");
+      if(badge) badge.hidden = !gp;
+    }, 1000);
+  }
   screen._bound = true;
   screen.addEventListener("click", () => {
     if(engineGameRunning) return;
@@ -5364,7 +6097,7 @@ function buildCmdItems(){
     { cat: "page", title: () => t("nav.news"), sub: "#news", hash: "#news", keys: ["news", "telegraph", "updates", "blog"], body: () => t("news.lead") },
     { cat: "page", title: () => t("nav.compare"), sub: "#compare", hash: "#compare", keys: ["compare", "cloud", "offline", "privacy"], body: () => pageSearchBody(["compare.lead","compare.prose","compare.block1p","compare.block2p"]) },
     { cat: "page", title: () => t("nav.privacy"), sub: "#privacy", hash: "#privacy", keys: ["privacy", "data", "tracking"], body: () => pageSearchBody(["privacy.lead","privacy.prose","privacy.l1","privacy.l2","privacy.l3"]) },
-    { cat: "page", title: () => t("nav.support"), sub: "#support", hash: "#support", keys: ["support", "faq", "help", "bug", "email", "getfloke"], body: () => pageSearchBody(["support.lead","support.a1","support.a2","support.a3","support.a4"]) + " getfloke@gmail.com" },
+    { cat: "page", title: () => t("nav.support"), sub: "#support", hash: "#support", keys: ["support", "faq", "help", "bug", "email", "getfloke", "windows", "gpl", "changelog"], body: () => faqSearchBody() + " getfloke@gmail.com " + pageSearchBody(["support.lead"]) },
     { cat: "page", title: () => t("nav.feedback"), sub: "#feedback", hash: "#feedback", keys: ["feedback", "giscus", "comments", "discussions"], body: () => t("feedback.lead") },
     { cat: "page", title: () => t("spec.h1"), sub: "#glyph/spec", hash: "#glyph/spec", keys: ["glyph", "pipeline", "knn", "ollama", "spec"], body: () => pageSearchBody(["spec.lead","spec.s1p","spec.s2p","spec.s3p"]) },
     { cat: "action", title: () => t("cmd.theme"), sub: "theme", run: () => { theme = theme === "dark" ? "light" : "dark"; applyTheme(); }, keys: ["theme", "dark", "light"] },
@@ -5413,17 +6146,38 @@ function cmdTokens(q){
   return q.trim().toLowerCase().split(/[\s#./_\-]+/).filter(Boolean);
 }
 
-function scoreCmdItem(it, tokens){
+function cmdSnippet(it, tokens){
+  if(!tokens.length) return "";
+  const body = typeof it.body === "function" ? it.body() : (it.body || "");
+  if(!body) return "";
+  const low = body.toLowerCase();
+  const tok = tokens.find(t => low.includes(t)) || tokens[0];
+  const i = low.indexOf(tok);
+  if(i < 0) return "";
+  const slice = body.slice(Math.max(0, i - 30), i + 80);
+  let out = esc(slice);
+  tokens.forEach(t => {
+    if(t.length < 2) return;
+    out = out.replace(new RegExp("(" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi"), "<mark>$1</mark>");
+  });
+  return (i > 30 ? "…" : "") + out;
+}
+
+function scoreCmdItem(it, tokens, filters){
+  if(filters && !matchesSearchFilters(it, filters)) return 0;
   const title = it.title().toLowerCase();
   const sub = (it.sub || "").toLowerCase();
   const keys = (it.keys || []).join(" ").toLowerCase();
   const body = (typeof it.body === "function" ? it.body() : it.body || "").toLowerCase();
   const blob = title + " " + sub + " " + keys + " " + body;
+  const phrase = tokens.join(" ");
   if(!tokens.length){
     const pri = { page: 40, app: 32, release: 30, action: 24, news: 20 };
     return pri[it.cat] ?? 10;
   }
   let score = 0;
+  if(phrase.length > 2 && body.includes(phrase)) score += 100;
+  if(phrase.length > 2 && blob.includes(phrase)) score += 45;
   tokens.forEach(tok => {
     if(title === tok || sub === tok) score += 120;
     else if(title.startsWith(tok)) score += 90;
@@ -5460,27 +6214,44 @@ function closeCmdPalette(){
 function renderCmdList(q){
   const list = document.getElementById("cmdList");
   if(!list) return;
-  const tokens = cmdTokens(q);
-  const scored = cmdItems
-    .map(it => ({ it, score: scoreCmdItem(it, tokens) }))
+  const filters = parseSearchQuery(q);
+  const tokens = filters.tokens.length ? filters.tokens : cmdTokens(q);
+  let scored = cmdItems
+    .map(it => ({ it, score: scoreCmdItem(it, tokens, filters) }))
     .filter(x => x.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, 12);
+  if(!q.trim()){
+    const hist = JSON.parse(localStorage.getItem("floke-search-history") || "[]");
+    const pinItems = SEARCH_PINS.map(p => ({
+      it: { title: () => p.label, sub: p.hash, hash: p.hash, cat: "page", keys: [p.label], run: null },
+      score: 200
+    }));
+    const histItems = hist.slice(0, 5).map(h => ({
+      it: { title: () => h, sub: t("cmd.history"), hash: "", cat: "action", keys: [h], run: () => { document.getElementById("cmdInput").value = h; renderCmdList(h); } },
+      score: 100
+    }));
+    scored = [...pinItems, ...histItems, ...scored].slice(0, 12);
+  }
   if(!scored.length){
     list.innerHTML = `<li class="cmd-empty">${esc(t("cmd.empty"))}</li>`;
     list._filtered = [];
     return;
   }
-  list.innerHTML = scored.map(({ it }, i) =>
-    `<li class="cmd-item${i === cmdActive ? " active" : ""}" role="option" data-idx="${i}" data-hash="${esc(it.hash || "")}" data-run="${it.run ? "1" : ""}">
-      <div class="cmd-item-body"><div class="cmd-item-title">${esc(it.title())}</div><div class="cmd-item-sub">${esc(it.sub || "")}</div></div>
-      <div class="cmd-item-key">${esc(t("cmd.cat." + it.cat))}</div>
-    </li>`
-  ).join("");
+  list.innerHTML = scored.map(({ it }, i) => {
+    const snip = cmdSnippet(it, tokens);
+    const pin = SEARCH_PINS.some(p => p.hash === it.hash) ? `<span class="cmd-pin">★</span>` : "";
+    return `<li class="cmd-item${i === cmdActive ? " active" : ""}" role="option" data-idx="${i}" data-hash="${esc(it.hash || "")}" data-run="${it.run ? "1" : ""}">
+      <div class="cmd-item-body"><div class="cmd-item-title">${esc(it.title())}${pin}</div><div class="cmd-item-sub">${esc(it.sub || "")}</div>${snip ? `<div class="cmd-item-snippet">${snip}</div>` : ""}</div>
+      <div class="cmd-item-key">${esc(t("cmd.cat." + (it.cat || "page")))}</div>
+    </li>`;
+  }).join("");
   list._filtered = scored.map(x => x.it);
   list.querySelectorAll(".cmd-item").forEach(el => el.addEventListener("click", () => runCmdItem(list._filtered[+el.dataset.idx])));
 }
 function runCmdItem(it){
+  const q = document.getElementById("cmdInput")?.value;
+  if(q) pushSearchHistory(q);
   closeCmdPalette();
   if(it.run) it.run();
   else if(it.hash) location.hash = it.hash;
@@ -5514,12 +6285,17 @@ function isTypingTarget(el){
 const SHORTCUT_ROWS = [
   { keys: "⌘ K", label: "shortcuts.search" },
   { keys: "?", label: "shortcuts.help" },
+  { keys: "$_", label: "shortcuts.shell" },
   { keys: "T", label: "shortcuts.theme" },
-  { keys: "G", label: "shortcuts.graph" },
+  { keys: "G then G", label: "shortcuts.graph" },
+  { keys: "G then P", label: "shortcuts.products" },
+  { keys: "/", label: "shortcuts.focusSearch" },
   { keys: "H", label: "shortcuts.home" },
   { keys: "A", label: "shortcuts.ambient" }
 ];
 let shortcutsOpen = false;
+let vimPrefix = null;
+let vimTimer = null;
 
 function renderShortcutsGrid(){
   const grid = document.getElementById("shortcutsGrid");
@@ -5549,13 +6325,24 @@ function initShortcuts(){
     if(e.target.id === "shortcutsModal") closeShortcuts();
   });
   document.addEventListener("keydown", e => {
-    if(isTypingTarget(e.target) || cmdPaletteOpen) return;
+    if(isTypingTarget(e.target) || cmdPaletteOpen || shellOpen) return;
     if(e.key === "?" && !e.metaKey && !e.ctrlKey && !e.altKey){ e.preventDefault(); shortcutsOpen ? closeShortcuts() : openShortcuts(); }
     if(e.key === "Escape" && shortcutsOpen){ e.preventDefault(); closeShortcuts(); }
-    if(e.key.toLowerCase() === "t" && !e.metaKey && !e.ctrlKey){ theme = theme === "dark" ? "light" : "dark"; applyTheme(); if(graphSim?.active) graphSim.refreshLabels(); }
-    if(e.key.toLowerCase() === "g" && !e.metaKey && !e.ctrlKey){ location.hash = "#graph"; }
-    if(e.key.toLowerCase() === "h" && !e.metaKey && !e.ctrlKey){ location.hash = ""; }
+    if(e.key === "/" && !e.metaKey && !e.ctrlKey){ e.preventDefault(); openCmdPalette(); return; }
+    if(e.key.toLowerCase() === "t" && !e.metaKey && !e.ctrlKey){ cycleTheme(); if(graphSim?.active) graphSim.refreshLabels(); }
+    if(e.key.toLowerCase() === "h" && !e.metaKey && !e.ctrlKey && !vimPrefix){ location.hash = ""; }
     if(e.key.toLowerCase() === "a" && !e.metaKey && !e.ctrlKey){ toggleAmbient(true); }
+    if(e.key.toLowerCase() === "g" && !e.metaKey && !e.ctrlKey){
+      vimPrefix = "g";
+      clearTimeout(vimTimer);
+      vimTimer = setTimeout(() => { vimPrefix = null; }, 800);
+      return;
+    }
+    if(vimPrefix === "g"){
+      vimPrefix = null;
+      if(e.key.toLowerCase() === "g"){ e.preventDefault(); location.hash = "#graph"; }
+      if(e.key.toLowerCase() === "p"){ e.preventDefault(); location.hash = "#products"; }
+    }
   });
 }
 
@@ -5577,10 +6364,11 @@ function updateAmbientDock(){
 function stopAmbient(){
   if(!ambientNodes) return;
   try { ambientNodes.source.stop(0); } catch(_){}
-  try { ambientNodes.source.disconnect(); } catch(_){}
-  try { ambientNodes.filter.disconnect(); } catch(_){}
-  try { ambientNodes.hum?.disconnect(); } catch(_){}
-  try { ambientNodes.gain.disconnect(); } catch(_){}
+  try { ambientNodes.hum?.stop(0); } catch(_){}
+  try { ambientNodes.hiss?.stop(0); } catch(_){}
+  ["source","filter","gain","hum","humGain","hiss","hissGain","comp"].forEach(k => {
+    try { ambientNodes[k]?.disconnect(); } catch(_){}
+  });
   ambientNodes = null;
 }
 
@@ -5626,7 +6414,19 @@ async function startAmbient(){
   gain.gain.exponentialRampToValueAtTime(0.055, now + 1.2);
   source.start(now);
   hum.start(now);
-  ambientNodes = { source, filter, gain, hum, humGain };
+  const hiss = ctx.createBufferSource();
+  const hb = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const hd = hb.getChannelData(0);
+  for(let i = 0; i < bufferSize; i++) hd[i] = (Math.random() * 2 - 1) * 0.015;
+  hiss.buffer = hb; hiss.loop = true;
+  const hissGain = ctx.createGain(); hissGain.gain.value = 0.012;
+  hiss.connect(hissGain).connect(gain);
+  hiss.start(now);
+  const comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -24; comp.ratio.value = 3;
+  gain.disconnect();
+  gain.connect(comp).connect(ctx.destination);
+  ambientNodes = { source, filter, gain, hum, humGain, hiss, hissGain, comp };
   return ctx.state === "running";
 }
 
@@ -5673,12 +6473,13 @@ function initAmbient(){
 
 function initDock(){
   document.getElementById("dockSearch")?.addEventListener("click", () => cmdPaletteOpen ? closeCmdPalette() : openCmdPalette());
-  document.getElementById("dockTheme")?.addEventListener("click", () => {
-    theme = theme === "dark" ? "light" : "dark";
-    applyTheme();
-    if(graphSim?.active) graphSim.refreshLabels();
-  });
+  document.getElementById("dockTheme")?.addEventListener("click", () => cycleTheme());
+  document.getElementById("dockTheme")?.addEventListener("dblclick", e => { e.preventDefault(); toggleCrt(); });
   document.getElementById("dockAmbient")?.addEventListener("click", () => toggleAmbient(true));
+  document.getElementById("dockTop")?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    window.flokeSfx?.("click");
+  });
 }
 
 function initOriginTimeline(){
@@ -5823,7 +6624,402 @@ function initWorkspace(){
   select(wsActive);
 }
 
-document.getElementById("themeBtn").addEventListener("click",()=>{ theme=theme==="dark"?"light":"dark"; applyTheme(); if(graphSim?.active) graphSim.refreshLabels(); });
+/* ── Extended features: shell, search IDB, PWA, hero, compare, privacy, game ── */
+const SEARCH_PINS = [
+  { hash: "#project/senza", label: "Senza" },
+  { hash: "#releases", label: "changelog cultiva cypress", q: "cultiva cypress changelog" }
+];
+const SEARCH_IDB = "floke-glyph-search";
+const SEARCH_STORE = "corpus";
+
+function openSearchDB(){
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(SEARCH_IDB, 1);
+    r.onupgradeneeded = () => r.result.createObjectStore(SEARCH_STORE);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function persistSearchCorpus(data){
+  try {
+    const db = await openSearchDB();
+    const tx = db.transaction(SEARCH_STORE, "readwrite");
+    tx.objectStore(SEARCH_STORE).put({ at: Date.now(), ...data }, "main");
+  } catch(_){}
+}
+async function loadSearchCorpus(){
+  try {
+    const db = await openSearchDB();
+    return await new Promise((res, rej) => {
+      const r = db.transaction(SEARCH_STORE).objectStore(SEARCH_STORE).get("main");
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  } catch(_){ return null; }
+}
+function applyOfflineCorpus(corpus){
+  if(!corpus) return;
+  Object.entries(corpus.releases || {}).forEach(([k, v]) => { if(v) releaseSearchCache[k] = v; });
+  if(corpus.faq) window._flokeFaqCorpus = corpus.faq;
+}
+function pushSearchHistory(q){
+  if(!q.trim()) return;
+  const key = "floke-search-history";
+  const hist = JSON.parse(localStorage.getItem(key) || "[]").filter(x => x !== q);
+  hist.unshift(q);
+  localStorage.setItem(key, JSON.stringify(hist.slice(0, 10)));
+}
+function parseSearchQuery(raw){
+  const parts = raw.trim().split(/\s+/);
+  const filters = { type: null, page: null, app: null, tokens: [] };
+  parts.forEach(p => {
+    const m = p.match(/^(type|page|app):(.+)$/i);
+    if(m) filters[m[1].toLowerCase()] = m[2].toLowerCase();
+    else filters.tokens.push(p.toLowerCase());
+  });
+  return filters;
+}
+function matchesSearchFilters(it, filters){
+  if(filters.type === "release" && it.cat !== "release") return false;
+  if(filters.page && !(it.hash || "").includes(filters.page) && !it.title().toLowerCase().includes(filters.page)) return false;
+  if(filters.app){
+    const slug = (it.hash || "").replace("#project/", "");
+    if(it.cat === "app" && !slug.includes(filters.app) && !it.title().toLowerCase().includes(filters.app)) return false;
+    if(it.cat !== "app" && !it.keys?.join(" ").includes(filters.app)) return false;
+  }
+  return true;
+}
+
+function initHeroMesh(){
+  const canvas = document.getElementById("heroMeshCanvas");
+  if(!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const ctx = canvas.getContext("2d");
+  let W, H, mx = 0.5, my = 0.5, raf;
+  const resize = () => {
+    W = canvas.width = canvas.offsetWidth * devicePixelRatio;
+    H = canvas.height = canvas.offsetHeight * devicePixelRatio;
+  };
+  resize();
+  window.addEventListener("resize", resize, { passive: true });
+  document.querySelector(".hero")?.addEventListener("mousemove", e => {
+    const r = canvas.getBoundingClientRect();
+    mx = (e.clientX - r.left) / r.width;
+    my = (e.clientY - r.top) / r.height;
+  }, { passive: true });
+  const loop = () => {
+    ctx.clearRect(0, 0, W, H);
+    const g = ctx.createRadialGradient(mx * W, my * H, 0, W * 0.5, H * 0.5, W * 0.7);
+    g.addColorStop(0, theme === "light" ? "rgba(143,115,64,0.12)" : "rgba(200,169,110,0.14)");
+    g.addColorStop(0.5, "rgba(74,124,89,0.08)");
+    g.addColorStop(1, "transparent");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    raf = requestAnimationFrame(loop);
+  };
+  loop();
+  canvas._stop = () => cancelAnimationFrame(raf);
+}
+
+function initScrollStory(){
+  const fill = document.getElementById("scrollStoryFill");
+  const steps = document.querySelectorAll(".scroll-story-step");
+  const section = document.getElementById("scroll-story");
+  if(!fill || !section) return;
+  const tick = () => {
+    const r = section.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const p = Math.max(0, Math.min(1, (vh * 0.7 - r.top) / (r.height + vh * 0.5)));
+    fill.style.width = (p * 100).toFixed(1) + "%";
+    steps.forEach((s, i) => s.classList.toggle("is-active", p >= i / steps.length));
+    const orbit = section.querySelector(".scroll-story-orbit i");
+    if(orbit) orbit.style.transform = `rotate(${p * 360}deg)`;
+  };
+  window.addEventListener("scroll", tick, { passive: true });
+  tick();
+}
+
+function initCompareSlider(){
+  const slider = document.getElementById("compareSlider");
+  if(!slider || slider._bound) return;
+  slider._bound = true;
+  const pairs = [
+    [t("compare.r1f"), t("compare.r1c")],
+    [t("compare.r2f"), t("compare.r2c")],
+    [t("compare.r3f"), t("compare.r3c")],
+    [t("compare.r4f"), t("compare.r4c")],
+    [t("compare.r5f"), t("compare.r5c")],
+    [t("compare.r6f"), t("compare.r6c")],
+    [t("compare.r7f"), t("compare.r7c")]
+  ];
+  const floke = document.getElementById("compareFlokeText");
+  const cloud = document.getElementById("compareCloudText");
+  const cf = document.getElementById("compareCardFloke");
+  const cc = document.getElementById("compareCardCloud");
+  const sync = () => {
+    const v = +slider.value;
+    const idx = Math.min(pairs.length - 1, Math.floor(v / (100 / pairs.length)));
+    if(floke) floke.textContent = pairs[idx][0];
+    if(cloud) cloud.textContent = pairs[idx][1];
+    cf?.classList.toggle("is-active", v < 55);
+    cc?.classList.toggle("is-active", v >= 45);
+    cf?.classList.toggle("is-dim", v >= 55);
+    cc?.classList.toggle("is-dim", v < 45);
+    cf.querySelector(".compare-card-icon").textContent = v < 50 ? "🔒" : "💾";
+    cc.querySelector(".compare-card-icon").textContent = v >= 50 ? "☁️" : "📤";
+  };
+  slider.addEventListener("input", sync);
+  sync();
+}
+
+function initPrivacyContract(){
+  const box = document.getElementById("privacyManifesto");
+  if(!box || box._contract) return;
+  box._contract = true;
+  const bar = document.createElement("div");
+  bar.className = "privacy-contract";
+  bar.innerHTML = '<div class="privacy-contract-bar"><div class="privacy-contract-fill" id="privacyContractFill"></div></div>';
+  box.before(bar);
+  const fill = document.getElementById("privacyContractFill");
+  const lines = box.querySelectorAll(".privacy-line");
+  const promise = document.getElementById("privacyPromise");
+  const tick = () => {
+    if(document.getElementById("privacyPage").style.display === "none") return;
+    const page = document.getElementById("privacyPage");
+    const r = page.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, (window.innerHeight * 0.5 - r.top) / (page.scrollHeight || 1)));
+    if(fill) fill.style.width = (p * 100) + "%";
+    lines.forEach((ln, i) => ln.classList.toggle("signed", p >= (i + 1) / (lines.length + 1)));
+    promise?.classList.toggle("show", p > 0.92);
+  };
+  window.addEventListener("scroll", tick, { passive: true });
+  tick();
+}
+
+function initStatusPage(){
+  const grid = document.getElementById("statusGrid");
+  if(!grid) return;
+  const rows = [
+    ["Senza", t("status.live") || "Live", "1.1.0"],
+    ["Cultiva", t("status.live"), verCache.cultiva || "1.1.0"],
+    ["BLIP", t("status.live"), verCache.blip || "1.1.1"],
+    ["Flint", t("tag.soon"), "Q3 2026"],
+    ["Glyph2.2-O", t("status.live"), "2.2-O"],
+    ["Mnemo", t("tag.soon"), "1.2-O"],
+    ["Site search", "IndexedDB", "Glyph 2.2-On"],
+    ["PWA shell", navigator.serviceWorker ? "sw.js" : "—", localStorage.getItem("floke-sw-ready") ? t("pwa.ready") : t("pwa.pending")]
+  ];
+  grid.innerHTML = rows.map(([a, b, c]) =>
+    `<div class="status-row"><span>${esc(a)} · ${esc(c)}</span><span>${esc(b)}</span></div>`
+  ).join("");
+}
+
+function initFlintTerminalAnim(){
+  const el = document.getElementById("flintTerminal");
+  if(!el || el._anim) return;
+  el._anim = true;
+  let i = 0;
+  setInterval(() => { el.style.opacity = 0.85 + Math.sin(i++ * 0.2) * 0.15; }, 120);
+}
+
+function checkGiscusFallback(){
+  const iframe = document.querySelector("iframe.giscus-frame");
+  const fb = document.getElementById("giscusInlineFallback");
+  if(!fb) return;
+  if(!iframe || iframe.offsetHeight < 40){
+    fb.classList.add("show");
+  }
+}
+function initGiscusFallbackForm(){
+  document.getElementById("giscusFallbackSubmit")?.addEventListener("click", async () => {
+    const title = document.getElementById("giscusFallbackTitle")?.value.trim() || "Floke site feedback";
+    const body = document.getElementById("giscusFallbackBody")?.value.trim() || "";
+    const md = `## ${title}\n\n${body}\n\n— via flokestudio.github.io/Floke/#feedback`;
+    if(navigator.clipboard?.writeText) await navigator.clipboard.writeText(md);
+    showFlokeToast("Copied", "Paste into Discussion #1 on GitHub", 3200);
+    window.open("https://github.com/FlokeStudio/Floke/discussions/1", "_blank", "noopener");
+  });
+}
+
+let shellOpen = false;
+function printShell(msg){
+  const out = document.getElementById("flokeShellOut");
+  if(out) out.textContent += "\n" + msg;
+}
+function runShellCmd(raw){
+  const line = raw.trim();
+  if(!line) return;
+  printShell("> " + line);
+  const [cmd, ...rest] = line.split(/\s+/);
+  const arg = rest.join(" ");
+  switch(cmd.toLowerCase()){
+    case "help": printShell(t("shell.help")); break;
+    case "open":
+      if(arg) location.hash = "#project/" + arg.toLowerCase();
+      else printShell("usage: open senza|cultiva|blip|flint|glyph");
+      closeFlokeShell();
+      break;
+    case "grep":
+      if(line.includes("releases")) openCmdPalette(), setTimeout(() => {
+        document.getElementById("cmdInput").value = "type:release " + (rest.slice(1).join(" ") || "cultiva");
+        renderCmdList(document.getElementById("cmdInput").value);
+      }, 50);
+      else printShell("try: grep releases cultiva");
+      break;
+    case "theme":
+      if(["dark","light","paper"].includes(arg)) { theme = arg; applyTheme(); }
+      else cycleTheme();
+      break;
+    case "graph": location.hash = "#graph"; closeFlokeShell(); break;
+    case "play": location.hash = "#engine"; closeFlokeShell(); break;
+    case "pixel": openPixelEditor(); break;
+    case "soundpack": exportSoundPack(); break;
+    default: printShell("unknown — type help");
+  }
+}
+function openFlokeShell(){
+  const el = document.getElementById("flokeShell");
+  if(!el) return;
+  shellOpen = true; el.hidden = false; el.classList.add("open");
+  document.getElementById("flokeShellInput")?.focus();
+}
+function closeFlokeShell(){
+  shellOpen = false;
+  document.getElementById("flokeShell")?.classList.remove("open");
+  document.getElementById("flokeShell").hidden = true;
+}
+function initFlokeShell(){
+  document.getElementById("dockShell")?.addEventListener("click", () => shellOpen ? closeFlokeShell() : openFlokeShell());
+  document.getElementById("flokeShellClose")?.addEventListener("click", closeFlokeShell);
+  const inp = document.getElementById("flokeShellInput");
+  inp?.addEventListener("keydown", e => {
+    if(e.key === "Escape") closeFlokeShell();
+    if(e.key === "Enter"){ runShellCmd(inp.value); inp.value = ""; }
+  });
+  document.getElementById("flokeShell")?.addEventListener("click", e => { if(e.target.id === "flokeShell") closeFlokeShell(); });
+}
+
+function exportSoundPack(){
+  const preset = {
+    name: "Floke Studio",
+    version: 1,
+    ambient: { brownHz: 480, humHz: 58, gain: 0.055 },
+    sfx: { nav: [220, 330], click: [880, 440], success: [523, 659] },
+    note: "Same oscillator curves as site ambient + UI — import in Senza/Cultiva easter egg."
+  };
+  const json = JSON.stringify(preset, null, 2);
+  if(navigator.clipboard?.writeText) navigator.clipboard.writeText(json);
+  showFlokeToast(t("foot.soundPack"), t("foot.soundPackOk"), 3200);
+}
+
+let diskSpinLast = 0;
+function playDiskSpin(){
+  if(Date.now() - diskSpinLast < 400) return;
+  diskSpinLast = Date.now();
+  if(!ambientOn || !ambientCtx) return;
+  try {
+    const o = ambientCtx.createOscillator();
+    const g = ambientCtx.createGain();
+    o.type = "sine"; o.frequency.value = 420;
+    g.gain.value = 0.0001;
+    o.connect(g); g.connect(ambientCtx.destination);
+    const n = ambientCtx.currentTime;
+    g.gain.exponentialRampToValueAtTime(0.004, n + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, n + 0.15);
+    o.start(n); o.stop(n + 0.16);
+  } catch(_){}
+}
+
+function initPWA(){
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js").then(() => {
+      localStorage.setItem("floke-sw-ready", "1");
+      const b = document.getElementById("pwaBadge");
+      if(b){ b.textContent = t("pwa.ready"); b.classList.add("ready"); }
+    }).catch(() => {});
+  }
+  let deferred;
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault(); deferred = e;
+    const btn = document.getElementById("footInstall");
+    if(btn){ btn.hidden = false; btn.onclick = () => { deferred.prompt(); btn.hidden = true; }; }
+  });
+}
+
+function initFlintMeter(){
+  const fill = document.getElementById("flintMeterFill");
+  if(!fill) return;
+  let p = 62;
+  setInterval(() => {
+    p = 58 + Math.sin(Date.now() / 900) * 8;
+    fill.style.width = p.toFixed(0) + "%";
+  }, 120);
+}
+
+function dailySeed(){
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+
+function openPixelEditor(){
+  const modal = document.getElementById("pixelEditorModal");
+  const grid = document.getElementById("pixelGrid");
+  if(!modal || !grid || grid._built) {
+    modal?.classList.add("open");
+    modal?.setAttribute("aria-hidden", "false");
+    return;
+  }
+  grid._built = true;
+  const pixels = Array(256).fill(0);
+  grid.innerHTML = pixels.map((_, i) => `<button type="button" class="pixel-cell" data-i="${i}"></button>`).join("");
+  grid.querySelectorAll(".pixel-cell").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const i = +cell.dataset.i;
+      pixels[i] = pixels[i] ? 0 : 1;
+      cell.classList.toggle("on", !!pixels[i]);
+    });
+  });
+  document.getElementById("pixelClear")?.addEventListener("click", () => {
+    pixels.fill(0);
+    grid.querySelectorAll(".pixel-cell").forEach(c => c.classList.remove("on"));
+  });
+  document.getElementById("pixelExport")?.addEventListener("click", () => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 16;
+    const x = c.getContext("2d");
+    x.fillStyle = "#080808"; x.fillRect(0, 0, 16, 16);
+    x.fillStyle = "#c8a96e";
+    pixels.forEach((on, i) => { if(on) x.fillRect(i % 16, (i / 16) | 0, 1, 1); });
+    c.toBlob(b => {
+      const u = URL.createObjectURL(b);
+      const a = document.createElement("a");
+      a.href = u; a.download = "floke-pixel.png"; a.click();
+      URL.revokeObjectURL(u);
+    });
+  });
+  document.getElementById("pixelClose")?.addEventListener("click", () => {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  });
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function initFootGeek(){
+  document.getElementById("footCopyLink")?.addEventListener("click", () => {
+    const url = location.href;
+    if(navigator.clipboard?.writeText){
+      navigator.clipboard.writeText(url).then(() => showFlokeToast(t("foot.copied"), location.pathname + location.hash, 2400));
+    } else {
+      showFlokeToast(t("foot.copied"), url, 2400);
+    }
+  });
+  document.getElementById("footViewSource")?.addEventListener("click", () => {
+    window.open("view-source:" + location.href, "_blank", "noopener");
+  });
+  document.getElementById("footSoundPack")?.addEventListener("click", exportSoundPack);
+}
+
+document.getElementById("themeBtn").addEventListener("click",()=>{ cycleTheme(); if(graphSim?.active) graphSim.refreshLabels(); });
 document.getElementById("btnEn").addEventListener("click",()=>{ locale="en"; applyLocale(); loadReleases(); });
 document.getElementById("btnRu").addEventListener("click",()=>{ locale="ru"; applyLocale(); loadReleases(); });
 document.getElementById("navHome").addEventListener("click",e=>{e.preventDefault();location.hash="";});
@@ -5831,9 +7027,13 @@ document.getElementById("storeBack").addEventListener("click",e=>{e.preventDefau
 document.getElementById("engineBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
 document.getElementById("aboutBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
 document.getElementById("graphBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
-["compareBack","privacyBack","supportBack","glyphSpecBack","feedbackBack"].forEach(id => {
+["compareBack","privacyBack","supportBack","glyphSpecBack","feedbackBack","flintBack","statusBack"].forEach(id => {
   document.getElementById(id)?.addEventListener("click", e => { e.preventDefault(); location.hash = ""; });
 });
+document.getElementById("errorHome")?.addEventListener("click", e => { e.preventDefault(); location.hash = ""; });
+document.getElementById("errorSearch")?.addEventListener("click", () => openCmdPalette());
+document.getElementById("flintWaitlistLanding")?.addEventListener("click", () => openWaitlist("flint"));
+document.getElementById("enginePixelBtn")?.addEventListener("click", openPixelEditor);
 document.getElementById("newsBack").addEventListener("click",e=>{
   e.preventDefault();
   const h = location.hash || "";
@@ -5845,6 +7045,8 @@ window.addEventListener("scroll",()=>{
 },{passive:true});
 window.addEventListener("hashchange", routeHash);
 
+initFootGeek();
+setPageShell("main", null);
 applyTheme();
 applyLocale();
 renderGlyphSlides();
@@ -5859,12 +7061,20 @@ initDock();
 initOriginTimeline();
 initReleaseCountdown();
 initFlokeSfx();
+initHeroMesh();
+initScrollStory();
+initCompareSlider();
+initFlokeShell();
+initGiscusFallbackForm();
+initPWA();
+initFlintMeter();
+loadSearchCorpus().then(applyOfflineCorpus);
 syncEngineTitleUI();
 loadReleases();
 routeHash();
 setTimeout(()=>{
   initReveal(document.querySelectorAll("#glyph .rv, #glyphSlides"));
-  initReveal(document.querySelectorAll("#products .rv, #release-rhythm .rv, #releases .rv, #origin .rv, #workspace .rv, .ecosystem-finale .rv, #engine-preview .rv, .manifesto .rv"));
+  initReveal(document.querySelectorAll("#products .rv, #release-rhythm .rv, #releases .rv, #origin .rv, #workspace .rv, #scroll-story .rv, #flint-landing, .ecosystem-finale .rv, #engine-preview .rv, .manifesto .rv"));
   initReveal(document.querySelectorAll("#newsListView .rv"));
 },120);
 </script>

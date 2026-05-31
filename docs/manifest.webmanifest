@@ -19,5 +19,11 @@
       "type": "image/svg+xml",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    { "name": "Senza", "url": "./index.html#project/senza", "description": "Music library" },
+    { "name": "Cultiva", "url": "./index.html#project/cultiva", "description": "Habit tracker" },
+    { "name": "News", "url": "./index.html#news", "description": "Studio news" },
+    { "name": "Search", "url": "./index.html#products", "description": "Browse & ⌘K" }
   ]
 }

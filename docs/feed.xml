@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Floke Studio News</title>
+    <link>https://flokestudio.github.io/Floke/#news</link>
+    <description>Studio updates — offline-first desktop apps, Glyph intelligence, indie games.</description>
+    <language>en</language>
+    <atom:link href="https://flokestudio.github.io/Floke/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Floke release rhythm · June 2026</title>
+      <link>https://flokestudio.github.io/Floke/#releases</link>
+      <guid isPermaLink="true">https://flokestudio.github.io/Floke/#releases</guid>
+      <description>Monthly patches. Quarterly features. One big Floke release every June.</description>
+    </item>
+    <item>
+      <title>Senza 1.1.0 Legato</title>
+      <link>https://flokestudio.github.io/Floke/#project/senza</link>
+      <guid isPermaLink="true">https://flokestudio.github.io/Floke/#project/senza</guid>
+      <description>Crossfade, Flow, Glyph2.2-O metadata intelligence.</description>
+    </item>
+    <item>
+      <title>Flint · Q3 2026</title>
+      <link>https://flokestudio.github.io/Floke/#flint</link>
+      <guid isPermaLink="true">https://flokestudio.github.io/Floke/#flint</guid>
+      <description>Local agent workstation — in development.</description>
+    </item>
+  </channel>
+</rss>
