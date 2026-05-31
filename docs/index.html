@@ -166,7 +166,7 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
   width:56px;height:56px;border-radius:14px;border:1px solid var(--border2);
   grid-row:1/span 4;align-self:start;
 }
-.pcard-ico img{width:100%;height:100%;object-fit:contain;padding:8px}
+.pcard-ico img{width:100%;height:100%;object-fit:cover;padding:0;border-radius:12px}
 .pcard-ico.is-missing,.store-icon.is-missing{background:var(--bg2)}
 .pcard-name{font-size:17px;font-weight:700;letter-spacing:.01em;margin-bottom:6px;padding-right:32px}
 .pcard-pitch{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px}
@@ -471,7 +471,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   width:88px;height:88px;border-radius:20px;border:1px solid var(--border2);
   flex-shrink:0;
 }
-.store-icon img{width:100%;height:100%;object-fit:contain;padding:12px}
+.store-icon img{width:100%;height:100%;object-fit:cover;padding:0;border-radius:18px}
 .store-icon.is-missing{background:var(--bg2)}
 .store-title{font-size:clamp(26px,4.5vw,38px);font-weight:700;line-height:1.08;letter-spacing:-.02em;margin-bottom:6px}
 .store-tagline{font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
@@ -1715,6 +1715,32 @@ function markMissing(el){
   if(slot) slot.classList.add("is-missing");
 }
 
+function syncIconSlot(slot){
+  if(!slot) return;
+  const img = slot.querySelector("img");
+  if(!img || !img.getAttribute("src")){
+    slot.classList.add("is-missing");
+    return;
+  }
+  const fail = () => slot.classList.add("is-missing");
+  const ok = () => slot.classList.remove("is-missing");
+  img.addEventListener("error", fail, { once: true });
+  if(img.complete){
+    if(img.naturalWidth > 0) ok();
+    else fail();
+  } else {
+    img.addEventListener("load", ok, { once: true });
+  }
+}
+
+function syncIconSlots(scope){
+  const root = scope && scope.querySelectorAll ? scope : document;
+  const nodes = scope && scope.matches && scope.matches(".media-slot")
+    ? [scope]
+    : root.querySelectorAll(".pcard-ico, .store-icon");
+  nodes.forEach(syncIconSlot);
+}
+
 function projectIconPath(p){
   return p.icon || "";
 }
@@ -1723,12 +1749,12 @@ function projectIconInner(p, size){
   const src = projectIconPath(p);
   if(!src) return "";
   const px = size || 56;
-  return `<img src="${esc(src)}" alt="" width="${px}" height="${px}" loading="lazy" onerror="markMissing(this)" onload="this.closest('.media-slot')?.classList.remove('is-missing')">`;
+  return `<img src="${esc(src)}" alt="" width="${px}" height="${px}" decoding="async" onerror="markMissing(this)">`;
 }
 
 function iconSlotHtml(p){
   const path = projectIconPath(p);
-  return `<div class="media-slot pcard-ico is-missing">
+  return `<div class="media-slot pcard-ico">
     ${projectIconInner(p, 56)}
     <span class="media-slot-label">${t("ph.icon")}<small>${esc(path)}</small></span>
   </div>`;
@@ -1736,10 +1762,11 @@ function iconSlotHtml(p){
 
 function fillIconSlot(container, p){
   const path = projectIconPath(p);
-  container.className = "store-icon media-slot is-missing";
+  container.className = "store-icon media-slot";
   container.innerHTML = `
     ${projectIconInner(p, 88)}
     <span class="media-slot-label">${t("ph.icon")}<small>${esc(path)}</small></span>`;
+  syncIconSlot(container);
 }
 
 /* Lightweight Markdown → HTML (GitHub release notes) */
@@ -2275,6 +2302,8 @@ function renderCards(){
   intel.innerHTML = ORDER_INTEL.map((slug,i) => buildCardHtml(slug, ORDER_APPS.length + i)).join("");
   bindCardGrid(prod);
   bindCardGrid(intel);
+  syncIconSlots(prod);
+  syncIconSlots(intel);
 }
 
 async function fetchRel(repo, n=8){
