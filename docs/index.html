@@ -46,6 +46,7 @@ body{
   background:var(--bg);color:var(--text);
   font-family:'Space Mono',monospace;font-size:13px;line-height:1.7;
   min-height:100vh;overflow-x:hidden;
+  display:flex;flex-direction:column;
   -webkit-font-smoothing:antialiased;
 }
 
@@ -205,7 +206,10 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 .mline:hover,.mline.hi{color:var(--text)}
 
 /* FOOTER */
-footer{border-top:1px solid var(--border);padding:32px 0;margin-top:20px}
+footer{
+  border-top:1px solid var(--border);padding:32px 0;margin-top:auto;
+  flex-shrink:0;width:100%;
+}
 footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
 .foot-l{font-size:11px;color:var(--muted)}
 .foot-l a{color:var(--accent);text-decoration:none}
@@ -214,7 +218,10 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .foot-links a:hover{color:var(--text)}
 
 /* STORE */
-.store-page{display:none;padding:96px 0 72px;animation:storeIn .45s var(--ease) both}
+.store-page{
+  display:none;flex:1;width:100%;
+  padding:96px 0 72px;animation:storeIn .45s var(--ease) both;
+}
 @keyframes storeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .store-back{margin-bottom:28px}
 .store-card{border:1px solid var(--border);background:var(--bg2);border-radius:calc(var(--radius) + 4px);overflow:hidden}
@@ -646,7 +653,48 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .hero-cta{animation:fadeUp .6s .26s both}
 
 /* NEWS */
-.news-page{display:none;padding:96px 0 72px;animation:storeIn .45s var(--ease) both}
+.news-page{
+  display:none;flex:1;width:100%;position:relative;overflow:hidden;
+  padding:96px 0 72px;animation:storeIn .45s var(--ease) both;
+}
+.news-page__bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.news-page__orb{
+  position:absolute;border-radius:50%;filter:blur(72px);opacity:.55;
+  will-change:transform;
+}
+.news-page__orb--1{
+  width:min(560px,78vw);height:min(560px,78vw);top:-12%;right:-10%;
+  background:radial-gradient(circle,rgba(200,169,110,.34) 0%,transparent 68%);
+  animation:newsOrbA 17s var(--ease) infinite alternate;
+}
+.news-page__orb--2{
+  width:min(440px,62vw);height:min(440px,62vw);bottom:8%;left:-14%;
+  background:radial-gradient(circle,rgba(74,124,89,.22) 0%,transparent 70%);
+  animation:newsOrbB 23s var(--ease) infinite alternate-reverse;
+}
+.news-page__orb--3{
+  width:min(320px,48vw);height:min(320px,48vw);top:42%;left:38%;
+  background:radial-gradient(circle,rgba(200,169,110,.12) 0%,transparent 72%);
+  animation:newsOrbC 28s ease-in-out infinite alternate;
+}
+.news-page__grid{
+  position:absolute;inset:-20% -10%;
+  background-image:
+    linear-gradient(rgba(200,169,110,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(200,169,110,.06) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 75% 65% at 50% 40%,#000 20%,transparent 72%);
+  opacity:.45;
+  animation:newsGridDrift 36s linear infinite;
+}
+@keyframes newsOrbA{from{transform:translate(0,0) scale(1)}to{transform:translate(-28px,36px) scale(1.1)}}
+@keyframes newsOrbB{from{transform:translate(0,0) scale(1)}to{transform:translate(32px,-24px) scale(1.06)}}
+@keyframes newsOrbC{from{transform:translate(0,0) scale(.92)}to{transform:translate(18px,-22px) scale(1.08)}}
+@keyframes newsGridDrift{from{transform:translateY(0)}to{transform:translateY(48px)}}
+@media (prefers-reduced-motion:reduce){
+  .news-page__orb,.news-page__grid{animation:none}
+}
+.news-page > .wrap{position:relative;z-index:1}
 .news-back{margin-bottom:28px}
 .news-head{margin-bottom:36px;max-width:640px}
 .news-h1{font-size:clamp(28px,5vw,42px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px}
@@ -654,9 +702,10 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .news-grid{display:grid;gap:14px}
 .news-card{
   display:block;width:100%;text-align:left;font-family:inherit;color:inherit;
-  border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);
-  padding:22px 24px;cursor:pointer;transition:background .2s var(--ease),border-color .2s;
-  text-decoration:none;
+  border:1px solid var(--border);background:color-mix(in srgb,var(--bg2) 88%,transparent);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:var(--radius);padding:22px 24px;cursor:pointer;
+  transition:background .2s var(--ease),border-color .2s;text-decoration:none;
 }
 .news-card:hover{background:var(--bg3);border-color:var(--border2)}
 .news-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -671,6 +720,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .news-empty{
   border:1px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;
   text-align:center;color:var(--muted);font-size:12px;line-height:1.8;
+  background:color-mix(in srgb,var(--bg2) 80%,transparent);
 }
 .news-article{max-width:720px}
 .news-article-head{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--border)}
@@ -920,12 +970,18 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 </section>
 
 <section class="news-page" id="newsPage">
+<div class="news-page__bg" aria-hidden="true">
+  <div class="news-page__orb news-page__orb--1"></div>
+  <div class="news-page__orb news-page__orb--2"></div>
+  <div class="news-page__orb news-page__orb--3"></div>
+  <div class="news-page__grid"></div>
+</div>
 <div class="wrap">
   <a href="#" class="btn btn-outline news-back" id="newsBack" data-k="news.back">← Back to Floke</a>
   <div id="newsListView">
     <header class="news-head rv">
       <h1 class="news-h1" data-k="news.title">News</h1>
-      <p class="news-lead" data-k="news.lead">Studio updates from Telegraph — add a post URL to the feed; content loads automatically.</p>
+      <p class="news-lead" data-k="news.lead">Studio updates from Telegraph. Add a post URL to the feed — content loads automatically, no HTML blocks in code.</p>
     </header>
     <div class="news-grid" id="newsGrid">
       <div class="news-loading" data-k="news.loading">Loading…</div>
@@ -1380,7 +1436,7 @@ async function renderNewsArticle(path){
 function showNewsPage(){
   document.getElementById("mainView").style.display = "none";
   document.getElementById("storePage").style.display = "none";
-  document.getElementById("newsPage").style.display = "block";
+  document.getElementById("newsPage").style.display = "flex";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -2497,7 +2553,7 @@ async function renderStore(slug){
   }
 
   document.getElementById("mainView").style.display = "none";
-  document.getElementById("storePage").style.display = "block";
+  document.getElementById("storePage").style.display = "flex";
   hideNewsPage();
   window.scrollTo({top:0,behavior:"smooth"});
 }
