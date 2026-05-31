@@ -25,9 +25,23 @@ docs/
         ├── blip/01.jpg … 10.jpg      (optional)
         ├── senza/01.png … 10.png     (shipped)
         └── glyph/01.png … 10.png     (Glyph UI — Flow, Vault, Settings)
+    └── data/
+        └── news-cache.json           (Telegraph posts — run sync script)
 ```
 
 Product card icons load from **`assets/icons/<product>.svg`** (paths shown on empty slots until files exist).
+
+## News (Telegraph)
+
+Posts are listed in **`NEWS_TELEGRAPH`** inside `docs/index.html` (one URL or path per line).
+
+After adding a Telegraph link, refresh the cache (GitHub Pages cannot call the Telegraph API from the browser):
+
+```bash
+node scripts/sync-telegraph-news.mjs
+```
+
+This writes `docs/assets/data/news-cache.json`. Commit both files. Site route: `#news` and `#news/<telegraph-path>`.
 
 ## Sync from apps
 

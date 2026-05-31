@@ -645,6 +645,70 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 .hero-sub{animation:fadeUp .6s .18s both}
 .hero-cta{animation:fadeUp .6s .26s both}
 
+/* NEWS */
+.news-page{display:none;padding:96px 0 72px;animation:storeIn .45s var(--ease) both}
+.news-back{margin-bottom:28px}
+.news-head{margin-bottom:36px;max-width:640px}
+.news-h1{font-size:clamp(28px,5vw,42px);font-weight:700;letter-spacing:-.03em;margin-bottom:12px}
+.news-lead{font-size:12px;color:var(--muted);line-height:1.85}
+.news-grid{display:grid;gap:14px}
+.news-card{
+  display:block;width:100%;text-align:left;font-family:inherit;color:inherit;
+  border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);
+  padding:22px 24px;cursor:pointer;transition:background .2s var(--ease),border-color .2s;
+  text-decoration:none;
+}
+.news-card:hover{background:var(--bg3);border-color:var(--border2)}
+.news-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.news-card-meta{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;
+}
+.news-card-tag{border:1px solid var(--accent2);color:var(--accent2);padding:2px 7px;border-radius:3px}
+.news-card-title{font-size:16px;font-weight:700;line-height:1.35;margin-bottom:8px;padding-right:8px}
+.news-card-desc{font-size:11px;color:var(--muted);line-height:1.75;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.news-card-foot{margin-top:14px;font-size:10px;color:var(--accent);letter-spacing:.06em}
+.news-empty{
+  border:1px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;
+  text-align:center;color:var(--muted);font-size:12px;line-height:1.8;
+}
+.news-article{max-width:720px}
+.news-article-head{margin-bottom:28px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.news-article-title{font-size:clamp(24px,4vw,34px);font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:12px}
+.news-article-meta{font-size:10px;color:var(--muted);letter-spacing:.06em;display:flex;gap:16px;flex-wrap:wrap}
+.news-article-meta a{color:var(--accent);text-decoration:none}
+.news-article-meta a:hover{text-decoration:underline}
+.news-loading{padding:48px 0;text-align:center;color:var(--muted);font-size:12px}
+.telegraph-body{font-size:14px;line-height:1.85;color:var(--text)}
+.telegraph-body p{margin:0 0 1.1em}
+.telegraph-body h3,.telegraph-body h4{
+  font-size:1.15em;font-weight:700;margin:1.6em 0 .65em;line-height:1.25;
+}
+.telegraph-body blockquote{
+  margin:1.2em 0;padding:12px 18px;border-left:3px solid var(--accent);
+  color:var(--muted);background:var(--accent-dim);border-radius:0 8px 8px 0;
+}
+.telegraph-body pre{
+  margin:1.2em 0;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;overflow-x:auto;font-size:12px;line-height:1.6;
+}
+.telegraph-body code{font-size:.92em;background:var(--bg3);padding:2px 6px;border-radius:4px}
+.telegraph-body pre code{background:none;padding:0}
+.telegraph-body ul,.telegraph-body ol{margin:0 0 1.1em;padding-left:1.4em}
+.telegraph-body li{margin:.35em 0}
+.telegraph-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.telegraph-body figure,.telegraph-body .tg-fig{margin:1.4em 0}
+.telegraph-body img,.telegraph-body video{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border)}
+.telegraph-body .tg-embed iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:8px;background:var(--bg3)}
+.telegraph-body figcaption{font-size:11px;color:var(--muted);margin-top:8px;text-align:center}
+.telegraph-body hr{border:none;border-top:1px solid var(--border);margin:1.8em 0}
+.news-article-actions{margin-top:32px;padding-top:20px;border-top:1px solid var(--border)}
+.news-open-ext{
+  display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;
+}
+.news-open-ext:hover{color:var(--accent)}
+
 @media(max-width:700px){
   .hero{padding:120px 0 80px}
   .pcard{grid-template-columns:56px 1fr;padding:24px 18px}
@@ -675,6 +739,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
     <li><a href="#products" data-k="nav.products">Products</a></li>
     <li><a href="#glyph" data-k="nav.glyph">Glyph</a></li>
     <li><a href="#releases" data-k="nav.releases">Releases</a></li>
+    <li><a href="#news" data-k="nav.news">News</a></li>
     <li><a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a></li>
   </ul>
   <div class="nav-right">
@@ -854,6 +919,31 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 </div>
 </section>
 
+<section class="news-page" id="newsPage">
+<div class="wrap">
+  <a href="#" class="btn btn-outline news-back" id="newsBack" data-k="news.back">← Back to Floke</a>
+  <div id="newsListView">
+    <header class="news-head rv">
+      <h1 class="news-h1" data-k="news.title">News</h1>
+      <p class="news-lead" data-k="news.lead">Studio updates from Telegraph — add a post URL to the feed; content loads automatically.</p>
+    </header>
+    <div class="news-grid" id="newsGrid">
+      <div class="news-loading" data-k="news.loading">Loading…</div>
+    </div>
+  </div>
+  <article class="news-article" id="newsArticleView" hidden>
+    <header class="news-article-head">
+      <h1 class="news-article-title" id="newsArticleTitle"></h1>
+      <div class="news-article-meta" id="newsArticleMeta"></div>
+    </header>
+    <div class="telegraph-body" id="newsArticleBody"></div>
+    <div class="news-article-actions">
+      <a class="news-open-ext" id="newsOpenTelegraph" href="#" target="_blank" rel="noopener" data-k="news.openTelegraph">Read on Telegraph →</a>
+    </div>
+  </article>
+</div>
+</section>
+
 <div class="floke-toast-wrap" id="flokeToastWrap" role="status" aria-live="polite">
   <div class="floke-toast">
     <div class="floke-toast-icon" aria-hidden="true">◇</div>
@@ -870,6 +960,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
   <div class="foot-l">© 2026 Floke Studio · <a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a></div>
   <div class="foot-links">
     <a href="https://github.com/FlokeStudio" target="_blank" rel="noopener">GitHub</a>
+    <a href="#news" data-k="nav.news">News</a>
     <a href="https://t.me/flokestudio" target="_blank" rel="noopener">Telegram</a>
   </div>
 </div>
@@ -878,7 +969,7 @@ footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-
 <script>
 const STR = {
   en: {
-    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases",
+    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases","nav.news":"News",
     "hero.tag":"Independent software studio",
     "hero.l1":"Software that lives","hero.l2":"on your machine.",
     "hero.sub":"Offline-first. No cloud. No tracking. No compromise.\nWe build tools that work — with or without the internet.",
@@ -896,6 +987,11 @@ const STR = {
     "store.info":"Information","store.privacy":"App Privacy",
     "store.get":"Get","store.loading":"Loading release notes…",
     "store.hint":"Download from GitHub Releases. On first launch Windows may show SmartScreen — choose More info → Run anyway.",
+    "news.back":"← Back to Floke","news.title":"News","news.lead":"Studio updates from Telegraph. Add a post URL to the feed — content loads automatically, no HTML blocks in code.",
+    "news.loading":"Loading posts…","news.empty":"No posts yet. Add a Telegraph URL to NEWS_TELEGRAPH in index.html.",
+    "news.readMore":"Read article →","news.openTelegraph":"Read on Telegraph →","news.by":"By","news.views":"views",
+    "news.error":"Could not load this post. Open it on Telegraph or run scripts/sync-telegraph-news.mjs to refresh the cache.",
+    "news.tag":"Telegraph",
     "store.videoBadge":"Video","store.shotBadge":"Screenshot",
     "store.videoLabel":"Video","store.shotLabel":"Screenshot",
     "card.why":"Why it matters","card.can":"What you can do",
@@ -962,7 +1058,7 @@ const STR = {
 
   },
   ru: {
-    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы",
+    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы","nav.news":"Новости",
     "hero.tag":"Независимая софт-студия",
     "hero.l1":"Софт, который живёт","hero.l2":"на твоей машине.",
     "hero.sub":"Offline-first. Без облака. Без трекинга. Без компромиссов.\nМы делаем инструменты, которые работают — с сетью и без.",
@@ -980,6 +1076,11 @@ const STR = {
     "store.info":"Информация","store.privacy":"Конфиденциальность",
     "store.get":"Скачать","store.loading":"Загрузка заметок к релизу…",
     "store.hint":"Скачивание с GitHub Releases. При первом запуске Windows может показать SmartScreen — Подробнее → Выполнить в любом случае.",
+    "news.back":"← Назад к Floke","news.title":"Новости","news.lead":"Обновления студии из Telegraph. Добавьте URL поста в ленту — контент подгрузится сам, без HTML-блоков в коде.",
+    "news.loading":"Загрузка…","news.empty":"Пока нет постов. Добавьте URL Telegraph в NEWS_TELEGRAPH в index.html.",
+    "news.readMore":"Читать →","news.openTelegraph":"Открыть в Telegraph →","news.by":"Автор","news.views":"просмотров",
+    "news.error":"Не удалось загрузить пост. Откройте в Telegraph или запустите scripts/sync-telegraph-news.mjs для обновления кэша.",
+    "news.tag":"Telegraph",
     "store.videoBadge":"Видео","store.shotBadge":"Скриншот",
     "store.videoLabel":"Видео","store.shotLabel":"Скриншот",
     "card.why":"Почему это важно","card.can":"Что можно делать",
@@ -1066,6 +1167,230 @@ const SENZA_RELEASE_URL = "https://github.com/FlokeStudio/Senza/releases/latest"
 function mediaShots(folder, ext = "png", count = 10){
   return Array.from({length: count}, (_, i) =>
     `assets/screenshots/${folder}/${String(i + 1).padStart(2, "0")}.${ext}`);
+}
+
+/** Telegraph feed — add full URL or path after publishing (newest first). */
+const NEWS_TELEGRAPH = [
+  "https://telegra.ph/FLOKE-Release-1--Iyun-2026-05-31",
+];
+
+const TELEGRAPH_API = "https://api.telegra.ph";
+const NEWS_CACHE_URL = "assets/data/news-cache.json";
+let newsCachePromise = null;
+const telegraphPageCache = new Map();
+
+function telegraphPathFromInput(input){
+  const s = String(input || "").trim();
+  if(!s) return "";
+  try {
+    if(/telegra\.ph/i.test(s)){
+      const u = new URL(s);
+      return decodeURIComponent(u.pathname.replace(/^\/+/, ""));
+    }
+  } catch(e){ /* not a URL */ }
+  return decodeURIComponent(s.replace(/^\/+/, ""));
+}
+
+function telegraphPublicUrl(path){
+  return `https://telegra.ph/${path}`;
+}
+
+function telegraphAssetUrl(src){
+  if(!src) return "";
+  if(/^https?:\/\//i.test(src)) return src;
+  if(src.startsWith("//")) return "https:" + src;
+  return "https://telegra.ph" + (src.startsWith("/") ? src : "/" + src);
+}
+
+async function loadNewsCacheFile(){
+  if(newsCachePromise) return newsCachePromise;
+  newsCachePromise = fetch(NEWS_CACHE_URL)
+    .then(r => r.ok ? r.json() : {})
+    .catch(() => ({}));
+  return newsCachePromise;
+}
+
+async function fetchTelegraphPage(path){
+  if(telegraphPageCache.has(path)) return telegraphPageCache.get(path);
+  const apiUrl = `${TELEGRAPH_API}/getPage/${encodeURIComponent(path)}?return_content=true`;
+  try {
+    const res = await fetch(apiUrl);
+    if(res.ok){
+      const data = await res.json();
+      if(data.ok && data.result){
+        telegraphPageCache.set(path, data.result);
+        return data.result;
+      }
+    }
+  } catch(e){ /* CORS / network — fall back to cache */ }
+  const cache = await loadNewsCacheFile();
+  const hit = cache[path];
+  if(hit) return hit;
+  throw new Error("telegraph_unavailable");
+}
+
+function renderTelegraphNode(node){
+  if(node == null) return "";
+  if(typeof node === "string") return esc(node);
+  const tag = String(node.tag || "").toLowerCase();
+  const children = (node.children || []).map(renderTelegraphNode).join("");
+  const attrs = node.attrs || {};
+  const attrStr = Object.entries(attrs)
+    .map(([k, v]) => ` ${k}="${esc(String(v))}"`)
+    .join("");
+
+  if(tag === "br") return "<br>";
+  if(tag === "hr") return "<hr>";
+  if(tag === "img"){
+    return `<figure class="tg-fig"><img src="${esc(telegraphAssetUrl(attrs.src))}" alt="" loading="lazy"></figure>`;
+  }
+  if(tag === "iframe"){
+    const src = telegraphAssetUrl(attrs.src);
+    return `<figure class="tg-fig tg-embed"><iframe src="${esc(src)}" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-presentation" allowfullscreen></iframe></figure>`;
+  }
+  if(tag === "video"){
+    return `<figure class="tg-fig"><video controls playsinline src="${esc(telegraphAssetUrl(attrs.src))}"></video></figure>`;
+  }
+  if(tag === "a"){
+    const href = attrs.href || "#";
+    return `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${children}</a>`;
+  }
+  const allowed = new Set(["p","h3","h4","blockquote","pre","code","b","strong","i","em","u","s","ul","ol","li","figure","figcaption","aside"]);
+  if(!allowed.has(tag)) return children;
+  return `<${tag}${attrStr}>${children}</${tag}>`;
+}
+
+function renderTelegraphContent(nodes){
+  if(!nodes || !nodes.length) return `<p>${esc(t("news.error"))}</p>`;
+  return renderTelegraphNodes(nodes);
+}
+
+function renderTelegraphNodes(nodes){
+  return (nodes || []).map(renderTelegraphNode).join("");
+}
+
+function newsPaths(){
+  return NEWS_TELEGRAPH.map(telegraphPathFromInput).filter(Boolean);
+}
+
+function setSiteTitle(suffix){
+  document.title = suffix ? `${suffix} · Floke` : "Floke — Software that lives on your machine";
+}
+
+function hideNewsPage(){
+  document.getElementById("newsPage").style.display = "none";
+}
+
+function renderNewsCard(page){
+  const path = page.path;
+  const title = page.title || path;
+  const desc = page.description || "";
+  const views = page.views ? `${page.views} ${t("news.views")}` : "";
+  return `<button type="button" class="news-card rv" data-news-path="${esc(path)}">
+    <div class="news-card-meta">
+      <span class="news-card-tag">${esc(t("news.tag"))}</span>
+      ${views ? `<span>${esc(views)}</span>` : ""}
+    </div>
+    <div class="news-card-title">${esc(title)}</div>
+    ${desc ? `<div class="news-card-desc">${esc(desc)}</div>` : ""}
+    <div class="news-card-foot">${esc(t("news.readMore"))}</div>
+  </button>`;
+}
+
+async function renderNewsList(){
+  const grid = document.getElementById("newsGrid");
+  const listView = document.getElementById("newsListView");
+  const articleView = document.getElementById("newsArticleView");
+  listView.hidden = false;
+  articleView.hidden = true;
+  setSiteTitle(t("news.title"));
+
+  const paths = newsPaths();
+  if(!paths.length){
+    grid.innerHTML = `<div class="news-empty rv">${esc(t("news.empty"))}</div>`;
+    initReveal(grid.querySelectorAll(".rv"));
+    return;
+  }
+
+  grid.innerHTML = `<div class="news-loading">${esc(t("news.loading"))}</div>`;
+  const pages = await Promise.all(paths.map(async path => {
+    try {
+      return await fetchTelegraphPage(path);
+    } catch(e){
+      return {
+        path,
+        url: telegraphPublicUrl(path),
+        title: path.replace(/-/g, " "),
+        description: "",
+        content: [{ tag: "p", children: [t("news.error")] }]
+      };
+    }
+  }));
+
+  grid.innerHTML = pages.map(renderNewsCard).join("");
+  grid.querySelectorAll("[data-news-path]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      location.hash = "#news/" + encodeURIComponent(btn.dataset.newsPath);
+    });
+  });
+  initReveal(grid.querySelectorAll(".rv"));
+}
+
+async function renderNewsArticle(path){
+  const listView = document.getElementById("newsListView");
+  const articleView = document.getElementById("newsArticleView");
+  const bodyEl = document.getElementById("newsArticleBody");
+  listView.hidden = true;
+  articleView.hidden = false;
+
+  bodyEl.innerHTML = `<div class="news-loading">${esc(t("news.loading"))}</div>`;
+  setSiteTitle(path);
+
+  let page;
+  try {
+    page = await fetchTelegraphPage(path);
+  } catch(e){
+    page = {
+      path,
+      url: telegraphPublicUrl(path),
+      title: path.replace(/-/g, " "),
+      author_name: "",
+      views: 0,
+      content: [{ tag: "p", children: [t("news.error")] }]
+    };
+  }
+
+  document.getElementById("newsArticleTitle").textContent = page.title || path;
+  const meta = [];
+  if(page.author_name){
+    const author = page.author_url
+      ? `<a href="${esc(page.author_url)}" target="_blank" rel="noopener">${esc(page.author_name)}</a>`
+      : esc(page.author_name);
+    meta.push(`${t("news.by")} ${author}`);
+  }
+  if(page.views) meta.push(`${page.views} ${t("news.views")}`);
+  document.getElementById("newsArticleMeta").innerHTML = meta.join(" · ");
+  bodyEl.innerHTML = renderTelegraphContent(page.content);
+  const ext = document.getElementById("newsOpenTelegraph");
+  ext.href = page.url || telegraphPublicUrl(path);
+  ext.textContent = t("news.openTelegraph");
+  setSiteTitle(page.title || path);
+}
+
+function showNewsPage(){
+  document.getElementById("mainView").style.display = "none";
+  document.getElementById("storePage").style.display = "none";
+  document.getElementById("newsPage").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function routeNews(subPath){
+  showNewsPage();
+  if(subPath){
+    await renderNewsArticle(decodeURIComponent(subPath));
+  } else {
+    await renderNewsList();
+  }
 }
 
 const PROJECTS = {
@@ -1830,6 +2155,9 @@ function applyLocale(){
   if(h.startsWith("#project/")){
     const slug = h.replace("#project/","").toLowerCase();
     if(PROJECTS[slug]) renderStore(slug);
+  } else if(h === "#news" || h.startsWith("#news/")){
+    const sub = h.startsWith("#news/") ? decodeURIComponent(h.slice(6)) : "";
+    routeNews(sub);
   }
   localStorage.setItem("floke-lang", locale);
 }
@@ -2171,12 +2499,15 @@ async function renderStore(slug){
 
   document.getElementById("mainView").style.display = "none";
   document.getElementById("storePage").style.display = "block";
+  hideNewsPage();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function showMain(){
   document.getElementById("mainView").style.display = "";
   document.getElementById("storePage").style.display = "none";
+  hideNewsPage();
+  setSiteTitle("");
   const wrap = document.getElementById("storeCarouselWrap");
   wrap?.classList.remove("carousel-wrap--glyph");
   const duo = document.getElementById("storePreviewDuo");
@@ -2190,6 +2521,10 @@ function routeHash(){
   if(h.startsWith("#project/")){
     const slug = h.replace("#project/","").toLowerCase().trim();
     if(PROJECTS[slug]){ renderStore(slug); return; }
+  }
+  if(h === "#news" || h.startsWith("#news/")){
+    routeNews(h.startsWith("#news/") ? h.slice(6) : "");
+    return;
   }
   showMain();
 }
@@ -2210,6 +2545,12 @@ document.getElementById("btnEn").addEventListener("click",()=>{ locale="en"; app
 document.getElementById("btnRu").addEventListener("click",()=>{ locale="ru"; applyLocale(); loadReleases(); });
 document.getElementById("navHome").addEventListener("click",e=>{e.preventDefault();location.hash="";});
 document.getElementById("storeBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
+document.getElementById("newsBack").addEventListener("click",e=>{
+  e.preventDefault();
+  const h = location.hash || "";
+  if(h.startsWith("#news/")) location.hash = "#news";
+  else location.hash = "";
+});
 window.addEventListener("scroll",()=>{
   document.querySelector("nav").classList.toggle("is-scrolled",scrollY>16);
 },{passive:true});
@@ -2224,6 +2565,7 @@ routeHash();
 setTimeout(()=>{
   initReveal(document.querySelectorAll("#glyph .rv, #glyphSlides"));
   initReveal(document.querySelectorAll("#products .rv, #releases .rv, .manifesto .rv"));
+  initReveal(document.querySelectorAll("#newsListView .rv"));
 },120);
 </script>
 </body>

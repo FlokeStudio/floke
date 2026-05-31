@@ -1,0 +1,1276 @@
+{
+  "FLOKE-Release-1--Iyun-2026-05-31": {
+    "path": "FLOKE-Release-1--Iyun-2026-05-31",
+    "url": "https://telegra.ph/FLOKE-Release-1--Iyun-2026-05-31",
+    "title": "FLOKE Release #1 · June 2026",
+    "description": "Floke",
+    "image_url": "https://i.postimg.cc/5NqGS39s/Untitled.jpg",
+    "content": [
+      {
+        "tag": "p",
+        "children": [
+          "Floke"
+        ]
+      },
+      {
+        "tag": "figure",
+        "children": [
+          {
+            "tag": "img",
+            "attrs": {
+              "src": "https://i.postimg.cc/5NqGS39s/Untitled.jpg"
+            }
+          },
+          {
+            "tag": "figcaption",
+            "children": [
+              "Release #1"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Floke Studio"
+            ]
+          },
+          " is a lineup of apps that ",
+          {
+            "tag": "strong",
+            "children": [
+              "live on your computer"
+            ]
+          },
+          ". Music, habits, metadata — later, local agents. No mandatory cloud. No account just to open the app. We’re not anti-internet — MusicBrainz and search in Flint will stay optional. But the core is always offline-first: your files, your library, your garden."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Release #1"
+            ]
+          },
+          " is the first month ",
+          {
+            "tag": "strong",
+            "children": [
+              "Senza"
+            ]
+          },
+          " and ",
+          {
+            "tag": "strong",
+            "children": [
+              "Cultiva"
+            ]
+          },
+          " ship ",
+          {
+            "tag": "strong",
+            "children": [
+              "together"
+            ]
+          },
+          " — one post, one rhythm. Before, each product had its own date. Going forward, we want a ",
+          {
+            "tag": "strong",
+            "children": [
+              "monthly"
+            ]
+          },
+          " update you can expect and a ",
+          {
+            "tag": "strong",
+            "children": [
+              "yearly"
+            ]
+          },
+          " big version. No magic promises — just a calendar that makes sense."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "June codenames: ",
+          {
+            "tag": "strong",
+            "children": [
+              "Legato"
+            ]
+          },
+          " — music that doesn’t snap between tracks. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Cypress"
+            ]
+          },
+          " — a calm, “forest” Cultiva release. Below — what changed and why."
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "h3",
+        "attrs": {
+          "id": "Senza-feels-alive"
+        },
+        "children": [
+          "Senza feels alive"
+        ]
+      },
+      {
+        "tag": "figure",
+        "children": [
+          {
+            "tag": "img",
+            "attrs": {
+              "src": "https://i.postimg.cc/g2GTrZpr/image.png"
+            }
+          },
+          {
+            "tag": "figcaption",
+            "children": [
+              "Flow"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Senza used to ",
+          {
+            "tag": "strong",
+            "children": [
+              "store"
+            ]
+          },
+          " and ",
+          {
+            "tag": "strong",
+            "children": [
+              "play"
+            ]
+          },
+          " music. That’s not enough if you listen to ",
+          {
+            "tag": "strong",
+            "children": [
+              "albums"
+            ]
+          },
+          ", not random files from search. There was silence between tracks — small, but noticeable every time. In ",
+          {
+            "tag": "strong",
+            "children": [
+              "1.1.0 Legato"
+            ]
+          },
+          " we closed the gap between a ",
+          {
+            "tag": "strong",
+            "children": [
+              "library manager"
+            ]
+          },
+          " and a ",
+          {
+            "tag": "strong",
+            "children": [
+              "real player"
+            ]
+          },
+          "."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Crossfade"
+            ]
+          },
+          " — tracks ",
+          {
+            "tag": "strong",
+            "children": [
+              "flow"
+            ]
+          },
+          " into each other instead of hard cuts. Zero to eight seconds: some want a barely visible seam, some want a long handoff like a live set. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Shuffle"
+            ]
+          },
+          " and ",
+          {
+            "tag": "strong",
+            "children": [
+              "repeat"
+            ]
+          },
+          " (playlist or one track) — hard to live without on a big library. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Hotkeys"
+            ]
+          },
+          " — Space, arrows, M, L — and ",
+          {
+            "tag": "strong",
+            "children": [
+              "media keys"
+            ]
+          },
+          " on your keyboard: play/pause on a laptop without the mouse. Everything you expect from a player, finally here, next to Flow and Vault."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Why this matters for Floke: Senza isn’t “another streaming clone.” It’s ",
+          {
+            "tag": "strong",
+            "children": [
+              "your"
+            ]
+          },
+          " collection on disk. The player should respect it the way streaming respects its queue — minus subscription and minus sending plays to a server."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Lyrics"
+            ]
+          },
+          " from a sidecar ",
+          {
+            "tag": "strong",
+            "children": [
+              {
+                "tag": "code",
+                "children": [
+                  ".lrc"
+                ]
+              }
+            ]
+          },
+          " file (next to the track) show ",
+          {
+            "tag": "strong",
+            "children": [
+              "in the player"
+            ]
+          },
+          ", line by line, in sync. No separate lyrics site — all local."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Favorites"
+            ]
+          },
+          " — a ",
+          {
+            "tag": "strong",
+            "children": [
+              "heart"
+            ]
+          },
+          " on the track and a ",
+          {
+            "tag": "strong",
+            "children": [
+              "dedicated sidebar"
+            ]
+          },
+          " view. Flow’s ",
+          {
+            "tag": "strong",
+            "children": [
+              "“Favorites”"
+            ]
+          },
+          " mode follows those marks: your choice, not “we think you’ll like this.” ",
+          {
+            "tag": "strong",
+            "children": [
+              "Recently played"
+            ]
+          },
+          " — its own list: back to yesterday’s album in two clicks."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Glyph2.2-O"
+            ]
+          },
+          " — our metadata layer inside Senza — now writes tags not only to ",
+          {
+            "tag": "strong",
+            "children": [
+              "MP3"
+            ]
+          },
+          " but ",
+          {
+            "tag": "strong",
+            "children": [
+              "FLAC, OGG, M4A, AAC, WAV"
+            ]
+          },
+          ". Import lossless — you’re not stuck with empty fields. On add, ",
+          {
+            "tag": "strong",
+            "children": [
+              "BPM"
+            ]
+          },
+          " is computed: helps the player and genre hints in ",
+          {
+            "tag": "strong",
+            "children": [
+              "Glyph 2.2-O"
+            ]
+          },
+          ". Version ",
+          {
+            "tag": "strong",
+            "children": [
+              "2.2-O"
+            ]
+          },
+          " shows in ",
+          {
+            "tag": "strong",
+            "children": [
+              "Flow, Vault, and Settings"
+            ]
+          },
+          " — you always know which “brain” is inside."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Smart playlists"
+            ]
+          },
+          " build themselves from ",
+          {
+            "tag": "strong",
+            "children": [
+              "simple rules"
+            ]
+          },
+          ": ",
+          {
+            "tag": "em",
+            "children": [
+              "not played lately"
+            ]
+          },
+          ", ",
+          {
+            "tag": "em",
+            "children": [
+              "recently added"
+            ]
+          },
+          ", ",
+          {
+            "tag": "em",
+            "children": [
+              "favorites only"
+            ]
+          },
+          ". Not an engagement algorithm — honest filters on ",
+          {
+            "tag": "strong",
+            "children": [
+              "your"
+            ]
+          },
+          " history on ",
+          {
+            "tag": "strong",
+            "children": [
+              "your"
+            ]
+          },
+          " disk."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "A ",
+          {
+            "tag": "strong",
+            "children": [
+              "watched folder"
+            ]
+          },
+          " — drop a file there (or download into it) — Senza ",
+          {
+            "tag": "strong",
+            "children": [
+              "picks it up"
+            ]
+          },
+          " and adds it to the library. Handy when music lives in Downloads or a shared “Incoming” folder. Moving PCs — ",
+          {
+            "tag": "strong",
+            "children": [
+              {
+                "tag": "code",
+                "children": [
+                  "senza-library.zip"
+                ]
+              }
+            ]
+          },
+          ": export and import the whole structure in settings, without hand-copying thousands of paths."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Search forgives typos. The sidebar can be ",
+          {
+            "tag": "strong",
+            "children": [
+              "reordered and trimmed"
+            ]
+          },
+          ". ",
+          {
+            "tag": "strong",
+            "children": [
+              "Accent color"
+            ]
+          },
+          " — not only Floke gold: pick yours if the player should feel visually ",
+          {
+            "tag": "strong",
+            "children": [
+              "yours"
+            ]
+          },
+          "."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Flow"
+            ]
+          },
+          " — a personal wave of ~32 tracks without repeats per session: discovery, rare stuff, favorites. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Vault"
+            ]
+          },
+          " — tag scan, duplicates, batch fill with a ",
+          {
+            "tag": "strong",
+            "children": [
+              "diff before apply"
+            ]
+          },
+          ": see what will change, then Apply. You can ",
+          {
+            "tag": "strong",
+            "children": [
+              "turn Glyph off"
+            ]
+          },
+          " and keep a plain editor — we don’t force “smart” where you only want music."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Senza was Windows-only for a long time. In ",
+          {
+            "tag": "strong",
+            "children": [
+              "1.1.0"
+            ]
+          },
+          " we added ",
+          {
+            "tag": "strong",
+            "children": [
+              "macOS"
+            ]
+          },
+          " and ",
+          {
+            "tag": "strong",
+            "children": [
+              "Linux"
+            ]
+          },
+          " builds — on GitHub Releases, next to installer and portable. One codebase, one idea: ",
+          {
+            "tag": "strong",
+            "children": [
+              "your machine, your library"
+            ]
+          },
+          "."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Download Senza →"
+            ]
+          },
+          " ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://github.com/FlokeStudio/Senza/releases/latest",
+              "target": "_blank"
+            },
+            "children": [
+              "https://github.com/FlokeStudio/Senza/releases/latest"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "h3",
+        "attrs": {
+          "id": "Cultiva-is-yours"
+        },
+        "children": [
+          "Cultiva is yours"
+        ]
+      },
+      {
+        "tag": "figure",
+        "children": [
+          {
+            "tag": "img",
+            "attrs": {
+              "src": "https://i.postimg.cc/rwYNc0wX/image.png"
+            }
+          },
+          {
+            "tag": "figcaption",
+            "children": [
+              "Garden"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Cultiva"
+            ]
+          },
+          " is a habit tracker that grows ",
+          {
+            "tag": "strong",
+            "children": [
+              "visually"
+            ]
+          },
+          ": seed, sprout, tree. No streak anxiety, no “you lost 47 days — start over.” A calm rhythm beats a red banner."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "1.1.0 Cypress"
+            ]
+          },
+          " is about ",
+          {
+            "tag": "strong",
+            "children": [
+              "mood"
+            ]
+          },
+          ". New ",
+          {
+            "tag": "strong",
+            "children": [
+              "Cypress"
+            ]
+          },
+          " theme: deep evergreen, not acid gamification. Three ",
+          {
+            "tag": "strong",
+            "children": [
+              "ambient backgrounds"
+            ]
+          },
+          " — ",
+          {
+            "tag": "strong",
+            "children": [
+              "Cypress Drift"
+            ]
+          },
+          ", ",
+          {
+            "tag": "strong",
+            "children": [
+              "Morning Dew"
+            ]
+          },
+          ", ",
+          {
+            "tag": "strong",
+            "children": [
+              "Canopy Sunbeam"
+            ]
+          },
+          " — move slowly behind the UI, like weather outside the window. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Accent color"
+            ]
+          },
+          " and background ",
+          {
+            "tag": "strong",
+            "children": [
+              "intensity"
+            ]
+          },
+          " adjust separately: keep the atmosphere, make it barely visible."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Why this matters for Floke: habits are daily. The UI shouldn’t shout. It should ",
+          {
+            "tag": "strong",
+            "children": [
+              "invite you to open the garden"
+            ]
+          },
+          " in the morning, not shame you at night."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "When habits pile up, you need ",
+          {
+            "tag": "strong",
+            "children": [
+              "search"
+            ]
+          },
+          " — ",
+          {
+            "tag": "strong",
+            "children": [
+              "Ctrl+F"
+            ]
+          },
+          " in the garden, no scrolling through screens. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Hotkeys"
+            ]
+          },
+          ": new habit, mark done, settings, dismiss — so your hands don’t live on the mouse every ten seconds."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "ZIP export"
+            ]
+          },
+          " — habits and settings in ",
+          {
+            "tag": "strong",
+            "children": [
+              "one archive"
+            ]
+          },
+          ". Backup before an update, move to another PC, or “put on disk and forget.” Cultiva data ",
+          {
+            "tag": "strong",
+            "children": [
+              "doesn’t go to our server"
+            ]
+          },
+          " — there is no server. Only you."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Cultiva is now officially part of Floke Studio"
+            ]
+          },
+          " — shared About, GitHub links, the same monthly rhythm as Senza. One brand, one idea: ",
+          {
+            "tag": "strong",
+            "children": [
+              "tools you can trust because they don’t ask for extra"
+            ]
+          },
+          "."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Download Cultiva →"
+            ]
+          },
+          " ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://github.com/FlokeStudio/Cultiva/releases/latest",
+              "target": "_blank"
+            },
+            "children": [
+              "https://github.com/FlokeStudio/Cultiva/releases/latest"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "h3",
+        "attrs": {
+          "id": "Why-Floke-exists"
+        },
+        "children": [
+          "Why Floke exists"
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "We build software for people who want to ",
+          {
+            "tag": "strong",
+            "children": [
+              "own their data"
+            ]
+          },
+          " — music, habits, files, later — talks with local agents. Not because “cloud is evil,” but because ",
+          {
+            "tag": "strong",
+            "children": [
+              "by default"
+            ]
+          },
+          " everything should work ",
+          {
+            "tag": "strong",
+            "children": [
+              "at home"
+            ]
+          },
+          ": fast, no login, no monthly fee to open what you already downloaded."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Release #1"
+            ]
+          },
+          " isn’t the end — it’s the ",
+          {
+            "tag": "strong",
+            "children": [
+              "start of a calendar"
+            ]
+          },
+          ". Senza and Cultiva are ready for daily use today. Next — monthly patches, ",
+          {
+            "tag": "strong",
+            "children": [
+              "Flint"
+            ]
+          },
+          " in ",
+          {
+            "tag": "strong",
+            "children": [
+              "Q3 2026"
+            ]
+          },
+          ", news on ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://flokestudio.github.io/Floke/",
+              "target": "_blank"
+            },
+            "children": [
+              "flokestudio.github.io/Floke"
+            ]
+          },
+          ". If it clicks, you stay with an ecosystem that doesn’t inflate for investor slides."
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "h3",
+        "attrs": {
+          "id": "Ahead-—-Flint"
+        },
+        "children": [
+          "Ahead — Flint"
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "The next big step — ",
+          {
+            "tag": "strong",
+            "children": [
+              "Flint"
+            ]
+          },
+          ". Not another ",
+          {
+            "tag": "strong",
+            "children": [
+              "AI chat"
+            ]
+          },
+          " in a browser, but a ",
+          {
+            "tag": "strong",
+            "children": [
+              "desktop with local agents"
+            ]
+          },
+          " on your computer."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "You state a task. The agent proposes ",
+          {
+            "tag": "strong",
+            "children": [
+              "file edits"
+            ]
+          },
+          ", searches the web, writes code. ",
+          {
+            "tag": "strong",
+            "children": [
+              "Every step on screen."
+            ]
+          },
+          " Every disk or URL action — only after your ",
+          {
+            "tag": "strong",
+            "children": [
+              "yes"
+            ]
+          },
+          " or ",
+          {
+            "tag": "strong",
+            "children": [
+              "no"
+            ]
+          },
+          ". No cloud by default. No subscription “for the model.”"
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Agent modes: ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliCode"
+            ]
+          },
+          " — code and architecture. ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliWriter"
+            ]
+          },
+          " — text. ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliWeb"
+            ]
+          },
+          " — search and browser. ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliDocs"
+            ]
+          },
+          " — files. ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliSlides"
+            ]
+          },
+          " — presentations. ",
+          {
+            "tag": "strong",
+            "children": [
+              "FliAgent"
+            ]
+          },
+          " — general mode on your PC."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Under the hood — ",
+          {
+            "tag": "strong",
+            "children": [
+              "Mnemo 1.2-O"
+            ]
+          },
+          ", local inference. Not a ChatGPT proxy — ",
+          {
+            "tag": "strong",
+            "children": [
+              "a model on your hardware"
+            ]
+          },
+          ". When an agent wants to ",
+          {
+            "tag": "strong",
+            "children": [
+              "touch a file"
+            ]
+          },
+          ", it stops and ",
+          {
+            "tag": "strong",
+            "children": [
+              "waits for permission"
+            ]
+          },
+          ". Same as Floke with music and habits: ",
+          {
+            "tag": "strong",
+            "children": [
+              "your “okay” first"
+            ]
+          },
+          "."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Q3 2026."
+            ]
+          },
+          " Goal — ",
+          {
+            "tag": "strong",
+            "children": [
+              "on your machine from first launch"
+            ]
+          },
+          ". Details in upcoming Releases."
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "h3",
+        "attrs": {
+          "id": "Links"
+        },
+        "children": [
+          "Links"
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Floke landing →"
+            ]
+          },
+          " ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://flokestudio.github.io/Floke/",
+              "target": "_blank"
+            },
+            "children": [
+              "https://flokestudio.github.io/Floke/"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "GitHub →"
+            ]
+          },
+          " ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://github.com/FlokeStudio",
+              "target": "_blank"
+            },
+            "children": [
+              "https://github.com/FlokeStudio"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Telegram →"
+            ]
+          },
+          " ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://t.me/flokestudio",
+              "target": "_blank"
+            },
+            "children": [
+              "https://t.me/flokestudio"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "em",
+            "children": [
+              "Release #1 · June 2026 · Floke Studio"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      }
+    ],
+    "views": 18
+  }
+}
