@@ -2187,7 +2187,7 @@ function buildCardHtml(slug, delayIdx){
   const p = PROJECTS[slug];
   const c = p[locale];
   const rawVer = verCache[slug] || (p.version || "…");
-  const ver = slug === "senza" ? formatRelVer(rawVer, "Senza") : rawVer;
+  const ver = formatRelVer(rawVer);
   const whyLabel = isComingSoon(slug) ? t("card.horizon") : t("card.why");
   const canLabel = isComingSoon(slug) ? t("card.today") : t("card.can");
   const why = c.why.map(x=>`<li>${esc(x)}</li>`).join("");
@@ -2234,17 +2234,16 @@ function fmtDate(s){
   return new Date(s).toLocaleDateString(locale==="ru"?"ru-RU":"en-GB",{day:"2-digit",month:"short",year:"numeric"});
 }
 
-function formatRelVer(ver, product){
+function formatRelVer(ver){
   if(!ver) return ver;
-  if(product === "Senza") return String(ver).replace(/^v/i, "");
-  return ver;
+  return String(ver).replace(/^v/i, "");
 }
 
 const FALLBACK_RELS = {
-  cultiva: { ver:"v1.1.0", name:"Cypress · theme, search, shortcuts" },
-  blip: { ver:"v1.1.1", name:"Beacon · mesh library & chat polish" },
+  cultiva: { ver:"1.1.0", name:"Cypress · theme, search, shortcuts" },
+  blip: { ver:"1.1.1", name:"Beacon · mesh library & chat polish" },
   senza: { ver:"1.1.0", name: locale => locale==="ru" ? "Legato · crossfade & Flow" : "Legato · crossfade & Flow" },
-  flint: { ver:"v0.6", name: locale === "ru" ? "В разработке · релиз Q3 2026" : "In development · public Q3 2026" },
+  flint: { ver:"0.6", name: locale === "ru" ? "В разработке · релиз Q3 2026" : "In development · public Q3 2026" },
   glyph: { ver:"2.2-O", name: () => "—" },
   mnemo: { ver:"1.2-O", name: () => locale === "ru" ? "С Flint · Q3 2026" : "With Flint · Q3 2026" }
 };
@@ -2260,17 +2259,17 @@ async function loadReleases(){
     const c = cList.status==="fulfilled" ? cList.value[0] : null;
     const b = bList.status==="fulfilled" ? bList.value[0] : null;
     const s = sListRaw.status==="fulfilled" ? sListRaw.value[0] : null;
-    if(c) verCache.cultiva = c.tag_name;
-    if(b) verCache.blip = b.tag_name;
+    if(c) verCache.cultiva = String(c.tag_name).replace(/^v/i, "");
+    if(b) verCache.blip = String(b.tag_name).replace(/^v/i, "");
     verCache.senza = s ? String(s.tag_name).replace(/^v/i, "") : "1.1.0";
-    verCache.flint = "v0.6";
+    verCache.flint = "0.6";
     verCache.glyph = "2.2-O";
     verCache.mnemo = "1.2-O";
     renderCards();
     renderGlyphSlides();
 
     const cv = verCache.cultiva||"latest", bv = verCache.blip||"latest", sv = verCache.senza||"1.1.0";
-    const fv = verCache.flint||"v0.6";
+    const fv = verCache.flint||"0.6";
     const rel = r => `<div class="rel-row rv">
       <div class="rel-prod">${r.product}</div>
       <div class="rel-ver">${esc(formatRelVer(r.ver, r.product))}</div>
