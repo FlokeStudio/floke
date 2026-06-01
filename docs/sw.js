@@ -1,4 +1,4 @@
-const CACHE = "floke-v1";
+const CACHE = "floke-v2";
 const ASSETS = [
   "./index.html",
   "./manifest.webmanifest",
@@ -10,7 +10,9 @@ const ASSETS = [
   "./assets/icons/blip.svg",
   "./assets/icons/flint.svg",
   "./assets/icons/glyph.svg",
-  "./assets/icons/mnemo.svg"
+  "./assets/icons/mnemo.svg",
+  "./assets/pixel_space/menu-bg.png",
+  "./assets/pixel_space/menu-bg.jpg"
 ];
 
 self.addEventListener("install", e => {
@@ -30,15 +32,17 @@ self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return;
   e.respondWith(
-    caches.match(e.request).then(hit =>
-      hit ||
-      fetch(e.request).then(res => {
-        if (res.ok && (url.pathname.endsWith(".html") || url.pathname.endsWith(".svg") || url.pathname.endsWith(".webmanifest"))) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
-        }
-        return res;
-      }).catch(() => hit)
-    )
+    fetch(e.request).then(res => {
+      if (res.ok && shouldCache(url.pathname)) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+      }
+      return res;
+    }).catch(() => caches.match(e.request))
   );
 });
+
+function shouldCache(path){
+  return path.endsWith(".html") || path.endsWith(".webmanifest") || path.endsWith(".svg")
+    || path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".js");
+}

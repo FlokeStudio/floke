@@ -25,6 +25,9 @@ docs/
         ├── blip/01.jpg … 10.jpg      (optional)
         ├── senza/01.png … 10.png     (shipped)
         └── glyph/01.png … 10.png     (Glyph UI — Flow, Vault, Settings)
+    └── pixel_space/
+        ├── menu-bg.png          (Echo menu background — primary)
+        └── menu-bg.jpg          (Echo menu fallback)
     └── data/
         └── news-cache.json           (Telegraph posts — run sync script)
 ```
