@@ -8,7 +8,7 @@
   <rect width="1200" height="630" fill="url(#g2)"/>
   <text x="80" y="280" font-family="ui-monospace,monospace" font-size="88" font-weight="700" fill="#f0f0f0" letter-spacing="-2">FL<tspan fill="#c8a96e">O</tspan>KE</text>
   <text x="80" y="360" font-family="ui-monospace,monospace" font-size="28" fill="#6a6a6a">Software that lives on your machine.</text>
-  <text x="80" y="420" font-family="ui-monospace,monospace" font-size="18" fill="#c8a96e" letter-spacing="4">OFFLINE-FIRST · DESKTOP · INDIE GAMES</text>
+  <text x="80" y="420" font-family="ui-monospace,monospace" font-size="18" fill="#c8a96e" letter-spacing="4">OFFLINE-FIRST Â· DESKTOP Â· INDIE GAMES</text>
   <circle cx="980" cy="320" r="4" fill="#c8a96e" opacity=".6"/>
   <circle cx="1020" cy="280" r="3" fill="#c8a96e" opacity=".4"/>
   <circle cx="1040" cy="360" r="5" fill="#4a7c59" opacity=".5"/>

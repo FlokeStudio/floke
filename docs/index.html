@@ -91,6 +91,38 @@
   --gh-muted: #6a6458;
   --gh-panel: #ebe6da;
 }
+[data-theme="paper"] .flint-page__canvas,
+[data-theme="paper"] .echo-screen canvas,
+[data-theme="paper"] #engineModalCanvas{
+  filter:contrast(1.12) sepia(0.14) saturate(0.88);
+  image-rendering:pixelated;
+}
+[data-theme="paper"] .flint-page::after,
+[data-theme="paper"] .echo-screen::after{
+  content:"";pointer-events:none;position:absolute;inset:0;z-index:4;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(42,38,28,.04) 3px 4px),
+    radial-gradient(ellipse at 50% 0,rgba(122,98,48,.06),transparent 55%);
+  mix-blend-mode:multiply;
+}
+[data-theme="paper"] .flint-page,
+[data-theme="paper"] .echo-screen{position:relative}
+[data-theme="paper"] .flint-qwen__composer,
+[data-theme="paper"] .echo-panel{
+  box-shadow:4px 4px 0 rgba(42,38,28,.12);
+  border-radius:4px;
+}
+[data-theme="pink"]{
+  --bg:#140810;--bg2:#1e0c16;--bg3:#28101e;--bg4:#321428;
+  --border:#4a2840;--border2:#5a3450;
+  --text:#ffe8f4;--muted:#b88aa8;--muted2:#886078;
+  --accent:#ff6eb4;--accent-dim:rgba(255,110,180,.16);
+  --accent2:#c084fc;--nav-bg:rgba(20,8,16,.88);
+  --sub-canvas-fade:rgba(20,8,16,.2);--sub-node-alpha:.32;
+  --gh-bg:#1e0c16;--gh-border:#4a2840;--gh-text:#ffe8f4;--gh-muted:#b88aa8;--gh-panel:#28101e;
+}
+[data-theme="pink"] .hero-blob{background:radial-gradient(circle,rgba(255,110,180,.25),transparent 70%)}
+[data-theme="pink"] .hero-blob2{background:radial-gradient(circle,rgba(192,132,252,.2),transparent 65%)}
 body.crt-mode::after{opacity:.65;mix-blend-mode:overlay}
 body.crt-mode::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
@@ -370,8 +402,15 @@ nav .wrap{height:52px;display:flex;align-items:center;justify-content:space-betw
 }
 .floke-dock-btn:hover,.floke-dock-btn.on{color:var(--text);border-color:var(--border2);background:var(--bg3)}
 .floke-dock-btn.on{color:var(--accent)}
-
-/* Graph backlinks in tooltip */
+.forge-live{position:relative}
+.forge-live::after{
+  content:"";position:absolute;top:3px;right:5px;width:6px;height:6px;border-radius:50%;
+  background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.85);
+  animation:forgePulse 1.1s ease-in-out infinite;
+}
+@keyframes forgePulse{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+nav a.forge-live::after{top:2px;right:-2px}
+.floke-dock-btn.forge-live::after{top:4px;right:8px}
 .ws-main-icon--logo{color:var(--accent)}
 .graph-tooltip .gt-backlinks{display:block;margin-top:6px;font-size:10px;color:var(--muted);line-height:1.5}
 .graph-tooltip .gt-backlinks em{font-style:normal;color:var(--accent2)}
@@ -1461,14 +1500,32 @@ footer{
 .engine-teaser-light{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .engine-teaser-light.r{background:#ff5f57}.engine-teaser-light.y{background:#febc2e}.engine-teaser-light.g{background:#28c840}
 .engine-teaser-bar-title{font-size:10px;letter-spacing:.06em;color:var(--muted);margin-left:auto;margin-right:auto}
-.engine-teaser-screen{position:relative;height:min(360px,52vw);background:#000;overflow:hidden;cursor:crosshair;min-height:220px}
+.engine-teaser-screen{position:relative;height:min(580px,64vw);background:#000;overflow:hidden;cursor:crosshair;min-height:400px}
+.engine-teaser-screen.is-menu{overflow:visible;min-height:440px;height:min(600px,66vw)}
 .engine-teaser-screen canvas{width:100%;height:100%;display:block}
+.engine-teaser-wrap{position:relative}
+.engine-teaser-wrap.is-fullscreen{
+  position:fixed;inset:max(52px,8px) 8px 72px;z-index:10006;
+  display:flex;flex-direction:column;border:2px solid var(--border);border-radius:6px;
+  box-shadow:0 0 0 1px #000,0 24px 80px rgba(0,0,0,.65);background:var(--bg2);
+  max-width:1200px;margin:0 auto;left:0;right:0;
+}
+.engine-teaser-wrap.is-fullscreen .engine-teaser-screen{flex:1;height:auto;min-height:min(78vh,820px)}
+.echo-fs-backdrop{
+  position:fixed;inset:0;z-index:10005;background:rgba(0,0,0,.72);opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.echo-fs-backdrop.open{opacity:1;pointer-events:auto}
+.engine-teaser-screen.is-idle canvas,
+.engine-teaser-screen.is-menu canvas{pointer-events:none}
+.engine-teaser-screen.is-idle{cursor:pointer}
 .engine-teaser-overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;pointer-events:none;transition:opacity .4s;text-align:center;padding:20px;
+  gap:14px;transition:opacity .4s;text-align:center;padding:20px;z-index:4;
+  background:rgba(4,4,10,.55);pointer-events:auto;cursor:pointer;
 }
-.engine-teaser-overlay.hidden{opacity:0}
-.engine-teaser-hint{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);animation:pulse 2s ease-in-out infinite}
+.engine-teaser-overlay.hidden{opacity:0;pointer-events:none}
+.engine-teaser-hint{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);animation:pulse 2s ease-in-out infinite;max-width:28ch;line-height:1.6}
+.echo-splash-cta{font-size:9px;color:var(--accent2);animation:none;opacity:.85}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 .engine-teaser-badge{
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;
@@ -1555,57 +1612,245 @@ footer{
 .about-mline:hover,.about-mline.hi{color:var(--text)}
 .about-solo{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:28px}
 
-/* Scroll story · compare slider · flint · shell · errors · arcade */
-.scroll-story{padding:0 0 48px}
-.scroll-story-rail{
-  position:relative;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2);
-  padding:20px 18px 24px;overflow:hidden;
+/* Flint Qwen · Echo · macOS shell */
+.flint-page{
+  display:none;flex:1;flex-direction:column;padding:0!important;min-height:100dvh;
+  position:relative;overflow:hidden;background:#050508;
 }
-.scroll-story-track{
-  display:flex;gap:0;height:3px;background:var(--border);border-radius:3px;margin-bottom:22px;overflow:hidden;
+.flint-page__canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.flint-page__veil{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,8,12,.35) 0%,transparent 35%,rgba(5,5,8,.5) 100%);
 }
-.scroll-story-fill{
-  height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .1s var(--ease);
+.flint-page__inner{
+  position:relative;z-index:2;min-height:calc(100dvh - 52px);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:80px 20px 48px;
 }
-.scroll-story-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.scroll-story-step{
-  padding:16px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);
-  transition:background .25s,box-shadow .25s,transform .25s;
+.flint-page__back{
+  position:fixed;top:64px;left:20px;z-index:20;
+  background:rgba(14,14,20,.92);backdrop-filter:blur(10px);
+  border-color:rgba(255,255,255,.14);color:#f0f0f0;font-size:11px;padding:8px 14px;
 }
-.scroll-story-step.is-active{background:var(--bg3);box-shadow:inset 3px 0 0 var(--accent);transform:translateY(-2px)}
-.scroll-story-step strong{display:block;font-size:12px;margin-bottom:6px}
-.scroll-story-step span{font-size:10px;color:var(--muted);line-height:1.65}
-.scroll-story-orbit{
-  position:absolute;right:12px;top:12px;width:88px;height:88px;border-radius:50%;
-  border:1px solid var(--border2);opacity:.55;pointer-events:none;
+.flint-qwen{width:min(720px,100%);text-align:center}
+.flint-qwen__badge{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:14px;padding:6px 12px;
+  border-radius:999px;border:1px solid rgba(140,200,160,.25);background:rgba(74,124,89,.12);
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#9fd4b0;
 }
-.scroll-story-orbit i{
-  position:absolute;inset:8px;border-radius:50%;border:1px dashed var(--accent-dim);
-  animation:orbitSpin 18s linear infinite;
+.flint-qwen__title{
+  font-size:clamp(28px,5vw,42px);font-weight:700;letter-spacing:-.03em;line-height:1.15;
+  margin-bottom:10px;color:#f5f5f5;
 }
-@keyframes orbitSpin{to{transform:rotate(360deg)}}
-.flint-landing{
-  margin:0 0 24px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-  background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);position:relative;
+.flint-qwen__sub{font-size:11px;color:#7a7a82;margin-bottom:28px;line-height:1.6;max-width:48ch;margin-left:auto;margin-right:auto}
+.flint-qwen__composer{
+  position:relative;border-radius:16px;background:rgba(22,22,28,.94);
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 80px rgba(0,0,0,.45);
+  padding:18px 18px 52px;text-align:left;
 }
-.flint-landing__spark{
-  position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at 20% 30%,rgba(200,169,110,.18),transparent 45%),
-    radial-gradient(circle at 80% 70%,rgba(74,124,89,.12),transparent 40%);
+.flint-qwen__composer.is-busy{opacity:.72;pointer-events:none}
+.flint-qwen__input{
+  width:100%;border:none;background:transparent;resize:none;outline:none;
+  font-family:inherit;font-size:15px;line-height:1.6;color:#ececec;min-height:72px;
 }
-.flint-landing__inner{
-  position:relative;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;
-  padding:28px 24px;
+.flint-qwen__input::placeholder{color:#6a6a72}
+.flint-qwen__send{
+  position:absolute;right:14px;bottom:14px;width:36px;height:36px;border-radius:50%;
+  border:none;background:#ececec;color:#111;font-size:16px;font-weight:700;cursor:pointer;
+  transition:transform .2s,opacity .2s;
 }
-.flint-landing__kicker{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.flint-landing__h{font-size:clamp(22px,4vw,32px);font-weight:700;margin-bottom:8px}
-.flint-landing__p{font-size:12px;color:var(--muted);line-height:1.8;max-width:52ch}
-.flint-landing__meter{
-  width:min(220px,100%);padding:16px;border:1px solid var(--border2);border-radius:12px;background:var(--bg);
+.flint-qwen__send:hover{transform:scale(1.05);opacity:.92}
+.flint-qwen__send:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.flint-qwen__chips{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;
 }
-.flint-meter-bar{height:6px;background:var(--border);border-radius:6px;overflow:hidden;margin:10px 0}
-.flint-meter-fill{height:100%;width:62%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
-.flint-sparks{font-family:inherit;font-size:10px;color:var(--accent);letter-spacing:.08em}
+.flint-qwen__chip{
+  font-family:inherit;font-size:10px;padding:8px 12px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);
+  color:#c8c8cc;cursor:pointer;transition:all .2s;text-align:left;line-height:1.35;
+}
+.flint-qwen__chip strong{display:block;font-size:9px;letter-spacing:.08em;color:#c8a96e;margin-bottom:2px}
+.flint-qwen__chip:hover,.flint-qwen__chip.is-on{
+  border-color:rgba(200,169,110,.45);color:#f0ebe3;background:rgba(200,169,110,.08);
+}
+.flint-qwen__reply{
+  margin-top:20px;text-align:left;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(18,18,24,.92);padding:16px 18px;min-height:64px;
+}
+.flint-qwen__reply[hidden]{display:none!important}
+.flint-qwen__thinking{
+  display:flex;align-items:center;gap:10px;font-size:12px;color:#8fd4ff;margin-bottom:0;
+}
+.flint-qwen__thinking-dots span{
+  display:inline-block;width:5px;height:5px;border-radius:50%;background:#8fd4ff;margin:0 2px;
+  animation:flintDot 1.2s ease-in-out infinite;
+}
+.flint-qwen__thinking-dots span:nth-child(2){animation-delay:.15s}
+.flint-qwen__thinking-dots span:nth-child(3){animation-delay:.3s}
+@keyframes flintDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.flint-qwen__answer{
+  font-size:13px;line-height:1.65;color:#dcdcdc;margin-top:10px;white-space:pre-wrap;
+}
+.flint-qwen__answer .flint-cursor{
+  display:inline-block;width:2px;height:1em;background:#c8a96e;margin-left:2px;vertical-align:text-bottom;
+  animation:flintBlink .9s step-end infinite;
+}
+@keyframes flintBlink{50%{opacity:0}}
+.flint-qwen__trace{
+  margin-top:14px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px;
+}
+.flint-qwen__trace summary{
+  cursor:pointer;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8fd4ff;
+  list-style:none;display:flex;align-items:center;gap:8px;user-select:none;
+}
+.flint-qwen__trace summary::-webkit-details-marker{display:none}
+.flint-trace-pill{
+  font-size:9px;padding:2px 8px;border-radius:999px;border:1px solid rgba(143,212,255,.25);
+  color:#b0d8ff;text-transform:none;letter-spacing:.04em;
+}
+.flint-trace-list{
+  margin:12px 0 0;padding:0;list-style:none;font-size:11px;line-height:1.55;
+}
+.flint-trace-list li{
+  display:grid;grid-template-columns:auto 1fr;gap:10px;padding:8px 0;
+  border-bottom:1px dashed rgba(255,255,255,.06);
+}
+.flint-trace-list li:last-child{border-bottom:none}
+.flint-trace-step{
+  font-family:ui-monospace,monospace;font-size:10px;color:#c8a96e;white-space:nowrap;
+}
+.flint-trace-detail{color:#a8a8b0;white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:10px}
+.flint-qwen__note{margin-top:20px;font-size:10px;color:#6a6a72;letter-spacing:.06em}
+
+.echo-panel{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg2)}
+.echo-tabbar{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
+  padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);
+}
+.echo-tabbar-lights{display:flex;gap:7px;align-items:center}
+.echo-tabbar-lights i{width:11px;height:11px;border-radius:50%;display:block}
+.echo-tabbar-lights .r{background:#ff5f57}.echo-tabbar-lights .y{background:#febc2e}.echo-tabbar-lights .g{background:#28c840}
+.echo-tabbar-title{
+  justify-self:center;font-family:"Courier New",ui-monospace,monospace;
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--text);
+  text-shadow:1px 1px 0 var(--bg4),2px 2px 0 rgba(0,0,0,.35);
+}
+.echo-tabbar-meta{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
+  font-size:9px;color:var(--muted2);letter-spacing:.04em;font-family:ui-monospace,monospace;
+}
+.echo-screen{background:#080810;image-rendering:pixelated;image-rendering:crisp-edges;position:relative}
+.echo-screen canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+.echo-menu{
+  position:absolute;inset:0;z-index:10;display:flex;align-items:flex-start;justify-content:center;padding:10px 8px;
+  image-rendering:pixelated;pointer-events:auto;overflow-y:auto;
+}
+.echo-menu[hidden]{display:none!important}
+.echo-menu__frame{
+  position:relative;width:min(380px,100%);margin-top:4px;
+  border:3px solid #2a2a38;outline:2px solid #0a0a12;box-shadow:inset 0 0 0 2px #4a4a58,4px 4px 0 rgba(0,0,0,.45);
+  background:#0c0c14;font-family:"Courier New",ui-monospace,monospace;
+}
+.echo-menu__bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.28;pointer-events:none;
+  image-rendering:pixelated;filter:contrast(1.1) saturate(.85);
+}
+.echo-menu__scanlines{
+  position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.35) 2px,rgba(0,0,0,.35) 4px);
+}
+.echo-menu__panel{
+  position:relative;z-index:2;padding:14px 14px 12px;text-align:center;
+}
+.echo-menu__panel[hidden]{display:none!important}
+.echo-menu__nav{display:grid;gap:5px;margin-top:6px}
+.echo-pbtn{
+  font-family:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 10px;
+  border:2px solid #3a3a48;background:linear-gradient(180deg,#222230 0%,#14141c 100%);color:#e0e0ea;
+  cursor:pointer;box-shadow:0 3px 0 #080810,0 0 0 1px #000;transition:transform .08s,filter .12s;
+  width:100%;pointer-events:auto;
+}
+.echo-pbtn:hover{filter:brightness(1.12);color:var(--accent)}
+.echo-pbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #080810}
+.echo-pbtn.is-sel,.echo-pbtn--start{border-color:var(--accent);color:var(--accent);box-shadow:0 3px 0 #1a1008,0 0 8px rgba(200,169,110,.25)}
+.echo-pbtn--back{font-size:9px;padding:6px 10px;margin-bottom:10px;opacity:.85}
+.echo-pbtn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+.echo-menu__logo{font-size:16px;letter-spacing:.28em;color:#e8e8f0;text-shadow:2px 2px 0 #000;margin-bottom:4px}
+.echo-menu__tag{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#8888a0;margin-bottom:6px;line-height:1.5}
+.echo-menu__meta{font-size:8px;color:#c8a96e;margin-bottom:8px;letter-spacing:.06em}
+.echo-menu__row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.echo-menu__row .echo-pbtn{flex:1;min-width:72px}
+.echo-menu__copy{font-size:9px;line-height:1.7;color:#a0a0b0;text-align:left;margin:8px 0}
+.echo-hangar-preview{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:10px 0;text-align:left;
+}
+.echo-hangar-canvas-wrap{
+  border:2px solid #333;background:#06060c;padding:6px;image-rendering:pixelated;
+}
+.echo-hangar-canvas-wrap canvas{width:100%;height:auto;display:block;image-rendering:pixelated}
+.echo-hangar-modules{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0}
+.echo-mod{
+  aspect-ratio:1;border:2px solid #333;background:#101018;display:grid;place-items:center;font-size:7px;
+  color:#666;position:relative;
+}
+.echo-mod.is-on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 6px rgba(200,169,110,.35)}
+.echo-mod__lv{position:absolute;bottom:2px;right:3px;font-size:6px}
+.echo-hangar-ships,.echo-hangar-ups{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0}
+.echo-hangar-ships .echo-pbtn,.echo-hangar-ups .echo-pbtn{min-width:64px;padding:7px 8px;font-size:8px}
+.echo-save-row{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.echo-music-list{display:grid;gap:4px;margin:8px 0;max-height:140px;overflow:auto;text-align:left}
+.echo-music-item{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;
+  border:1px solid #333;font-size:8px;color:#aaa;
+}
+.echo-music-item.is-now{border-color:var(--accent);color:var(--accent)}
+.echo-tutor{
+  position:absolute;left:10px;bottom:10px;z-index:6;max-width:220px;padding:10px 12px;
+  background:rgba(0,0,0,.72);border:1px solid var(--border);border-radius:8px;
+  font-size:9px;line-height:1.65;color:var(--muted);font-family:ui-monospace,monospace;
+}
+.echo-tutor[hidden]{display:none!important}
+.echo-tutor button{margin-top:8px;font-size:9px}
+.echo-gamepad-line{
+  margin:10px 0 0;font-size:10px;color:var(--muted);line-height:1.65;display:flex;align-items:flex-start;gap:10px;
+}
+.echo-gamepad-line svg{flex-shrink:0;margin-top:2px;opacity:.75}
+.echo-gamepad-line.is-connected{color:var(--accent2)}
+.echo-icon-gamepad{width:16px;height:16px;display:inline-block;vertical-align:middle}
+.echo-streak-badge{font-size:9px;padding:2px 7px;border:1px solid var(--border);border-radius:999px;color:var(--accent)}
+
+.mac-shell{
+  width:min(820px,96vw);max-height:min(520px,78vh);border-radius:12px;overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);font-family:"SF Mono","Space Mono",monospace;
+}
+.mac-shell__chrome{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  background:linear-gradient(180deg,#3a3a3c 0%,#2d2d2f 100%);border-bottom:1px solid #1a1a1a;
+}
+.mac-shell__lights{display:flex;gap:7px;align-items:center}
+.mac-shell__lights button,.mac-shell__lights i{width:12px;height:12px;border-radius:50%;border:none;padding:0}
+.mac-shell__lights button{background:#ff5f57;cursor:pointer}
+.mac-shell__lights .y{background:#febc2e}.mac-shell__lights .g{background:#28c840}
+.mac-shell__title{flex:1;text-align:center;font-size:11px;color:#b0b0b5;letter-spacing:.02em}
+.mac-shell__body{
+  background:rgba(30,30,30,.94);padding:14px 16px 12px;overflow:hidden;
+  display:flex;flex-direction:column;min-height:320px;
+}
+.mac-shell__out{
+  flex:1;margin:0 0 8px;font-size:12px;line-height:1.55;color:#d4d4d4;
+  overflow-y:auto;white-space:pre-wrap;max-height:min(360px,50vh);
+}
+.mac-shell__line{display:flex;align-items:center;gap:8px}
+.mac-shell__prompt{color:#7dd3fc;white-space:nowrap;font-size:12px}
+.mac-shell__input{
+  flex:1;border:none;background:transparent;color:#f5f5f5;font:inherit;font-size:12px;outline:none;
+}
+.floke-shell{
+  position:fixed;inset:0;z-index:10004;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.floke-shell.open{opacity:1;pointer-events:auto}
+
 .compare-slider-wrap{margin:24px 0 32px;padding:22px 20px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg2)}
 .compare-slider-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;font-size:11px}
 .compare-slider-head span{color:var(--muted)}
@@ -1629,65 +1874,53 @@ footer{
   font-size:11px;color:var(--accent);opacity:0;transform:translateY(6px);transition:all .35s var(--ease);
 }
 .privacy-promise.show{opacity:1;transform:none}
-.floke-shell{
-  position:fixed;inset:0;z-index:10004;display:flex;align-items:flex-end;justify-content:center;
-  padding:0 16px 72px;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s;
-}
-.floke-shell.open{opacity:1;pointer-events:auto}
-.floke-shell-panel{
-  width:min(720px,100%);border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);
-  overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5);
-}
-.floke-shell-bar{
-  display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
-  background:var(--bg3);border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);
-}
-.floke-shell-out{
-  min-height:140px;max-height:220px;overflow-y:auto;padding:12px 14px;font-size:11px;line-height:1.65;
-  color:var(--muted);white-space:pre-wrap;
-}
-.floke-shell-input-wrap{display:flex;border-top:1px solid var(--border);background:var(--bg3)}
-.floke-shell-input{
-  flex:1;border:none;background:transparent;font-family:inherit;font-size:12px;color:var(--text);
-  padding:12px 14px;outline:none;
-}
-.floke-shell-input::before{content:'> '}
 .error-page{display:none;flex:1;flex-direction:column;padding:120px 0 80px;text-align:center}
 .error-code{font-size:clamp(48px,12vw,96px);font-weight:700;color:var(--accent);line-height:1;margin-bottom:12px}
 .error-msg{font-size:13px;color:var(--muted);max-width:42ch;margin:0 auto 24px;line-height:1.75}
 .error-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.flint-spark-page .flint-terminal{
-  margin-top:24px;border:1px solid var(--border);border-radius:var(--radius);background:#0d0d0d;
-  padding:16px;font-size:11px;color:#8cf;line-height:1.7;text-align:left;max-width:560px;
-}
-.status-grid{display:grid;gap:10px;margin-top:24px}
-.status-row{
-  display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--border);
-  border-radius:8px;background:var(--bg3);font-size:11px;
-}
-.status-row span:last-child{color:var(--accent2);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
-.arcade-cabinet{border:3px solid var(--border2);border-radius:12px;overflow:hidden;background:#0a0a0e}
-.arcade-marquee{
-  padding:8px 12px;background:linear-gradient(90deg,#1a1020,#2a1810);color:var(--accent);
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-align:center;
-  border-bottom:1px solid var(--border);
-}
-.arcade-meta{
-  display:flex;justify-content:space-between;gap:8px;padding:8px 12px;font-size:9px;color:var(--muted2);
-  border-bottom:1px solid var(--border);background:var(--bg3);flex-wrap:wrap;
-}
-.gamepad-badge{color:var(--accent2);font-size:9px}
+.flint-spark-page .flint-terminal{display:none}
+.arcade-cabinet,.arcade-marquee,.arcade-meta{display:none}
+.status-grid{display:none}
+.pwa-badge,.foot-geek-links{display:none}
 .pixel-editor-modal{
-  position:fixed;inset:0;z-index:10005;display:grid;place-items:center;padding:20px;
-  background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s;
+  position:fixed;inset:0;z-index:10005;display:grid;place-items:center;padding:16px;
+  background:rgba(0,0,0,.75);opacity:0;pointer-events:none;transition:opacity .2s;
 }
 .pixel-editor-modal.open{opacity:1;pointer-events:auto}
 .pixel-editor-card{
-  width:min(360px,100%);border:1px solid var(--border);background:var(--bg2);border-radius:var(--radius);padding:20px;
+  width:min(960px,96vw);aspect-ratio:18/9;max-height:min(88vh,540px);
+  border:2px solid var(--border);background:var(--bg2);border-radius:8px;padding:0;
+  display:grid;grid-template-columns:1fr minmax(240px,32%);overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.04);
+  image-rendering:pixelated;
 }
-.pixel-grid{display:grid;grid-template-columns:repeat(16,1fr);gap:1px;margin:12px 0;border:1px solid var(--border)}
-.pixel-cell{aspect-ratio:1;background:var(--bg4);cursor:pointer;border:none;padding:0}
+.pixel-editor-main{padding:18px 20px;overflow:auto;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:10px}
+.pixel-editor-side{padding:18px 16px;overflow:auto;background:var(--bg3);display:flex;flex-direction:column;gap:10px}
+.pixel-editor-head{font-size:13px;letter-spacing:.08em;margin:0}
+.pixel-editor-sub{font-size:9px;color:var(--muted);line-height:1.6;margin:0}
+.pixel-workspace{display:flex;flex-direction:column;gap:16px;align-items:flex-start;flex:1}
+.pixel-art-col{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
+.pixel-grid{
+  display:grid;grid-template-columns:repeat(16,1fr);gap:1px;
+  border:2px solid var(--border);background:var(--bg4);
+  width:min(320px,100%);aspect-ratio:1;
+}
+.pixel-cell{aspect-ratio:1;background:var(--bg3);cursor:pointer;border:none;padding:0;min-height:14px}
+.pixel-cell:hover{background:var(--border2)}
 .pixel-cell.on{background:var(--accent)}
+.pixel-portrait-block{margin:0;padding:12px;border:1px dashed var(--border);background:var(--bg2);width:100%;max-width:340px}
+.pixel-portrait-preview{
+  display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:128px;margin:8px 0;
+  border:2px solid var(--border);image-rendering:pixelated;background:var(--bg4);
+}
+.pixel-portrait-cell{aspect-ratio:1;background:var(--bg3);min-height:14px}
+.pixel-portrait-cell.on{background:var(--accent)}
+.pixel-editor-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.pixel-editor-actions .btn{font-size:10px;padding:7px 10px}
+@media(max-width:760px){
+  .pixel-editor-card{aspect-ratio:auto;max-height:none;grid-template-columns:1fr}
+  .pixel-editor-side{border-top:1px solid var(--border)}
+}
 .giscus-inline-fallback{
   margin-top:16px;padding:18px;border:1px solid var(--gh-border);border-radius:10px;background:var(--gh-panel);
   display:none;
@@ -1744,7 +1977,6 @@ footer{
     <li><a href="#releases" data-k="nav.releases">Releases</a></li>
     <li><a href="#engine" data-k="nav.engine">Engine</a></li>
     <li><a href="#flint" data-k="nav.flint">Flint</a></li>
-    <li><a href="#status" data-k="nav.status">Status</a></li>
     <li><a href="#about" data-k="nav.about">About</a></li>
     <li><a href="#graph" data-k="nav.graph">Graph</a></li>
     <li><a href="#news" data-k="nav.news">News</a></li>
@@ -1767,7 +1999,6 @@ footer{
     <li><a href="#releases" data-k="nav.releases" data-drawer-close>Releases</a></li>
     <li><a href="#engine" data-k="nav.engine" data-drawer-close>Engine</a></li>
     <li><a href="#flint" data-k="nav.flint" data-drawer-close>Flint</a></li>
-    <li><a href="#status" data-k="nav.status" data-drawer-close>Status</a></li>
     <li><a href="#about" data-k="nav.about" data-drawer-close>About</a></li>
     <li><a href="#graph" data-k="nav.graph" data-drawer-close>Graph</a></li>
     <li><a href="#news" data-k="nav.news" data-drawer-close>News</a></li>
@@ -1829,46 +2060,7 @@ footer{
     </div>
   </div>
   <hr class="div">
-</div>
-</section>
-
-<section id="scroll-story" class="scroll-story">
-<div class="wrap wrap--wide">
-  <div class="sec-label rv" data-k="story.label">One timeline</div>
-  <p class="sec-hint rv" data-k="story.hint">Pet projects → Glyph intelligence → Floke Engine — scroll the landing and watch the orbit sync.</p>
-  <div class="scroll-story-rail rv">
-    <div class="scroll-story-orbit" aria-hidden="true"><i></i></div>
-    <div class="scroll-story-track"><div class="scroll-story-fill" id="scrollStoryFill"></div></div>
-    <div class="scroll-story-steps" id="scrollStorySteps">
-      <div class="scroll-story-step" data-story="0"><strong data-k="story.s1t">Pet projects</strong><span data-k="story.s1p">Senza, Cultiva, BLIP — built alone, offline-first.</span></div>
-      <div class="scroll-story-step" data-story="1"><strong data-k="story.s2t">Glyph layer</strong><span data-k="story.s2p">Metadata intelligence ties the library together on-device.</span></div>
-      <div class="scroll-story-step" data-story="2"><strong data-k="story.s3t">Floke Engine</strong><span data-k="story.s3p">Same studio, same hands — small games worth finishing.</span></div>
-    </div>
   </div>
-  <hr class="div">
-</div>
-</section>
-
-<section id="flint-landing" class="flint-landing rv">
-<div class="flint-landing__spark" aria-hidden="true"></div>
-<div class="wrap">
-  <div class="flint-landing__inner">
-    <div>
-      <div class="flint-landing__kicker" data-k="flint.landing.kicker">Local agent · Q3 2026</div>
-      <h2 class="flint-landing__h" data-k="flint.landing.h">Flint</h2>
-      <p class="flint-landing__p" data-k="flint.landing.p">Think here. Stay here. A workstation stub on the landing — v0.6 in the forge, public release on the horizon.</p>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <button type="button" class="btn btn-solid" id="flintWaitlistLanding" data-k="waitlist.flint.btn">Join waitlist →</button>
-        <a href="#flint" class="btn btn-outline" data-k="flint.landing.more">Explore Flint →</a>
-      </div>
-    </div>
-    <div class="flint-landing__meter">
-      <div class="flint-sparks" data-k="flint.landing.spark">forge pulse · offline</div>
-      <div class="flint-meter-bar"><div class="flint-meter-fill" id="flintMeterFill"></div></div>
-      <div style="font-size:10px;color:var(--muted)" data-k="flint.landing.meter">v0.6 compile · Mnemo 1.2-O · agent tools</div>
-    </div>
-  </div>
-</div>
 </section>
 
 <section id="glyph" class="glyph-stage">
@@ -2176,39 +2368,112 @@ footer{
     </div>
   </div>
   <hr class="div" style="margin-top:0">
-  <div class="sec-label sec-label--page rv" data-k="engine.teaser.label">Void Signal · arcade cabinet</div>
-  <p class="engine-teaser-note rv" data-k="engine.teaser.note">Mock arcade to pass time — not the real Floke Engine title. Daily seed · local hi-score · optional gist export.</p>
-  <div class="engine-teaser arcade-cabinet rv" style="margin-top:18px">
-    <div class="arcade-marquee" data-k="engine.game.name">◆ VOID SIGNAL ◆ floke-engine mock ◆</div>
-    <div class="arcade-meta">
-      <span id="arcadeDailySeed">seed: —</span>
-      <span id="arcadeHiScore">hi: 0</span>
-      <span id="gamepadBadge" class="gamepad-badge" hidden data-k="engine.gamepad">🎮 controller</span>
-      <button type="button" class="graph-tool" id="engineExportScore" data-k="engine.exportScore">Export score</button>
-    </div>
-    <div class="engine-teaser-bar">
-      <div class="engine-teaser-light r"></div>
-      <div class="engine-teaser-light y"></div>
-      <div class="engine-teaser-light g"></div>
-      <div class="engine-teaser-bar-title">void-signal · cabinet · build 0.0.1</div>
-      <div class="engine-teaser-actions">
+  <div class="sec-label sec-label--page rv" data-k="engine.teaser.label">Echo · playable mock</div>
+  <p class="engine-teaser-note rv" data-k="engine.teaser.note">Arcade mock · daily seed · export replay</p>
+  <div class="engine-teaser-wrap" id="engineTeaserWrap">
+  <div class="engine-teaser echo-panel rv" style="margin-top:18px">
+    <div class="echo-tabbar">
+      <div class="echo-tabbar-lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+      <span class="echo-tabbar-title" data-k="engine.game.name">Echo</span>
+      <div class="echo-tabbar-meta">
+        <span id="arcadeBiome">biome —</span>
+        <span id="arcadeDailySeed">seed —</span>
+        <span id="arcadeHiScore">hi 0</span>
+        <span id="arcadeStreak" class="echo-streak-badge" hidden title="Echo streak"></span>
+        <span id="gamepadBadge" class="gamepad-badge" hidden>
+          <svg class="echo-icon-gamepad" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="5" width="12" height="7" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8.5" r="1" fill="currentColor"/><circle cx="8" cy="8.5" r="1" fill="currentColor"/><rect x="10.5" y="7.5" width="1.5" height="2" rx=".3" fill="currentColor"/></svg>
+          <span data-k="engine.gamepad.on">pad</span>
+        </span>
+        <button type="button" class="graph-tool" id="engineExportScore" data-k="engine.exportScore">Export</button>
+        <button type="button" class="graph-tool" id="enginePortraitBtn" data-k="engine.portrait">8×8 pilot</button>
         <button type="button" class="graph-tool" id="enginePixelBtn" data-k="engine.pixel">16×16</button>
-        <button type="button" class="graph-tool" id="engineFullscreenBtn" data-k="engine.teaser.fullscreen">Fullscreen →</button>
+        <button type="button" class="graph-tool" id="engineFullscreenBtn" data-k="engine.teaser.fullscreen">Fullscreen</button>
       </div>
     </div>
-    <div class="engine-teaser-screen" id="engineTeaserScreen">
+    <div class="engine-teaser-screen echo-screen is-idle" id="engineTeaserScreen">
       <canvas id="engineGameCanvas"></canvas>
       <div class="engine-teaser-score" id="engineTeaserScore">score: 0</div>
+      <div class="echo-menu" id="echoMenu" hidden>
+        <div class="echo-menu__frame">
+          <img class="echo-menu__bg" src="assets/pixel_space/menu-bg.jpg" alt="" width="420" height="280" decoding="async">
+          <div class="echo-menu__scanlines"></div>
+          <div class="echo-menu__panel is-active" id="echoPanelMain" data-echo-panel="main">
+            <div class="echo-menu__logo">ECHO</div>
+            <div class="echo-menu__tag" data-k="engine.teaser.hint">Мини-демо · не настоящий тайтл</div>
+            <div class="echo-menu__meta" id="echoMenuMeta">tokens 0 · ship scout</div>
+            <nav class="echo-menu__nav">
+              <button type="button" class="echo-pbtn" data-echo-nav="arcade" data-k="echo.menu.arcade">Arcade</button>
+              <button type="button" class="echo-pbtn" data-echo-nav="adventure" data-k="echo.menu.adventure">Adventure</button>
+              <button type="button" class="echo-pbtn" data-echo-nav="hangar" data-k="echo.menu.hangar">Hangar</button>
+              <button type="button" class="echo-pbtn" data-echo-nav="saves" data-k="echo.menu.saves">Saves</button>
+              <button type="button" class="echo-pbtn" data-echo-nav="about" data-k="echo.menu.about">About</button>
+              <button type="button" class="echo-pbtn" data-echo-nav="music" data-k="echo.menu.music">Music</button>
+            </nav>
+          </div>
+          <div class="echo-menu__panel" id="echoPanelArcade" data-echo-panel="arcade" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.arcade">Arcade</div>
+            <div class="echo-menu__row">
+              <button type="button" class="echo-pbtn" data-echo-diff="easy" data-k="echo.diff.easy">Easy</button>
+              <button type="button" class="echo-pbtn is-sel" data-echo-diff="normal" data-k="echo.diff.normal">Normal</button>
+              <button type="button" class="echo-pbtn" data-echo-diff="hard" data-k="echo.diff.hard">Hard</button>
+            </div>
+            <button type="button" class="echo-pbtn echo-pbtn--start" id="echoArcadeStart" data-k="echo.menu.launch">Launch</button>
+          </div>
+          <div class="echo-menu__panel" id="echoPanelHangar" data-echo-panel="hangar" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.hangar">Hangar</div>
+            <div class="echo-hangar-preview">
+              <div class="echo-hangar-canvas-wrap"><canvas id="echoHangarCanvas" width="96" height="64"></canvas></div>
+              <div class="echo-hangar-modules" id="echoHangarModules"></div>
+            </div>
+            <div class="echo-hangar-ships" id="echoHangarShips"></div>
+            <div class="echo-hangar-ups" id="echoHangarUps"></div>
+          </div>
+          <div class="echo-menu__panel" id="echoPanelSaves" data-echo-panel="saves" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.saves">Saves</div>
+            <div class="echo-menu__copy" id="echoSavesCopy">—</div>
+            <div class="echo-save-row">
+              <button type="button" class="echo-pbtn" id="echoSaveContinue" data-k="echo.saves.continue">Continue daily</button>
+              <button type="button" class="echo-pbtn" id="echoSaveReset" data-k="echo.saves.reset">Reset all</button>
+            </div>
+          </div>
+          <div class="echo-menu__panel" id="echoPanelAbout" data-echo-panel="about" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-menu__logo" style="font-size:12px">Echo</div>
+            <div class="echo-menu__copy" data-k="echo.about.body">Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.</div>
+          </div>
+          <div class="echo-menu__panel" id="echoPanelMusic" data-echo-panel="music" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.music">Music</div>
+            <div class="echo-menu__row">
+              <button type="button" class="echo-pbtn is-sel" id="echoMusicToggle" data-k="echo.music.on">On</button>
+            </div>
+            <div class="echo-music-list" id="echoMusicList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="echo-tutor" id="echoTutor" hidden>
+        <div data-k="echo.tutor.l1">Move · mouse / WASD / gamepad</div>
+        <div data-k="echo.tutor.l2">P · pause</div>
+        <div data-k="echo.tutor.l3">Export · replay markdown in tabbar</div>
+        <button type="button" class="btn btn-outline" id="echoTutorDismiss" data-k="echo.tutor.ok">Got it</button>
+      </div>
       <div class="engine-teaser-overlay" id="engineTeaserOverlay">
-        <div class="engine-teaser-badge" data-k="engine.teaser.badge">Click to play</div>
-        <div class="engine-teaser-hint" data-k="engine.teaser.hint">Mini demo · not the real title</div>
+        <div class="engine-teaser-badge" data-k="engine.teaser.badge">Echo</div>
+        <div class="engine-teaser-hint" data-k="engine.teaser.hint">Мини-демо · не настоящий тайтл</div>
+        <div class="engine-teaser-hint echo-splash-cta" data-k="echo.splash.tap">click to open</div>
+        <div class="engine-teaser-hint" id="echoDailyBiomes" style="animation:none;font-size:9px;opacity:.7"></div>
       </div>
     </div>
-    <div class="engine-teaser-foot">
-      <div class="engine-teaser-foot-l" data-k="engine.teaser.foot"><strong>Teaser only.</strong><br>A small arcade demo to pass time — the first real title is still in development.</div>
-      <div class="engine-teaser-status" data-k="engine.teaser.status">In development</div>
-    </div>
   </div>
+  </div>
+  <div class="echo-fs-backdrop" id="echoFsBackdrop" aria-hidden="true"></div>
+  <p class="echo-gamepad-line" id="echoGamepadLine">
+    <svg class="echo-icon-gamepad" viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><rect x="2" y="5" width="12" height="7" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8.5" r="1" fill="currentColor"/><circle cx="8" cy="8.5" r="1" fill="currentColor"/><rect x="10.5" y="7.5" width="1.5" height="2" rx=".3" fill="currentColor"/></svg>
+    <span data-k="engine.gamepadLine">Have a controller nearby? Plug it in and try — left stick to move, face buttons optional.</span>
+  </p>
   <hr class="div">
   <div class="sec-label rv" data-k="engine.titles.label">Titles</div>
   <div class="engine-titles rv">
@@ -2425,42 +2690,40 @@ footer{
 </div>
 </section>
 
-<section class="sub-page sub-page--rich flint-spark-page" id="flintPage">
-<div class="sub-page__bg" aria-hidden="true"><div class="sub-page__orb sub-page__orb--1"></div></div>
-<div class="wrap">
-  <a href="#" class="btn btn-outline sub-page-back" id="flintBack" data-k="flint.back">← Back to Floke</a>
-  <header class="sub-hero rv">
-    <div class="sub-hero-pre" data-k="flint.pre">Local agent · stub</div>
-    <h1 class="sub-hero-h1">Flint</h1>
-    <p class="graph-lead" data-k="flint.lead">Think here. Stay here. v0.6 in the forge — Code, Writer, General agents with Y/N on every file touch.</p>
-  </header>
-  <div class="flint-landing__meter rv" style="max-width:320px">
-    <div class="flint-sparks">forge · mnemo 1.2-o · q3 2026</div>
-    <div class="flint-meter-bar"><div class="flint-meter-fill" style="width:62%"></div></div>
+<section class="sub-page flint-page" id="flintPage">
+<canvas class="flint-page__canvas" id="flintBgCanvas" aria-hidden="true"></canvas>
+<div class="flint-page__veil" aria-hidden="true"></div>
+<div class="flint-page__inner">
+  <a href="#" class="btn btn-outline flint-page__back" id="flintBack" data-k="flint.back">← Back to Floke</a>
+  <div class="flint-qwen rv">
+    <div class="flint-qwen__badge" data-k="flint.badge">Mnemo 1.2-O · Ollama-ready · offline</div>
+    <h1 class="flint-qwen__title" data-k="flint.qwenTitle">Ask Flint,<br>Stay Local.</h1>
+    <p class="flint-qwen__sub" data-k="flint.qwenSub">FliCode · FliWriter · FliGeneral — local agent modes on your disk. No cloud relay.</p>
+    <div class="flint-qwen__composer" id="flintComposer">
+      <textarea class="flint-qwen__input" id="flintPrompt" rows="3" data-k-placeholder="flint.qwenPlaceholder" placeholder="How can I help you today?"></textarea>
+      <button type="button" class="flint-qwen__send" id="flintSend" aria-label="Send">↑</button>
+    </div>
+    <div class="flint-qwen__reply" id="flintReply" hidden>
+      <div class="flint-qwen__thinking" id="flintThinking">
+        <span id="flintThinkingLabel" data-k="flint.thinking">Mnemo routing…</span>
+        <span class="flint-qwen__thinking-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+      </div>
+      <div class="flint-qwen__answer" id="flintAnswer"></div>
+      <details class="flint-qwen__trace" id="flintTrace" hidden>
+        <summary><span data-k="flint.trace.label">Tool trace</span> <span class="flint-trace-pill" id="flintTracePill"></span></summary>
+        <ol class="flint-trace-list" id="flintTraceList"></ol>
+      </details>
+    </div>
+    <div class="flint-qwen__chips" id="flintChips">
+      <button type="button" class="flint-qwen__chip" data-flint-mode="flicode"><strong>FliCode</strong><span data-k="flint.chip.flicode">Refactor with diff</span></button>
+      <button type="button" class="flint-qwen__chip" data-flint-mode="fliwriter"><strong>FliWriter</strong><span data-k="flint.chip.fliwriter">Release copy</span></button>
+      <button type="button" class="flint-qwen__chip" data-flint-mode="fligeneral"><strong>FliGeneral</strong><span data-k="flint.chip.figeneral">Local Q&A</span></button>
+      <button type="button" class="flint-qwen__chip" data-flint-mode="mnemo"><strong>Mnemo 1.2-O</strong><span data-k="flint.chip.mnemo">Agent router</span></button>
+      <button type="button" class="flint-qwen__chip" data-flint-mode="rag"><strong>RAG</strong><span data-k="flint.chip.rag">Your docs only</span></button>
+      <button type="button" class="flint-qwen__chip" data-flint-mode="waitlist"><strong>Q3 2026</strong><span data-k="waitlist.flint.btn">Waitlist</span></button>
+    </div>
+    <p class="flint-qwen__note" data-k="flint.qwenNote">Stub · v0.6 in forge · Q3 2026 · no cloud relay</p>
   </div>
-  <div class="flint-terminal rv" id="flintTerminal" aria-live="polite">
-    <span data-k="flint.term">flint&gt; await public_release(Q3_2026)</span><br>
-    <span data-k="flint.term2">mnemo&gt; agent_modes: [code, writer, general]</span><br>
-    <span data-k="flint.term3">status&gt; no cloud relay · no telemetry · your disk</span>
-  </div>
-  <div class="sub-hero-cta rv" style="margin-top:24px">
-    <button type="button" class="btn btn-solid" onclick="openWaitlist('flint')" data-k="waitlist.flint.btn">Join waitlist →</button>
-    <a href="#project/flint" class="btn btn-outline" data-k="flint.store">Product page →</a>
-  </div>
-</div>
-</section>
-
-<section class="sub-page" id="statusPage">
-<div class="sub-page__bg" aria-hidden="true"><div class="sub-page__orb sub-page__orb--2"></div></div>
-<div class="wrap">
-  <a href="#" class="btn btn-outline sub-page-back" id="statusBack" data-k="status.back">← Back to Floke</a>
-  <header class="sub-hero rv">
-    <div class="sub-hero-pre" data-k="status.pre">Studio pulse</div>
-    <h1 class="sub-hero-h1" data-k="status.h1">Status</h1>
-    <p class="graph-lead" data-k="status.lead">Live-ish snapshot — products, site, and release rhythm. No status page vendor.</p>
-  </header>
-  <div class="status-grid rv" id="statusGrid"></div>
-  <p style="margin-top:20px;font-size:10px;color:var(--muted2)" data-k="status.foot">Updated on load · GitHub for ground truth.</p>
 </div>
 </section>
 
@@ -2547,30 +2810,59 @@ footer{
   <button type="button" class="floke-dock-btn" id="dockTop" title="Top">↑</button>
 </div>
 
-<div class="floke-shell" id="flokeShell" role="dialog" aria-modal="true" aria-label="Floke shell" hidden>
-  <div class="floke-shell-panel">
-    <div class="floke-shell-bar"><span>floke shell · type help</span><button type="button" class="graph-tool" id="flokeShellClose">esc</button></div>
-    <div class="floke-shell-out" id="flokeShellOut">Floke shell — second UI for CLI people. Try: help · open senza · grep releases cultiva · theme dark · graph · play</div>
-    <div class="floke-shell-input-wrap"><input type="text" class="floke-shell-input" id="flokeShellInput" autocomplete="off" spellcheck="false" aria-label="Shell input"></div>
+<div class="floke-shell" id="flokeShell" role="dialog" aria-modal="true" aria-label="Terminal" hidden>
+  <div class="mac-shell">
+    <div class="mac-shell__chrome">
+      <div class="mac-shell__lights"><button type="button" id="flokeShellClose" aria-label="Close"></button><i class="y"></i><i class="g"></i></div>
+      <span class="mac-shell__title">krwg — floke — zsh — 80×24</span>
+    </div>
+    <div class="mac-shell__body">
+      <pre class="mac-shell__out" id="flokeShellOut" aria-live="polite"></pre>
+      <div class="mac-shell__line">
+        <span class="mac-shell__prompt" id="flokeShellPrompt">krwg@floke ~ %</span>
+        <input type="text" class="mac-shell__input" id="flokeShellInput" autocomplete="off" spellcheck="false" aria-label="Terminal input">
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="pixel-editor-modal" id="pixelEditorModal" aria-hidden="true">
   <div class="pixel-editor-card">
-    <h3 style="font-size:14px;margin-bottom:6px" data-k="engine.pixelTitle">16×16 · easter egg</h3>
-    <p style="font-size:10px;color:var(--muted);margin-bottom:8px" data-k="engine.pixelHint">Click pixels · export favicon data URL</p>
-    <div class="pixel-grid" id="pixelGrid"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-      <button type="button" class="btn btn-outline" id="pixelClear" data-k="engine.pixelClear">Clear</button>
-      <button type="button" class="btn btn-solid" id="pixelExport" data-k="engine.pixelExport">Export PNG</button>
-      <button type="button" class="btn btn-outline" id="pixelClose" data-k="waitlist.close">Close</button>
+    <div class="pixel-editor-main">
+      <h3 class="pixel-editor-head" data-k="engine.pixelStudio">Echo · pilot studio</h3>
+      <p class="pixel-editor-sub" data-k="engine.pixelHint">16×16 art · 8×8 pilot · export hi-res PNG</p>
+      <div class="pixel-workspace">
+        <div class="pixel-art-col">
+          <span class="pixel-editor-sub" data-k="engine.pixel">16×16</span>
+          <div class="pixel-grid" id="pixelGrid"></div>
+        </div>
+        <div class="pixel-portrait-block" id="pixelPortraitBlock">
+          <p class="pixel-editor-sub" data-k="engine.portraitHint">8×8 pilot · generate, then set as active</p>
+          <div class="pixel-portrait-preview" id="pixelPortraitPreview"></div>
+          <div class="pixel-editor-actions">
+            <button type="button" class="btn btn-outline" id="pixelPortraitGen" data-k="engine.portraitGen">Generate</button>
+            <button type="button" class="btn btn-solid" id="pixelPortraitSet" data-k="engine.portraitSet">Set active</button>
+            <button type="button" class="btn btn-outline" id="pixelPortraitExport" data-k="engine.portraitExport">Export PNG</button>
+          </div>
+          <p class="pixel-editor-sub" id="pixelPortraitStatus">—</p>
+        </div>
+      </div>
+    </div>
+    <div class="pixel-editor-side">
+      <p class="pixel-editor-sub" data-k="engine.pixelStudioNote">Echo is the landing's hidden gem — mock label, real depth.</p>
+      <div class="pixel-editor-actions" style="flex-direction:column;align-items:stretch">
+        <button type="button" class="btn btn-outline" id="pixelClear" data-k="engine.pixelClear">Clear 16×16</button>
+        <button type="button" class="btn btn-solid" id="pixelExport" data-k="engine.pixelExport">Art only</button>
+        <button type="button" class="btn btn-outline" id="pixelExportFrame" data-k="engine.pixelExportFrame">FLOKE frame</button>
+        <button type="button" class="btn btn-outline" id="pixelClose" data-k="waitlist.close">Close</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="engine-modal" id="engineGameModal" aria-hidden="true">
   <div class="engine-modal-bar">
-    <span>void-signal · arcade mock · ESC to exit</span>
+    <span>echo · mock · ESC to exit</span>
     <button type="button" class="engine-modal-close" id="engineModalClose" data-k="engine.modal.close">Close</button>
   </div>
   <div class="engine-modal-body">
@@ -2597,25 +2889,12 @@ footer{
 <div class="floke-toast-wrap" id="flokeToastWrap" role="status" aria-live="polite">
   <div class="floke-toast">
     <div class="floke-toast-title" id="flokeToastTitle"></div>
-    <p class="floke-toast-msg" id="flokeToastMsg"></p>
+      <p class="floke-toast-msg" id="flokeToastMsg"></p>
   </div>
 </div>
 
 <footer>
 <div class="wrap foot-grid">
-  <div class="foot-geek">
-    <span class="foot-geek-dot" aria-hidden="true"></span>
-    <span class="pwa-badge" id="pwaBadge" data-k="pwa.pending">PWA · checking…</span>
-    <button type="button" class="foot-geek-btn" id="footInstall" hidden data-k="pwa.install">Add to desktop</button>
-    <button type="button" class="foot-geek-btn" id="footCopyLink" data-k="foot.copyLink">Copy page link</button>
-    <button type="button" class="foot-geek-btn" id="footViewSource" data-k="foot.viewSource">View source</button>
-    <button type="button" class="foot-geek-btn" id="footSoundPack" data-k="foot.soundPack">Sound pack</button>
-    <a class="foot-geek-btn" href="feed.xml" data-k="foot.rss">RSS</a>
-    <span class="foot-geek-links">
-      <span data-k="foot.errors">Errors:</span>
-      <a href="#error/404">404</a><a href="#error/400">400</a><a href="#error/403">403</a><a href="#error/500">500</a><a href="#error/503">503</a>
-    </span>
-  </div>
   <div class="foot-brand">
     <div class="foot-logo">FL<b>O</b>KE</div>
     <p class="foot-tag" data-k="foot.tag">Independent studio · offline-first desktop apps, Glyph intelligence, indie games.</p>
@@ -2639,7 +2918,6 @@ footer{
     <a href="#engine" data-k="nav.engine">Engine</a>
     <a href="#news" data-k="nav.news">News</a>
     <a href="#graph" data-k="nav.graph">Graph</a>
-    <a href="#status" data-k="nav.status">Status</a>
     <a href="#flint" data-k="nav.flint">Flint</a>
   </div>
   <div class="foot-col">
@@ -2662,7 +2940,7 @@ footer{
 <script>
 const STR = {
   en: {
-    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases","nav.engine":"Engine","nav.flint":"Flint","nav.status":"Status","nav.about":"About","nav.graph":"Graph","nav.news":"News",
+    "nav.products":"Products","nav.glyph":"Glyph","nav.releases":"Releases","nav.engine":"Engine","nav.flint":"Flint","nav.about":"About","nav.graph":"Graph","nav.news":"News",
     "nav.compare":"Compare","nav.privacy":"Privacy","nav.support":"Support","nav.feedback":"Feedback",
     "hero.tag":"Independent software studio",
     "hero.l1":"Software that lives","hero.l2":"on your machine.",
@@ -2693,8 +2971,8 @@ const STR = {
     "engine.landing.status":"First game in the works.",
     "engine.landing.tg":"Follow on Telegram →","engine.landing.more":"Explore Engine →",
     "engine.teaser.label":"While you wait · Playable teaser",
-    "engine.teaser.note":"This isn't the game we're building at Floke Engine — but you're welcome to play while development continues.",
-    "engine.teaser.badge":"Click to play","engine.teaser.hint":"Mini demo · not the real title",
+    "engine.teaser.note":"Arcade mock · daily seed · export replay",
+    "engine.teaser.badge":"Echo","engine.teaser.hint":"Mini demo · not the real title",
     "engine.teaser.foot":"<strong>Teaser only.</strong><br>A small arcade demo to pass time — the first real title is still in development.",
     "engine.teaser.status":"In development","engine.titles.label":"Titles","engine.titles.tag":"Not announced",
     "engine.manifesto.label":"Why games",
@@ -2730,7 +3008,7 @@ const STR = {
     "graph.node.news":"News","graph.node.graph":"Graph",
     "graph.node.compare":"Compare","graph.node.privacy":"Privacy","graph.node.support":"Support",
     "graph.node.feedback":"Feedback","graph.node.glyphSpec":"Glyph spec",
-    "graph.node.flint":"Flint","graph.node.status":"Status",
+    "graph.node.flint":"Flint",
     "graph.node.senza":"Senza","graph.node.cultiva":"Cultiva","graph.node.blip":"BLIP","graph.node.flint":"Flint",
     "graph.node.glyph":"Glyph2.2-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Open →",
@@ -2776,15 +3054,19 @@ const STR = {
     "flint.landing.kicker":"Local agent · Q3 2026","flint.landing.h":"Flint","flint.landing.p":"Think here. Stay here. A workstation stub on the landing — v0.6 in the forge, public release on the horizon.",
     "flint.landing.more":"Explore Flint →","flint.landing.spark":"forge pulse · offline","flint.landing.meter":"v0.6 compile · Mnemo 1.2-O · agent tools",
     "flint.back":"← Back to Floke","flint.pre":"Local agent · stub","flint.lead":"Think here. Stay here. v0.6 in the forge — Code, Writer, General agents with Y/N on every file touch.",
+    "flint.qwenTitle":"Ask Flint,<br>Stay Local.","flint.qwenPlaceholder":"How can I help you today?","flint.qwenSub":"FliCode · FliWriter · FliGeneral — local agent modes on your disk. No cloud relay.","flint.qwenNote":"Stub · v0.6 in forge · Q3 2026 · no cloud relay",
+    "flint.badge":"Mnemo 1.2-O · Ollama-ready · offline","flint.thinking":"Mnemo 1.2-O routing…","flint.thinkingTokens":"Tokenizing context…","flint.thinkingOllama":"Ollama slot idle · waiting for v0.6",
+    "flint.chip.flicode":"Refactor with diff","flint.chip.fliwriter":"Release copy","flint.chip.figeneral":"Local Q&A","flint.chip.mnemo":"Agent router","flint.chip.rag":"Your docs only",
+    "flint.stubReply":"Public release lands Q3 2026 — FliCode, FliWriter, and FliGeneral with Y/N on every file touch. Join the waitlist for day-one install.",
+    "flint.trace.label":"Tool trace",
     "flint.term":"flint&gt; await public_release(Q3_2026)","flint.term2":"mnemo&gt; agent_modes: [code, writer, general]","flint.term3":"status&gt; no cloud relay · no telemetry · your disk","flint.store":"Product page →",
-    "status.back":"← Back to Floke","status.pre":"Studio pulse","status.h1":"Status","status.lead":"Live-ish snapshot — products, site, and release rhythm. No status page vendor.","status.foot":"Updated on load · GitHub for ground truth.",
     "error.400":"Bad request — that hash or query is malformed.","error.403":"Forbidden — this route is not exposed on the landing.","error.404":"This hash route does not exist on the Floke landing.","error.500":"Internal error — something broke in the single-file router.","error.503":"Service unavailable — try again when GitHub Pages is back.",
     "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Test: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
     "compare.sliderHint":"drag",
     "feedback.fallback":"Embed blocked? Post via GitHub — we copy your draft and open Discussion #1.","feedback.fallbackTitle":"Title","feedback.fallbackBody":"Your feedback…","feedback.fallbackBtn":"Open Discussion #1 →",
-    "engine.game.name":"◆ VOID SIGNAL ◆ floke-engine mock ◆","engine.gamepad":"🎮 controller","engine.exportScore":"Export score","engine.pixel":"16×16","engine.pixelTitle":"16×16 · easter egg","engine.pixelHint":"Click pixels · export favicon data URL","engine.pixelClear":"Clear","engine.pixelExport":"Export PNG",
+    "engine.game.name":"Echo","engine.gamepad.on":"pad connected","engine.gamepadLine":"Have a controller nearby? Plug it in and try — left stick to move, face buttons optional.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay for Gist leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 pilot · generate, then set as active","engine.portraitGen":"Generate","engine.portraitSet":"Set active","engine.portraitExport":"Export PNG","engine.portraitDraft":"Draft ready — Set active to use in runs","engine.portraitActive":"Active pilot set","engine.portraitEmpty":"Generate a pilot first","engine.streak":"day streak","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Hangar","echo.menu.saves":"Saves","echo.menu.about":"About","echo.menu.music":"Music","echo.menu.back":"Back","echo.menu.launch":"Launch","echo.menu.meta":"tokens {t} · ship {s}","echo.splash.tap":"click to open","echo.saves.hi":"Hi","echo.saves.daily":"Daily run saved","echo.saves.fresh":"No daily save","echo.saves.continue":"Continue daily","echo.saves.reset":"Reset all","echo.saves.resetConfirm":"Reset all Echo progress? Tokens, ships, saves, pilot — gone.","echo.saves.resetDone":"Progress cleared","echo.about.body":"Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.","echo.music.on":"On","echo.music.off":"Off","engine.pixelStudio":"Echo · pilot studio","engine.pixelStudioNote":"Echo is the landing's hidden gem — mock label, real depth.","echo.diff.easy":"Easy","echo.diff.normal":"Normal","echo.diff.hard":"Hard","echo.tutor.l1":"Move · mouse / WASD / gamepad","echo.tutor.l2":"P · pause","echo.tutor.l3":"Export · replay markdown in tabbar","echo.tutor.ok":"Got it","echo.hangar.title":"Hangar","echo.hangar.upgrades":"Upgrades","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Not enough tokens","echo.cheat.ok":"All unlocked","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 · easter egg","engine.pixelHint":"Click pixels · export hi-res PNG (1024px)","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
     "cmd.history":"Recent","cmd.pinned":"Pinned","shortcuts.shell":"Floke shell","shortcuts.products":"Products (vim g p)","shortcuts.focusSearch":"Focus search /",
-    "shell.help":"Commands: help · open <app> · grep releases <app> · theme dark|light|paper · graph · play · pixel · soundpack",
+    "shell.help":"help · clear · ls · pwd · whoami · date · echo · open · grep releases · theme · locale · ambient · routes · graph · flint · play · pixel · cheat-code-echo · soundpack · version · neofetch · man · history · exit",
     "privacy.promise":"You've read the promise — no cookie, just scroll.","foot.copied":"Link copied",
     "foot.col.apps":"Apps","foot.col.intel":"Intelligence","foot.col.studio":"Studio","foot.col.help":"Help & legal",
     "cmd.cat.page":"Page","cmd.cat.app":"App","cmd.cat.action":"Action","cmd.cat.news":"News","cmd.cat.release":"Release",
@@ -2863,7 +3145,7 @@ const STR = {
     "graph.filter.all":"All","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Pages",
     "engine.teaser.fullscreen":"Fullscreen →","engine.modal.close":"Close",
     "spec.deep":"Pipeline spec →",
-    "graph.node.engineTitle":"Project 001",
+    "graph.node.engineTitle":"Echo",
     "graph.syncNote":"Auto-synced from site map",
     "store.videoBadge":"Video","store.shotBadge":"Screenshot",
     "store.videoLabel":"Video","store.shotLabel":"Screenshot",
@@ -2931,7 +3213,7 @@ const STR = {
 
   },
   ru: {
-    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы","nav.engine":"Engine","nav.flint":"Flint","nav.status":"Status","nav.about":"О студии","nav.graph":"Граф","nav.news":"Новости",
+    "nav.products":"Проекты","nav.glyph":"Glyph","nav.releases":"Релизы","nav.engine":"Engine","nav.flint":"Flint","nav.about":"О студии","nav.graph":"Граф","nav.news":"Новости",
     "nav.compare":"Сравнение","nav.privacy":"Приватность","nav.support":"Поддержка","nav.feedback":"Feedback",
     "hero.tag":"Независимая софт-студия",
     "hero.l1":"Софт, который живёт","hero.l2":"на твоей машине.",
@@ -2962,8 +3244,8 @@ const STR = {
     "engine.landing.status":"Первая игра в работе.",
     "engine.landing.tg":"Telegram →","engine.landing.more":"Подробнее об Engine →",
     "engine.teaser.label":"Пока ждёте · Играбельный тизер",
-    "engine.teaser.note":"Это не та игра, которую мы делаем во Floke Engine — но можно поиграть, пока идёт разработка.",
-    "engine.teaser.badge":"Нажмите, чтобы играть","engine.teaser.hint":"Мини-демо · не настоящий тайтл",
+    "engine.teaser.note":"Arcade mock · daily seed · export replay",
+    "engine.teaser.badge":"Echo","engine.teaser.hint":"Мини-демо · не настоящий тайтл",
     "engine.teaser.foot":"<strong>Только тизер.</strong><br>Небольшая аркада, чтобы скоротать время — первый настоящий тайтл ещё в разработке.",
     "engine.teaser.status":"В разработке","engine.titles.label":"Тайтлы","engine.titles.tag":"Не анонсирован",
     "engine.manifesto.label":"Зачем игры",
@@ -2999,7 +3281,7 @@ const STR = {
     "graph.node.news":"Новости","graph.node.graph":"Graph",
     "graph.node.compare":"Сравнение","graph.node.privacy":"Приватность","graph.node.support":"Поддержка",
     "graph.node.feedback":"Feedback","graph.node.glyphSpec":"Glyph spec",
-    "graph.node.flint":"Flint","graph.node.status":"Status",
+    "graph.node.flint":"Flint",
     "graph.node.senza":"Senza","graph.node.cultiva":"Cultiva","graph.node.blip":"BLIP","graph.node.flint":"Flint",
     "graph.node.glyph":"Glyph2.2-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Открыть →",
@@ -3118,23 +3400,27 @@ const STR = {
     "flint.landing.kicker":"Локальный агент · Q3 2026","flint.landing.h":"Flint","flint.landing.p":"Думай здесь. Оставайся здесь. Заглушка на лендинге — v0.6 в forge, релиз на горизонте.",
     "flint.landing.more":"Flint →","flint.landing.spark":"forge pulse · offline","flint.landing.meter":"v0.6 · Mnemo 1.2-O · agent tools",
     "flint.back":"← Назад","flint.pre":"Локальный агент · stub","flint.lead":"Code, Writer, General — Y/N на каждое действие с файлами.",
+    "flint.qwenTitle":"Ask Flint,<br>Stay Local.","flint.qwenPlaceholder":"How can I help you today?","flint.qwenSub":"FliCode · FliWriter · FliGeneral — локальные режимы на вашем диске. Без cloud relay.","flint.qwenNote":"Stub · v0.6 in forge · Q3 2026 · без cloud relay",
+    "flint.badge":"Mnemo 1.2-O · Ollama-ready · offline","flint.thinking":"Mnemo 1.2-O routing…","flint.thinkingTokens":"Tokenizing context…","flint.thinkingOllama":"Ollama idle · ждём v0.6",
+    "flint.chip.flicode":"Refactor + diff","flint.chip.fliwriter":"Release copy","flint.chip.figeneral":"Local Q&A","flint.chip.mnemo":"Agent router","flint.chip.rag":"Только ваши docs",
+    "flint.stubReply":"Публичный релиз — Q3 2026. FliCode, FliWriter, FliGeneral с Y/N на каждое действие с файлами. Waitlist на день запуска.",
+    "flint.trace.label":"Tool trace",
     "flint.term":"flint&gt; await public_release(Q3_2026)","flint.term2":"mnemo&gt; agent_modes: [code, writer, general]","flint.term3":"status&gt; no cloud · no telemetry",
     "flint.store":"Страница продукта →",
-    "status.back":"← Назад","status.pre":"Пульс студии","status.h1":"Status","status.lead":"Снимок продуктов и ритма релизов — без стороннего status page.","status.foot":"Обновляется при загрузке · GitHub — источник правды.",
     "error.400":"Bad request — hash или query некорректны.","error.403":"Forbidden — маршрут не открыт.","error.404":"Такого hash-маршрута нет на лендинге.","error.500":"Internal error — сломался single-file router.","error.503":"Service unavailable — попробуйте позже.",
     "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Тест: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
     "compare.sliderHint":"тяните",
     "feedback.fallback":"Embed заблокирован? Черновик в буфер + Discussion #1.","feedback.fallbackTitle":"Заголовок","feedback.fallbackBody":"Feedback…","feedback.fallbackBtn":"Открыть Discussion #1 →",
-    "engine.game.name":"◆ VOID SIGNAL ◆ mock ◆","engine.gamepad":"🎮 геймпад","engine.exportScore":"Export score","engine.pixel":"16×16","engine.pixelTitle":"16×16 easter egg","engine.pixelHint":"Клик · export PNG","engine.pixelClear":"Clear","engine.pixelExport":"Export PNG",
+    "engine.game.name":"Echo","engine.gamepad.on":"геймпад","engine.gamepadLine":"Есть геймпад? Подключите и попробуйте — левый стик для движения, кнопки по желанию.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay для Gist-leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 пилот · сгенерировать, затем установить","engine.portraitGen":"Сгенерировать","engine.portraitSet":"Установить","engine.portraitExport":"Export PNG","engine.portraitDraft":"Черновик готов — установите как активный","engine.portraitActive":"Активный пилот установлен","engine.portraitEmpty":"Сначала сгенерируйте пилота","engine.streak":"дней подряд","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Ангар","echo.menu.saves":"Сохранения","echo.menu.about":"Об игре","echo.menu.music":"Музыка","echo.menu.back":"Назад","echo.menu.launch":"Старт","echo.menu.meta":"токены {t} · корабль {s}","echo.splash.tap":"нажмите, чтобы открыть","echo.saves.hi":"Рекорд","echo.saves.daily":"Есть daily-save","echo.saves.fresh":"Нет сохранения","echo.saves.continue":"Продолжить daily","echo.saves.reset":"Сбросить всё","echo.saves.resetConfirm":"Сбросить весь прогресс Echo? Токены, корабли, сохранения, пилот — всё удалится.","echo.saves.resetDone":"Прогресс сброшен","echo.about.body":"Офлайн pixel-mock на лендинге. Daily seed, биомы, токены — ничего не уходит из браузера.","echo.music.on":"Вкл","echo.music.off":"Выкл","engine.pixelStudio":"Echo · студия пилота","engine.pixelStudioNote":"Echo — главная фишка лендинга. Mock снаружи, игра внутри.","echo.diff.easy":"Легко","echo.diff.normal":"Норма","echo.diff.hard":"Сложно","echo.tutor.l1":"Движение · мышь / WASD / геймпад","echo.tutor.l2":"P · пауза","echo.tutor.l3":"Export · replay markdown в tabbar","echo.tutor.ok":"Понятно","echo.hangar.title":"Ангар","echo.hangar.upgrades":"Улучшения","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Не хватает токенов","echo.cheat.ok":"Всё открыто","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 easter egg","engine.pixelHint":"Клик · hi-res PNG 1024px","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
     "cmd.history":"Недавние","cmd.pinned":"Закреплённые","shortcuts.shell":"Floke shell","shortcuts.products":"Products (g p)","shortcuts.focusSearch":"Поиск /",
-    "shell.help":"help · open senza · grep releases cultiva · theme dark · graph · play · pixel",
+    "shell.help":"help · clear · ls · pwd · whoami · date · echo · open · grep · theme · locale · ambient · routes · graph · flint · play · pixel · cheat-code-echo · soundpack · version · neofetch · man · history · exit",
     "privacy.promise":"Вы прочитали promise — без cookie, только scroll.",
     "foot.col.apps":"Приложения","foot.col.intel":"Интеллект","foot.col.studio":"Студия","foot.col.help":"Помощь и legal",
     "cmd.cat.release":"Релиз",
     "graph.filter.all":"Все","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Страницы",
     "engine.teaser.fullscreen":"Fullscreen →","engine.modal.close":"Закрыть",
     "spec.deep":"Спека pipeline →",
-    "graph.node.engineTitle":"Проект 001",
+    "graph.node.engineTitle":"Echo",
     "graph.syncNote":"Синхронизация с картой сайта",
     "store.videoBadge":"Видео","store.shotBadge":"Скриншот",
     "store.videoLabel":"Видео","store.shotLabel":"Скриншот",
@@ -3345,7 +3631,7 @@ function setSiteTitle(suffix){
 }
 
 function hideSubPages(){
-  ["newsPage","enginePage","aboutPage","graphPage","comparePage","privacyPage","supportPage","glyphSpecPage","feedbackPage","flintPage","statusPage","errorPage"].forEach(id => {
+  ["newsPage","enginePage","aboutPage","graphPage","comparePage","privacyPage","supportPage","glyphSpecPage","feedbackPage","flintPage","errorPage"].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
@@ -3357,6 +3643,7 @@ function hideSubPages(){
   closeEngineModal();
   document.getElementById("engineGameModal")?.classList.remove("open");
   stopAllSubPageCanvas();
+  document.getElementById("flintBgCanvas")?._stop?.();
   document.querySelectorAll(".page-sub-active").forEach(el => el.classList.remove("page-sub-active"));
 }
 function hideNewsPage(){ hideSubPages(); }
@@ -3704,6 +3991,18 @@ function initFlokeSfx(){
       o.type = "sine"; o.frequency.setValueAtTime(660, now); o.frequency.exponentialRampToValueAtTime(440, now + 0.08);
       g.gain.setValueAtTime(0.012, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
       o.start(now); o.stop(now + 0.1);
+    } else if(type === "ambient"){
+      const notes = [262, 294, 330, 349, 392];
+      notes.forEach((f, i) => {
+        const o2 = sfxCtx.createOscillator();
+        const g2 = sfxCtx.createGain();
+        o2.type = "sine"; o2.connect(g2); g2.connect(sfxCtx.destination);
+        const t0 = now + i * 0.22;
+        o2.frequency.setValueAtTime(f, t0);
+        g2.gain.setValueAtTime(0.0001, t0); g2.gain.exponentialRampToValueAtTime(0.018, t0 + 0.04);
+        g2.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
+        o2.start(t0); o2.stop(t0 + 0.36);
+      });
     }
   };
   document.addEventListener("click", e => {
@@ -3724,8 +4023,7 @@ function routePrivacy(){ showSubPage("privacyPage", "Privacy", initPrivacyPage);
 function routeSupport(){ showSubPage("supportPage", locale === "ru" ? "Поддержка" : "Support", initSupportPage); startSubPageCanvas("supportBgCanvas", 28); window.flokeSfx?.("nav"); }
 function routeGlyphSpec(){ showSubPage("glyphSpecPage", "Glyph spec", initGlyphSpecPage); }
 function routeFeedback(){ showSubPage("feedbackPage", locale === "ru" ? "Feedback" : "Feedback", initGiscus); startCodeRainCanvas("feedbackCodeCanvas"); window.flokeSfx?.("nav"); checkGiscusFallback(); }
-function routeFlint(){ showSubPage("flintPage", "Flint"); window.flokeSfx?.("nav"); initFlintTerminalAnim(); }
-function routeStatus(){ showSubPage("statusPage", t("status.h1"), initStatusPage); window.flokeSfx?.("nav"); }
+function routeFlint(){ showSubPage("flintPage", "Flint", initFlintPage); window.flokeSfx?.("nav"); }
 function routeError(code){
   document.getElementById("mainView").style.display = "none";
   document.getElementById("storePage").style.display = "none";
@@ -4005,7 +4303,7 @@ const ORDER_APPS = ["cultiva","blip","senza","flint"];
 const ORDER_INTEL = ["glyph","mnemo"];
 
 /** Set name when first Engine title is announced — auto-updates graph + engine page */
-const ENGINE_TITLE = { slot: "001", name: null };
+const ENGINE_TITLE = { slot: "001", name: "Echo" };
 
 const SITE_PAGES = [
   { id: "products", hash: "#products", group: "page", r: 10 },
@@ -4020,8 +4318,7 @@ const SITE_PAGES = [
   { id: "support", hash: "#support", group: "page", r: 8 },
   { id: "feedback", hash: "#feedback", group: "page", r: 8 },
   { id: "glyphSpec", hash: "#glyph/spec", group: "page", r: 8 },
-  { id: "flint", hash: "#flint", group: "page", r: 9 },
-  { id: "status", hash: "#status", group: "page", r: 8 }
+  { id: "flint", hash: "#flint", group: "page", r: 9 }
 ];
 
 function hashBase(h){ return (h || "").split("?")[0]; }
@@ -4080,7 +4377,7 @@ function isIntegratedSlug(slug){ return slug==="glyph" || slug==="mnemo"; }
 let locale = localStorage.getItem("floke-lang") || (navigator.language.startsWith("ru") ? "ru" : "en");
 let theme = localStorage.getItem("floke-theme") || "dark";
 let crtMode = localStorage.getItem("floke-crt") === "1";
-const THEMES = ["dark", "light", "paper"];
+const THEMES = ["dark", "light", "paper", "pink"];
 const relCache = {};
 const verCache = {};
 
@@ -4248,7 +4545,7 @@ function renderMarkdown(md){
 function applyTheme(){
   document.documentElement.setAttribute("data-theme", theme);
   document.body.classList.toggle("crt-mode", crtMode);
-  const icon = theme === "dark" ? "◐" : theme === "light" ? "◑" : "◈";
+  const icon = theme === "dark" ? "◐" : theme === "light" ? "◑" : theme === "paper" ? "◈" : "♡";
   document.getElementById("themeBtn").textContent = icon;
   const dockTheme = document.getElementById("dockTheme");
   if(dockTheme) dockTheme.textContent = icon + (crtMode ? "▤" : "");
@@ -4662,8 +4959,6 @@ function applyLocale(){
     routeFeedback();
   } else if(hashBase(h) === "#flint"){
     routeFlint();
-  } else if(hashBase(h) === "#status"){
-    routeStatus();
   } else if(h.startsWith("#error/")){
     routeError(h.replace("#error/", "").split("?")[0]);
   }
@@ -5006,7 +5301,7 @@ async function renderStore(slug){
       getBtn.onclick = () => openWaitlist("flint");
     } else {
       getBtn.textContent = slug === "mnemo" ? t("mnemo.get") : t("flint.get");
-      getBtn.onclick = () => showComingSoonToast(slug);
+    getBtn.onclick = () => showComingSoonToast(slug);
     }
   } else if(slug==="glyph"){
     getBtn.textContent = t("glyph.get");
@@ -5103,7 +5398,6 @@ function routeHash(){
   }
   if(base === "#engine"){ navTransition(() => routeEngine()); return; }
   if(base === "#flint"){ navTransition(() => routeFlint()); return; }
-  if(base === "#status"){ navTransition(() => routeStatus()); return; }
   if(base === "#about"){ navTransition(() => routeAbout()); return; }
   if(base === "#graph"){ navTransition(() => routeGraph()); return; }
   if(base === "#compare"){ navTransition(() => routeCompare()); return; }
@@ -5112,7 +5406,7 @@ function routeHash(){
   if(base === "#glyph/spec"){ navTransition(() => routeGlyphSpec()); return; }
   if(base === "#feedback"){ navTransition(() => routeFeedback()); return; }
   if(h && h !== "#" && !["#products","#glyph","#releases","#origin","#workspace"].includes(base)){
-    const known = ["","#products","#glyph","#releases","#engine","#about","#graph","#news","#compare","#privacy","#support","#feedback","#glyph/spec","#flint","#status"];
+    const known = ["","#products","#glyph","#releases","#engine","#about","#graph","#news","#compare","#privacy","#support","#feedback","#glyph/spec","#flint"];
     if(!known.includes(base) && !h.startsWith("#news/") && !h.startsWith("#project/") && !h.startsWith("#error/")){
       navTransition(() => routeError("404"));
       return;
@@ -5363,22 +5657,695 @@ function initEngineParticles(){
   loop();
 }
 
-function startFlokePixelGame(canvas, hostEl, opts){
+function echoHiScore(){
+  return +localStorage.getItem("floke-echo-hi") || +localStorage.getItem("floke-void-signal-hi") || 0;
+}
+function echoSaveKey(){ return "floke-echo-save"; }
+
+const ECHO_SENZA_BPM = 118;
+const ECHO_META_KEY = "floke-echo-meta";
+const ECHO_PORTRAIT_DRAFT_KEY = "floke-echo-portrait-draft";
+const ECHO_PORTRAIT_ACTIVE_KEY = "floke-echo-portrait-active";
+const ECHO_TUTOR_KEY = "floke-echo-tutor-seen";
+const ECHO_BIOME_COUNT = 20;
+const ECHO_BIOMES = [
+  { id: "void", bg: "#080810", star: "#c8a96e", px1: "#6a3080", px2: "#9a4048", px3: "#2a1030", labelKey: "engine.biome.void", mono: false },
+  { id: "forge", bg: "#0a1008", star: "#d7bc87", px1: "#4a7c59", px2: "#8a6040", px3: "#1a1a2e", labelKey: "engine.biome.forge", mono: false },
+  { id: "deep", bg: "#040818", star: "#8cf", px1: "#2040a0", px2: "#4080c0", px3: "#101828", labelKey: "engine.biome.deep", mono: false },
+  { id: "ember", bg: "#120608", star: "#ff8060", px1: "#a03020", px2: "#ff6040", px3: "#280810", labelKey: "engine.biome.ember", mono: false },
+  { id: "moss", bg: "#061008", star: "#a8e090", px1: "#306840", px2: "#588858", px3: "#102018", labelKey: "engine.biome.moss", mono: false },
+  { id: "ice", bg: "#080c14", star: "#c0e8ff", px1: "#5080a8", px2: "#90c0e0", px3: "#182838", labelKey: "engine.biome.ice", mono: false },
+  { id: "dust", bg: "#100c08", star: "#e8c890", px1: "#806040", px2: "#b09060", px3: "#201810", labelKey: "engine.biome.dust", mono: false },
+  { id: "neon", bg: "#080010", star: "#ff40ff", px1: "#8040c0", px2: "#40ff80", px3: "#180828", labelKey: "engine.biome.neon", mono: false },
+  { id: "rust", bg: "#100808", star: "#c87050", px1: "#803020", px2: "#a05030", px3: "#281010", labelKey: "engine.biome.rust", mono: false },
+  { id: "aurora", bg: "#040810", star: "#80ffc0", px1: "#4080a0", px2: "#60c0a0", px3: "#102028", labelKey: "engine.biome.aurora", mono: false },
+  { id: "mono", bg: "#0a0a0a", star: "#e0e0e0", px1: "#888", px2: "#bbb", px3: "#444", labelKey: "engine.biome.mono", mono: true },
+  { id: "sepia", bg: "#100e0a", star: "#d4b896", px1: "#6a5840", px2: "#9a8060", px3: "#282018", labelKey: "engine.biome.sepia", mono: false },
+  { id: "coral", bg: "#100810", star: "#ff90a8", px1: "#c04060", px2: "#ff6080", px3: "#281018", labelKey: "engine.biome.coral", mono: false },
+  { id: "slate", bg: "#0c0e12", star: "#a0b0c0", px1: "#506070", px2: "#708090", px3: "#181c24", labelKey: "engine.biome.slate", mono: false },
+  { id: "haze", bg: "#0e0a14", star: "#c0a0ff", px1: "#6040a0", px2: "#9070c0", px3: "#201028", labelKey: "engine.biome.haze", mono: false },
+  { id: "solar", bg: "#140e04", star: "#ffd060", px1: "#c08020", px2: "#ffa030", px3: "#281808", labelKey: "engine.biome.solar", mono: false },
+  { id: "tide", bg: "#040c10", star: "#60d0c0", px1: "#208080", px2: "#40a0a0", px3: "#081820", labelKey: "engine.biome.tide", mono: false },
+  { id: "ash", bg: "#0a0a0c", star: "#909098", px1: "#505058", px2: "#707078", px3: "#18181c", labelKey: "engine.biome.ash", mono: false },
+  { id: "bloom", bg: "#100818", star: "#ffa0d0", px1: "#c060a0", px2: "#ff80c0", px3: "#281020", labelKey: "engine.biome.bloom", mono: false },
+  { id: "echo", bg: "#060810", star: "#c8a96e", px1: "#806030", px2: "#c8a96e", px3: "#181420", labelKey: "engine.biome.echo", mono: false }
+];
+const ECHO_SHIPS = [
+  { id: "scout", nameKey: "echo.ship.scout", hull: null, accent: "#8cf", cost: 0 },
+  { id: "gold", nameKey: "echo.ship.gold", hull: "#c8a96e", accent: "#ffe090", cost: 40 },
+  { id: "void", nameKey: "echo.ship.void", hull: "#6a3080", accent: "#c080ff", cost: 80 },
+  { id: "mono", nameKey: "echo.ship.mono", hull: "#888", accent: "#fff", cost: 120 },
+  { id: "neon", nameKey: "echo.ship.neon", hull: "#ff40ff", accent: "#40ff80", cost: 160 }
+];
+const ECHO_UPGRADES = [
+  { id: "spread", nameKey: "echo.up.spread", cost: 25, max: 3 },
+  { id: "rapid", nameKey: "echo.up.rapid", cost: 30, max: 3 },
+  { id: "shield", nameKey: "echo.up.shield", cost: 20, max: 3 },
+  { id: "speed", nameKey: "echo.up.speed", cost: 35, max: 3 },
+  { id: "magnet", nameKey: "echo.up.magnet", cost: 45, max: 2 }
+];
+let echoLastReplay = null;
+let echoLastPortrait = null;
+let echoDraftPortrait = null;
+let echoMenuMode = "arcade";
+let echoMenuDiff = "normal";
+let echoCheatUnlocked = false;
+const echoKonami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight"];
+let echoKonamiStep = 0;
+
+function echoDefaultMeta(){
+  return { tokens: 0, ship: "scout", upgrades: {}, unlockedShips: ["scout"], cheat: false, musicOn: true, musicTrack: 0 };
+}
+function echoLoadMeta(){
+  try {
+    const j = JSON.parse(localStorage.getItem(ECHO_META_KEY) || "null");
+    if(j) return { ...echoDefaultMeta(), ...j, upgrades: j.upgrades || {} };
+  } catch(_){}
+  return echoDefaultMeta();
+}
+function echoSaveMeta(m){
+  try { localStorage.setItem(ECHO_META_KEY, JSON.stringify(m)); } catch(_){}
+}
+function echoUnlockAllCheats(){
+  echoCheatUnlocked = true;
+  const m = echoLoadMeta();
+  m.cheat = true;
+  m.tokens = Math.max(m.tokens, 9999);
+  m.unlockedShips = ECHO_SHIPS.map(s => s.id);
+  ECHO_UPGRADES.forEach(u => { m.upgrades[u.id] = u.max; });
+  echoSaveMeta(m);
+  echoRefreshMenuMeta();
+  showFlokeToast("Echo", t("echo.cheat.ok") || "All unlocked", 2400);
+}
+function echoAddTokens(n){
+  const m = echoLoadMeta();
+  m.tokens += n;
+  echoSaveMeta(m);
+  echoRefreshMenuMeta();
+}
+function echoShipDef(id){ return ECHO_SHIPS.find(s => s.id === id) || ECHO_SHIPS[0]; }
+function echoDiffMult(d){
+  if(d === "easy") return { spawn: 0.75, dmg: 0.7, token: 1.2 };
+  if(d === "hard") return { spawn: 1.35, dmg: 1.4, token: 0.85 };
+  return { spawn: 1, dmg: 1, token: 1 };
+}
+
+function echoGeneratePortrait(seed, score){
+  let s = ((seed >>> 0) * 997 + (score >>> 0) * 7919) >>> 0;
+  const rnd = () => { s = (s * 1103515245 + 12345) >>> 0; return s / 4294967296; };
+  const px = Array(64).fill(0);
+  for(let y = 0; y < 8; y++){
+    for(let x = 0; x < 4; x++){
+      if(y === 1 && (x === 1 || x === 2)){ px[y * 8 + x] = 1; px[y * 8 + (7 - x)] = 1; continue; }
+      if(y >= 2 && y <= 4 && x <= 2){ px[y * 8 + x] = 1; px[y * 8 + (7 - x)] = 1; continue; }
+      if(y >= 5 && x === 0 && rnd() > 0.35){ px[y * 8 + x] = 1; px[y * 8 + (7 - x)] = 1; continue; }
+      if(rnd() > 0.62 - Math.min(score, 999) * 0.0004){ px[y * 8 + x] = 1; px[y * 8 + (7 - x)] = 1; }
+    }
+  }
+  px[6 * 8 + 3] = 1; px[6 * 8 + 4] = 1;
+  return px;
+}
+
+function echoSavePortraitDraft(seed, score, pixels){
+  echoDraftPortrait = { seed, score, pixels };
+  try { localStorage.setItem(ECHO_PORTRAIT_DRAFT_KEY, JSON.stringify(echoDraftPortrait)); } catch(_){}
+}
+function echoSetActivePortrait(fromDraft){
+  const src = fromDraft || echoDraftPortrait;
+  if(!src?.pixels) return false;
+  echoLastPortrait = src.pixels;
+  try { localStorage.setItem(ECHO_PORTRAIT_ACTIVE_KEY, JSON.stringify(src)); } catch(_){}
+  return true;
+}
+function echoLoadPortraitDraft(){
+  if(echoDraftPortrait) return echoDraftPortrait;
+  try {
+    const raw = localStorage.getItem(ECHO_PORTRAIT_DRAFT_KEY);
+    if(raw){ echoDraftPortrait = JSON.parse(raw); return echoDraftPortrait; }
+  } catch(_){}
+  return null;
+}
+function echoLoadPortrait(){
+  if(echoLastPortrait) return echoLastPortrait;
+  try {
+    const raw = localStorage.getItem(ECHO_PORTRAIT_ACTIVE_KEY) || localStorage.getItem("floke-echo-portrait");
+    if(raw){ const j = JSON.parse(raw); echoLastPortrait = j.pixels; return echoLastPortrait; }
+  } catch(_){}
+  return null;
+}
+function echoGenerateDraftPortrait(seed, score){
+  const pixels = echoGeneratePortrait(seed, score);
+  echoSavePortraitDraft(seed, score, pixels);
+  return pixels;
+}
+
+function echoUpdateStreak(){
+  const today = dailySeed();
+  const last = +localStorage.getItem("floke-echo-last-day") || 0;
+  let streak = +localStorage.getItem("floke-echo-streak") || 0;
+  if(last === today){
+    syncEchoStreakUi(streak);
+    return streak;
+  }
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const yesterday = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  streak = last === yesterday ? streak + 1 : 1;
+  localStorage.setItem("floke-echo-streak", String(streak));
+  localStorage.setItem("floke-echo-last-day", String(today));
+  syncEchoStreakUi(streak);
+  return streak;
+}
+
+function syncEchoStreakUi(streak){
+  const el = document.getElementById("arcadeStreak");
+  if(!el) return;
+  if(streak > 1){
+    el.hidden = false;
+    el.textContent = "×" + streak;
+    el.title = streak + " " + (t("engine.streak") || "day streak");
+  } else el.hidden = true;
+}
+
+function renderPortraitPreview(container, pixels){
+  if(!container) return;
+  container.innerHTML = pixels.map(on =>
+    `<span class="pixel-portrait-cell${on ? " on" : ""}"></span>`
+  ).join("");
+}
+
+function exportEchoPortraitPng(){
+  const pixels = echoLoadPortrait() || echoLoadPortraitDraft()?.pixels;
+  if(!pixels){ showFlokeToast("Echo", t("engine.portraitEmpty") || "Generate a pilot first", 2200); return; }
+  const SCALE = 32;
+  const c = document.createElement("canvas");
+  c.width = c.height = 8 * SCALE;
+  const x = c.getContext("2d");
+  x.fillStyle = "#080810";
+  x.fillRect(0, 0, c.width, c.height);
+  x.fillStyle = "#c8a96e";
+  pixels.forEach((on, i) => {
+    if(on) x.fillRect((i % 8) * SCALE, ((i / 8) | 0) * SCALE, SCALE, SCALE);
+  });
+  c.toBlob(b => {
+    const u = URL.createObjectURL(b);
+    const a = document.createElement("a");
+    a.href = u;
+    a.download = "floke-echo-pilot.png";
+    a.click();
+    URL.revokeObjectURL(u);
+  });
+}
+
+function echoSeededShuffle(seed, n){
+  const arr = Array.from({ length: n }, (_, i) => i);
+  let s = seed >>> 0;
+  for(let i = n - 1; i > 0; i--){
+    s = (s * 1103515245 + 12345) >>> 0;
+    const j = s % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function echoBiomeForWave(seed, wave){
+  const order = echoSeededShuffle(seed, ECHO_BIOME_COUNT);
+  const slot = Math.min(ECHO_BIOME_COUNT - 1, Math.floor((wave - 1) / 4));
+  return ECHO_BIOMES[order[slot]];
+}
+function echoDailyBiomeOrder(seed){
+  return echoSeededShuffle(seed, ECHO_BIOME_COUNT).slice(0, 5).map(i => t(ECHO_BIOMES[i].labelKey) || ECHO_BIOMES[i].id);
+}
+
+function echoExportReplayMd(replay){
+  if(!replay) return "# Echo\n\nNo replay yet — play a run on #engine first.\n";
+  const lines = [
+    `# Echo replay · seed ${replay.seed}`,
+    "",
+    `| field | value |`,
+    `| --- | --- |`,
+    `| hi | ${replay.hi} |`,
+    `| score | ${replay.score} |`,
+    `| wave | ${replay.wave} |`,
+    `| lives | ${replay.lives} |`,
+    `| biome order | ${replay.biomeOrder.join(" → ")} |`,
+    `| duration | ${(replay.durationMs / 1000).toFixed(1)}s |`,
+    "",
+    "## Biomes (daily seed)",
+    ...replay.biomeOrder.map((b, i) => `- ${i + 1}. **${b}** (waves ${i * 5 + 1}–${i * 5 + 5})`),
+    "",
+    "## Events",
+    ...replay.events.slice(-80).map(e => `- ${(e.t / 1000).toFixed(1)}s · **${e.type}**${e.detail ? " · " + e.detail : ""}`),
+    "",
+    `Tag: \`floke-echo-leaderboard\` · [Floke Engine](#engine) mock`,
+    `\`flokestudio.github.io/Floke/#engine\``
+  ];
+  return lines.join("\n");
+}
+
+window.echoBossBeat = function(){
+  if(!ambientOn || !ambientNodes?.hum) return;
+  try {
+    const ctx = ambientCtx;
+    const hum = ambientNodes.hum;
+    const now = ctx.currentTime;
+    hum.frequency.cancelScheduledValues(now);
+    hum.frequency.setValueAtTime(hum.frequency.value, now);
+    hum.frequency.linearRampToValueAtTime(ECHO_SENZA_BPM / 2, now + 0.04);
+    hum.frequency.linearRampToValueAtTime(58, now + 0.2);
+  } catch(_){}
+  window.flokeSfx?.("hit");
+};
+
+const ECHO_ADV_BIOME_MS = 45000;
+const ECHO_MUSIC_TRACKS = 10;
+const ECHO_MUSIC_MS = 120000;
+let echoMusicOn = true;
+let echoMusicTrack = 0;
+let echoMusicTimer = null;
+let echoMusicNodes = null;
+let echoMusicCtx = null;
+
+function echoShowSplash(){
+  const overlay = document.getElementById("engineTeaserOverlay");
+  const menu = document.getElementById("echoMenu");
+  const screen = document.getElementById("engineTeaserScreen");
+  if(menu) menu.hidden = true;
+  overlay?.classList.remove("hidden");
+  screen?.classList.add("is-idle");
+  screen?.classList.remove("is-menu");
+  syncEchoDailyHint();
+}
+function echoHideSplash(){
+  document.getElementById("engineTeaserOverlay")?.classList.add("hidden");
+  document.getElementById("engineTeaserScreen")?.classList.remove("is-idle");
+}
+function echoOpenMenuFromSplash(){
+  echoHideSplash();
+  echoShowMenu();
+}
+function echoSetPanel(id){
+  document.querySelectorAll("[data-echo-panel]").forEach(p => {
+    const on = p.dataset.echoPanel === id;
+    if(on){ p.removeAttribute("hidden"); p.classList.add("is-active"); }
+    else { p.setAttribute("hidden", ""); p.classList.remove("is-active"); }
+  });
+  if(id === "hangar") echoRenderHangar();
+  if(id === "saves") echoRenderSaves();
+  if(id === "music") echoRenderMusicList();
+}
+function echoRefreshMenuMeta(){
+  const el = document.getElementById("echoMenuMeta");
+  if(!el) return;
+  const m = echoLoadMeta();
+  const ship = echoShipDef(m.ship);
+  el.textContent = (t("echo.menu.meta") || "tokens {t} · ship {s}")
+    .replace("{t}", m.tokens)
+    .replace("{s}", t(ship.nameKey) || ship.id);
+}
+function echoShowMenu(){
+  const menu = document.getElementById("echoMenu");
+  const scoreEl = document.getElementById("engineTeaserScore");
+  const screen = document.getElementById("engineTeaserScreen");
+  echoHideSplash();
+  if(menu){ menu.hidden = false; echoSetPanel("main"); }
+  screen?.classList.add("is-menu");
+  scoreEl?.classList.remove("visible");
+  echoRefreshMenuMeta();
+}
+function echoHideMenu(){
+  const menu = document.getElementById("echoMenu");
+  document.getElementById("engineTeaserScreen")?.classList.remove("is-menu");
+  if(menu) menu.hidden = true;
+}
+function echoMaybeShowTutor(){
+  if(localStorage.getItem(ECHO_TUTOR_KEY)) return;
+  const tutor = document.getElementById("echoTutor");
+  if(tutor) tutor.hidden = false;
+}
+function echoDrawHangarShip(canvas){
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const m = echoLoadMeta();
+  const ship = echoShipDef(m.ship);
+  const PX = 4;
+  ctx.fillStyle = "#06060c";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const cx = canvas.width / 2, cy = canvas.height / 2 + 8;
+  const hull = ship.hull || "#2a1030";
+  const acc = ship.accent || "#c8a96e";
+  const fill = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(~~x, ~~y, w, h); };
+  fill(cx - PX * 2, cy - PX, PX * 4, PX * 2, hull);
+  fill(cx - PX * 1.5, cy - PX * 2, PX * 3, PX, acc);
+  fill(cx - PX * .5, cy - PX * 3, PX, PX * 2, "#8cf");
+  if((m.upgrades.spread || 0) > 0){ fill(cx - PX * 3, cy, PX, PX, "#8cf"); fill(cx + PX * 2, cy, PX, PX, "#8cf"); }
+  if((m.upgrades.rapid || 0) > 0) fill(cx - PX, cy + PX, PX * 2, PX, "#fa0");
+  if((m.upgrades.shield || 0) > 0){ ctx.strokeStyle = "rgba(120,200,255,.6)"; ctx.strokeRect(cx - PX * 3, cy - PX * 3, PX * 6, PX * 6); }
+  if((m.upgrades.speed || 0) > 0){ fill(cx - PX * 2, cy + PX * 2, PX, PX, acc); fill(cx + PX, cy + PX * 2, PX, PX, acc); }
+  if((m.upgrades.magnet || 0) > 0){ ctx.fillStyle = "#c8a96e"; ctx.fillText("◈", cx - 3, cy - PX * 4); }
+}
+function echoRenderHangarModules(){
+  const box = document.getElementById("echoHangarModules");
+  if(!box) return;
+  const m = echoLoadMeta();
+  const icons = { spread: "◆◆", rapid: "»»", shield: "▢", speed: ">>", magnet: "◈" };
+  box.innerHTML = ECHO_UPGRADES.map(u => {
+    const lv = m.upgrades[u.id] || 0;
+    return `<div class="echo-mod${lv ? " is-on" : ""}" title="${u.id}"><span>${icons[u.id] || u.id}</span><span class="echo-mod__lv">${lv}/${u.max}</span></div>`;
+  }).join("");
+}
+function echoRenderHangar(){
+  echoDrawHangarShip(document.getElementById("echoHangarCanvas"));
+  echoRenderHangarModules();
+  const m = echoLoadMeta();
+  const shipsEl = document.getElementById("echoHangarShips");
+  const upsEl = document.getElementById("echoHangarUps");
+  if(shipsEl){
+    shipsEl.innerHTML = ECHO_SHIPS.map(s => {
+      const owned = m.unlockedShips.includes(s.id) || m.cheat;
+      const active = m.ship === s.id;
+      return `<button type="button" class="echo-pbtn${active ? " is-sel" : ""}" data-echo-ship="${s.id}" ${!owned && m.tokens < s.cost ? "" : ""}>${t(s.nameKey) || s.id}${owned ? "" : " ·" + s.cost + "T"}</button>`;
+    }).join("");
+  }
+  if(upsEl){
+    upsEl.innerHTML = ECHO_UPGRADES.map(u => {
+      const lv = m.upgrades[u.id] || 0;
+      const maxed = lv >= u.max;
+      return `<button type="button" class="echo-pbtn${maxed ? " is-sel" : ""}" data-echo-up="${u.id}" ${maxed ? "disabled" : ""}>${t(u.nameKey) || u.id} ·${u.cost}T</button>`;
+    }).join("");
+  }
+}
+function echoBuyShip(id){
+  const m = echoLoadMeta();
+  const ship = ECHO_SHIPS.find(s => s.id === id);
+  if(!ship) return;
+  if(!m.unlockedShips.includes(id) && !m.cheat){
+    if(m.tokens < ship.cost){ showFlokeToast("Echo", t("echo.hangar.nope") || "Not enough tokens", 2000); return; }
+    m.tokens -= ship.cost;
+    m.unlockedShips.push(id);
+  }
+  m.ship = id;
+  echoSaveMeta(m);
+  echoRefreshMenuMeta();
+  echoRenderHangar();
+  window.flokeSfx?.("powerup");
+}
+function echoBuyUpgrade(id){
+  const m = echoLoadMeta();
+  const up = ECHO_UPGRADES.find(u => u.id === id);
+  if(!up) return;
+  const lv = m.upgrades[id] || 0;
+  if(lv >= up.max) return;
+  if(m.tokens < up.cost){ showFlokeToast("Echo", t("echo.hangar.nope") || "Not enough tokens", 2000); return; }
+  m.tokens -= up.cost;
+  m.upgrades[id] = lv + 1;
+  echoSaveMeta(m);
+  echoRefreshMenuMeta();
+  echoRenderHangar();
+  window.flokeSfx?.("powerup");
+}
+function echoRenderSaves(){
+  const el = document.getElementById("echoSavesCopy");
+  if(!el) return;
+  const m = echoLoadMeta();
+  const hi = echoHiScore();
+  const streak = localStorage.getItem("floke-echo-streak") || "0";
+  const saved = localStorage.getItem(echoSaveKey());
+  el.textContent = [
+    (t("echo.saves.hi") || "Hi") + ": " + hi,
+    (t("echo.menu.meta") || "tokens {t}").replace("{t}", m.tokens),
+    (t("engine.streak") || "streak") + ": " + streak,
+    saved ? (t("echo.saves.daily") || "Daily run saved") : (t("echo.saves.fresh") || "No daily save")
+  ].join("\n");
+}
+function echoResetAll(){
+  if(!confirm(t("echo.saves.resetConfirm") || "Reset all Echo progress? This cannot be undone.")) return;
+  ["floke-echo-meta","floke-echo-save","floke-echo-hi","floke-void-signal-hi","floke-void-signal-save",
+    ECHO_PORTRAIT_DRAFT_KEY,ECHO_PORTRAIT_ACTIVE_KEY,"floke-echo-portrait","floke-echo-streak",
+    "floke-echo-last-day",ECHO_TUTOR_KEY].forEach(k => localStorage.removeItem(k));
+  echoLastPortrait = echoDraftPortrait = null;
+  echoLastReplay = null;
+  echoCheatUnlocked = false;
+  echoRefreshMenuMeta();
+  echoRenderSaves();
+  echoRenderHangar();
+  showFlokeToast("Echo", t("echo.saves.resetDone") || "Progress cleared", 2600);
+}
+function echoRenderMusicList(){
+  const list = document.getElementById("echoMusicList");
+  const toggle = document.getElementById("echoMusicToggle");
+  if(toggle){
+    toggle.textContent = echoMusicOn ? (t("echo.music.on") || "On") : (t("echo.music.off") || "Off");
+    toggle.classList.toggle("is-sel", echoMusicOn);
+  }
+  if(!list) return;
+  list.innerHTML = Array.from({ length: ECHO_MUSIC_TRACKS }, (_, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    const now = i === echoMusicTrack && echoMusicOn;
+    return `<div class="echo-music-item${now ? " is-now" : ""}"><span>Vibe ${n}</span><span>~2:00</span></div>`;
+  }).join("");
+}
+function echoStopMusic(){
+  if(echoMusicTimer){ clearTimeout(echoMusicTimer); echoMusicTimer = null; }
+  try { echoMusicNodes?.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch(_){} }); } catch(_){}
+  echoMusicNodes = null;
+}
+function echoPlayMusicTrack(trackIdx){
+  echoStopMusic();
+  if(!echoMusicOn) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  if(!echoMusicCtx) echoMusicCtx = new AC();
+  if(echoMusicCtx.state === "suspended") echoMusicCtx.resume();
+  const ctx = echoMusicCtx;
+  const scales = [[0,2,4,7,9],[0,3,5,7,10],[0,2,3,7,9],[0,4,7,11,14],[0,2,5,7,10],[0,3,7,10,14],[0,5,7,10,12],[0,2,4,9,11],[0,4,5,7,12],[0,2,7,9,14]];
+  const scale = scales[trackIdx % scales.length];
+  const root = 55 + (trackIdx % 5) * 7;
+  const nodes = [];
+  const dur = ECHO_MUSIC_MS / 1000;
+  const step = 0.55;
+  for(let t = 0; t < dur; t += step){
+    const n = scale[(Math.random() * scale.length) | 0];
+    const freq = root * Math.pow(2, n / 12) * (1 + (trackIdx % 3) * 0.03);
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = trackIdx % 2 ? "triangle" : "sine";
+    o.connect(g); g.connect(ctx.destination);
+    const t0 = ctx.currentTime + t;
+    o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.012 + (trackIdx % 4) * 0.002, t0 + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + step * 0.95);
+    o.start(t0); o.stop(t0 + step);
+    nodes.push(o, g);
+  }
+  echoMusicNodes = nodes;
+  echoMusicTrack = trackIdx;
+  const mm = echoLoadMeta();
+  mm.musicTrack = trackIdx;
+  echoSaveMeta(mm);
+  echoRenderMusicList();
+  echoMusicTimer = setTimeout(() => echoPlayMusicTrack((trackIdx + 1) % ECHO_MUSIC_TRACKS), ECHO_MUSIC_MS);
+}
+function echoStartMusic(){
+  const m = echoLoadMeta();
+  echoMusicOn = m.musicOn !== false;
+  echoMusicTrack = m.musicTrack || 0;
+  if(echoMusicOn) echoPlayMusicTrack(echoMusicTrack);
+}
+function echoToggleMusic(on){
+  echoMusicOn = on;
+  const m = echoLoadMeta();
+  m.musicOn = on;
+  echoSaveMeta(m);
+  if(on) echoPlayMusicTrack(echoMusicTrack);
+  else echoStopMusic();
+  echoRenderMusicList();
+}
+function echoToggleFullscreen(on){
+  const wrap = document.getElementById("engineTeaserWrap");
+  const bd = document.getElementById("echoFsBackdrop");
+  if(on){
+    wrap?.classList.add("is-fullscreen");
+    bd?.classList.add("open");
+    bd?.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  } else {
+    wrap?.classList.remove("is-fullscreen");
+    bd?.classList.remove("open");
+    bd?.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if(echoGameStop){ echoGameStop(); echoGameStop = null; }
+  }
+}
+function echoBindMenu(){
+  const menu = document.getElementById("echoMenu");
+  if(!menu || menu._bound) return;
+  menu._bound = true;
+  const openFromSplash = e => {
+    if(engineGameRunning) return;
+    const overlay = document.getElementById("engineTeaserOverlay");
+    const echoMenuEl = document.getElementById("echoMenu");
+    if(!overlay || overlay.classList.contains("hidden")) return;
+    if(echoMenuEl && !echoMenuEl.hidden) return;
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    echoOpenMenuFromSplash();
+    echoMaybeShowTutor();
+  };
+  document.getElementById("engineTeaserOverlay")?.addEventListener("click", openFromSplash);
+  document.getElementById("engineTeaserScreen")?.addEventListener("click", e => {
+    if(e.target.closest("#echoMenu,#echoTutor,.engine-teaser-score")) return;
+    openFromSplash(e);
+  });
+  menu.querySelectorAll("[data-echo-nav]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const nav = btn.dataset.echoNav;
+      if(nav === "arcade") echoSetPanel("arcade");
+      else if(nav === "adventure") echoLaunchGame("adventure", echoMenuDiff);
+      else if(nav === "hangar") echoSetPanel("hangar");
+      else if(nav === "saves") echoSetPanel("saves");
+      else if(nav === "about") echoSetPanel("about");
+      else if(nav === "music") echoSetPanel("music");
+      window.flokeSfx?.("click");
+    });
+  });
+  menu.querySelectorAll("[data-echo-back]").forEach(btn => btn.addEventListener("click", () => { echoSetPanel("main"); window.flokeSfx?.("click"); }));
+  menu.querySelectorAll("[data-echo-diff]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      echoMenuDiff = btn.dataset.echoDiff;
+      menu.querySelectorAll("[data-echo-diff]").forEach(b => b.classList.toggle("is-sel", b === btn));
+    });
+  });
+  document.getElementById("echoArcadeStart")?.addEventListener("click", () => echoLaunchGame("arcade", echoMenuDiff));
+  menu.addEventListener("click", e => {
+    const ship = e.target.closest("[data-echo-ship]");
+    if(ship){ echoBuyShip(ship.dataset.echoShip); return; }
+    const up = e.target.closest("[data-echo-up]");
+    if(up){ echoBuyUpgrade(up.dataset.echoUp); return; }
+  });
+  document.getElementById("echoSaveReset")?.addEventListener("click", echoResetAll);
+  document.getElementById("echoSaveContinue")?.addEventListener("click", () => echoLaunchGame("arcade", echoMenuDiff));
+  document.getElementById("echoMusicToggle")?.addEventListener("click", () => {
+    echoToggleMusic(!echoMusicOn);
+    const m = echoLoadMeta();
+    m.musicTrack = echoMusicTrack;
+    echoSaveMeta(m);
+  });
+  document.getElementById("echoTutorDismiss")?.addEventListener("click", () => {
+    localStorage.setItem(ECHO_TUTOR_KEY, "1");
+    document.getElementById("echoTutor").hidden = true;
+  });
+  window.addEventListener("keydown", e => {
+    if(!location.hash.includes("engine")) return;
+    if(document.getElementById("echoMenu")?.hidden) return;
+    if(!document.querySelector("#echoPanelMain:not([hidden])")) return;
+    if(e.key === echoKonami[echoKonamiStep]){
+      echoKonamiStep++;
+      if(echoKonamiStep >= echoKonami.length){ echoKonamiStep = 0; echoUnlockAllCheats(); echoRenderHangar(); }
+    } else echoKonamiStep = e.key === echoKonami[0] ? 1 : 0;
+  });
+}
+let echoGameStop = null;
+function echoLaunchGame(mode, diff){
+  const screen = document.getElementById("engineTeaserScreen");
+  const gc = document.getElementById("engineGameCanvas");
+  const scoreEl = document.getElementById("engineTeaserScore");
+  if(!screen || !gc) return;
+  if(engineGameRunning && echoGameStop){ echoGameStop(); echoGameStop = null; }
+  echoHideMenu();
+  screen.classList.remove("is-idle");
+  const launch = () => {
+    try { echoStartMusic(); } catch(_){}
+    echoGameStop = startEchoGame(gc, screen, {
+      scoreEl, mode, difficulty: diff,
+      onEnd: () => { echoStopMusic(); engineGameRunning = false; echoShowMenu(); }
+    });
+  };
+  requestAnimationFrame(() => requestAnimationFrame(launch));
+}
+function syncEchoGamepadLine(){
+  const line = document.getElementById("echoGamepadLine");
+  const gp = navigator.getGamepads?.() && [...navigator.getGamepads()].find(g => g && g.connected);
+  if(line) line.classList.toggle("is-connected", !!gp);
+}
+function initEchoPortraitUi(){
+  if(initEchoPortraitUi._done) return;
+  initEchoPortraitUi._done = true;
+  const gen = document.getElementById("pixelPortraitGen");
+  const set = document.getElementById("pixelPortraitSet");
+  const status = document.getElementById("pixelPortraitStatus");
+  const preview = document.getElementById("pixelPortraitPreview");
+  const refresh = () => {
+    const draft = echoLoadPortraitDraft();
+    const active = echoLoadPortrait();
+    if(draft?.pixels) renderPortraitPreview(preview, draft.pixels);
+    else if(active) renderPortraitPreview(preview, active);
+    if(status){
+      status.textContent = active
+        ? (t("engine.portraitActive") || "Active pilot set")
+        : draft
+          ? (t("engine.portraitDraft") || "Draft ready — Set active to use in runs")
+          : "—";
+    }
+  };
+  gen?.addEventListener("click", () => {
+    const seed = dailySeed();
+    const score = echoHiScore();
+    renderPortraitPreview(preview, echoGenerateDraftPortrait(seed, score));
+    refresh();
+    showFlokeToast("Echo", t("engine.portraitGen") || "Generated", 1800);
+  });
+  set?.addEventListener("click", () => {
+    if(!echoSetActivePortrait()){ showFlokeToast("Echo", t("engine.portraitEmpty") || "Generate first", 2000); return; }
+    refresh();
+    showFlokeToast("Echo", t("engine.portraitSet") || "Active", 1800);
+  });
+  document.getElementById("pixelPortraitExport")?.addEventListener("click", exportEchoPortraitPng);
+  refresh();
+}
+
+function startEchoGame(canvas, hostEl, opts){
   const gCtx = canvas.getContext("2d");
   const scoreEl = opts?.scoreEl;
-  const overlay = opts?.overlay;
+  const mode = opts?.mode || "arcade";
+  const diff = echoDiffMult(opts?.difficulty || echoMenuDiff);
+  const meta = echoLoadMeta();
+  const shipDef = echoShipDef(meta.ship);
+  const upLv = id => meta.upgrades[id] || 0;
   const PX = 4;
   const seed = dailySeed();
-  let gW, gH, running = true, paused = false, score = 0, combo = 0, wave = 1, lives = 3;
-  let hi = +localStorage.getItem("floke-void-signal-hi") || 0;
-  const saved = JSON.parse(localStorage.getItem("floke-void-signal-save") || "null");
-  if(saved && saved.seed === seed){ score = saved.score || 0; wave = saved.wave || 1; lives = saved.lives || 3; }
+  const biomeOrder = echoDailyBiomeOrder(seed);
+  let biome = echoBiomeForWave(seed, 1);
+  let gW, gH, running = true, paused = false, score = 0, combo = 0, wave = 1, lives = 3, runTokens = 0;
+  const adventure = mode === "adventure";
+  let advBiomeIdx = 0, advBiomeT0 = performance.now();
+  let hi = echoHiScore();
+  const saved = !adventure && JSON.parse(localStorage.getItem(echoSaveKey()) || localStorage.getItem("floke-void-signal-save") || "null");
+  if(saved && saved.seed === seed){ score = saved.score || 0; wave = saved.wave || 1; lives = saved.lives || 3; biome = echoBiomeForWave(seed, wave); }
+  const replay = { seed, hi, score, wave, lives, biomeOrder, mode, events: [], t0: performance.now(), durationMs: 0 };
+  const logEv = (type, detail) => replay.events.push({ t: performance.now() - replay.t0, type, detail });
+  logEv("run_start", mode + " · " + biomeOrder.slice(0, 3).join(" → "));
   document.getElementById("arcadeDailySeed") && (document.getElementById("arcadeDailySeed").textContent = "seed: " + seed);
   document.getElementById("arcadeHiScore") && (document.getElementById("arcadeHiScore").textContent = "hi: " + hi);
+  const syncBiomeHud = () => {
+    const el = document.getElementById("arcadeBiome");
+    if(el) el.textContent = t(biome.labelKey) || biome.id;
+  };
+  syncBiomeHud();
   let player = { x: 0, y: 0, shield: 0, spread: 0, rapid: 0, bomb: 0 };
-  let bullets = [], enemies = [], drops = [], parts = [], stars = [];
-  let lastShot = 0, spawnT = 0, waveT = 0, boss = null, keys = {};
-  const WAVE_KILLS = 18;
+  let bullets = [], enemies = [], drops = [], parts = [], stars = [], tokens = [];
+  let lastShot = 0, spawnT = 0, boss = null, keys = {}, lastBossBeat = 0, bossFlash = 0;
+  const beatMs = 60000 / ECHO_SENZA_BPM;
+  const shipHull = shipDef.hull || biome.px3;
+  const shipAccent = shipDef.accent || biome.star;
+  const baseRate = Math.max(90, 220 - upLv("rapid") * 25);
+  const spreadExtra = upLv("spread");
+  const shieldBonus = upLv("shield") * 120;
+  const speedBonus = 1 + upLv("speed") * 0.12;
+  const magnetR = 28 + upLv("magnet") * 22;
+
+  function col(c){ return c; }
 
   function resizeGame(){
     const r = hostEl.getBoundingClientRect();
@@ -5387,251 +6354,373 @@ function startFlokePixelGame(canvas, hostEl, opts){
     canvas.style.width = gW + "px";
     canvas.style.height = gH + "px";
     gCtx.imageSmoothingEnabled = false;
-    if(!stars.length){
-      for(let i = 0; i < 60; i++) stars.push({ x: Math.random() * gW, y: Math.random() * gH, s: Math.random() > 0.7 ? 2 : 1, sp: 0.1 + Math.random() * 0.25 });
-    }
+    stars.length = 0;
+    for(let i = 0; i < 70; i++) stars.push({ x: Math.random() * gW, y: Math.random() * gH, s: Math.random() > 0.75 ? 2 : 1, sp: 0.12 + Math.random() * 0.3 });
     player.x = gW / 2; player.y = gH - PX * 10;
   }
   resizeGame();
-  overlay?.classList.add("hidden");
+  requestAnimationFrame(resizeGame);
   scoreEl?.classList.add("visible");
-  const syncHud = () => { if(scoreEl) scoreEl.textContent = `wave ${wave} · ${score} · ♥${lives}`; };
+  const syncHud = () => {
+    const tok = runTokens ? ` · ◈${runTokens}` : "";
+    if(scoreEl) scoreEl.textContent = adventure ? `adventure · ${t(biome.labelKey) || biome.id}${tok}` : `wave ${wave} · ${score}${tok} · ♥${lives}`;
+    replay.score = score; replay.wave = wave; replay.lives = lives;
+  };
   syncHud();
+  echoUpdateStreak();
   window.flokeSfx?.("wave");
-
-  function pxFill(px, py, gw, gh, c){ gCtx.fillStyle=c; gCtx.fillRect(~~px, ~~py, gw*PX, gh*PX); }
-  function burst(x,y,c,n){ for(let i=0;i<n;i++) parts.push({ x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:20+Math.random()*15,c }); }
-  function addEnemy(type,x,y){
-    const base = { x,y,vy:1,type,hp:1,t:0,shoot:0 };
-    if(type==="tank"){ base.hp=4; base.vy=.7; }
-    if(type==="diver"){ base.vy=1.4; base.vx=(Math.random()-.5)*2; }
-    if(type==="shooter"){ base.shoot=900; base.vy=.9; }
+  function pxFill(px, py, gw, gh, c){ gCtx.fillStyle = c; gCtx.fillRect(~~px, ~~py, gw * PX, gh * PX); }
+  function burst(x, y, c, n){ for(let i = 0; i < n; i++) parts.push({ x, y, vx: (Math.random() - .5) * 4, vy: (Math.random() - .5) * 4, life: 18 + Math.random() * 14, c }); }
+  function addEnemy(type, x, y){
+    const base = { x, y, vy: 1, type, hp: 1, t: 0, shoot: 0 };
+    if(type === "tank"){ base.hp = 4; base.vy = .7; }
+    if(type === "diver"){ base.vy = 1.4; base.vx = (Math.random() - .5) * 2; }
+    if(type === "shooter"){ base.shoot = 900; base.vy = .9; }
     enemies.push(base);
   }
   function spawnWave(){
+    if(adventure){
+      const order = echoSeededShuffle(seed, ECHO_BIOME_COUNT);
+      biome = ECHO_BIOMES[order[advBiomeIdx % ECHO_BIOME_COUNT]];
+      advBiomeIdx++;
+      advBiomeT0 = performance.now();
+      syncBiomeHud();
+      logEv("biome", t(biome.labelKey) || biome.id);
+      for(let i = 0; i < 4; i++) tokens.push({ x: Math.random() * (gW - 40) + 20, y: -20 - i * 80, vy: 0.8, val: 1 + (Math.random() > 0.7 ? 1 : 0) });
+      return;
+    }
     boss = null;
     spawnT = performance.now();
-    const n = Math.min(6 + wave, 14);
-    for(let i=0;i<n;i++){
-      setTimeout(()=>{
+    biome = echoBiomeForWave(seed, wave);
+    syncBiomeHud();
+    logEv("wave", `w${wave} · ${t(biome.labelKey) || biome.id}`);
+    const n = Math.min(Math.floor((6 + wave) * diff.spawn), 18);
+    for(let i = 0; i < n; i++){
+      setTimeout(() => {
         if(!running) return;
-        const types = wave>3 ? ["grunt","diver","shooter","tank"] : wave>1 ? ["grunt","diver"] : ["grunt"];
-        addEnemy(types[Math.floor(Math.random()*types.length)], Math.random()*(gW-PX*8)+PX*4, -PX*(2+i*2));
-      }, i*320);
+        const types = wave > 3 ? ["grunt", "diver", "shooter", "tank"] : wave > 1 ? ["grunt", "diver"] : ["grunt"];
+        addEnemy(types[Math.floor(Math.random() * types.length)], Math.random() * (gW - PX * 8) + PX * 4, -PX * (2 + i * 2));
+      }, i * 320);
     }
-    if(wave%5===0){
-      setTimeout(()=>{
-        boss = { x:gW/2, y:-40, hp:24+wave*2, t:0, phase:0 };
+    if(wave % 5 === 0 && !adventure){
+      setTimeout(() => {
+        boss = { x: gW / 2, y: -40, hp: 24 + wave * 2, t: 0, phase: 0 };
+        logEv("boss", `BPM ${ECHO_SENZA_BPM}`);
         window.flokeSfx?.("boss");
-      }, n*320+400);
+      }, n * 320 + 400);
     }
   }
   spawnWave();
+  if(adventure) try { window.flokeSfx?.("ambient"); } catch(_){}
 
-  function onMove(cx,cy){
+  function onMove(cx, cy){
     const r = hostEl.getBoundingClientRect();
-    player.x = Math.max(PX*3, Math.min(gW-PX*3, cx-r.left));
-    if(cy!=null) player.y = Math.max(gH*0.45, Math.min(gH-PX*6, cy-r.top));
+    player.x = Math.max(PX * 3, Math.min(gW - PX * 3, cx - r.left));
+    if(cy != null) player.y = Math.max(gH * 0.45, Math.min(gH - PX * 6, cy - r.top));
   }
   const onMouse = e => onMove(e.clientX, e.clientY);
   const onTouch = e => { e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); };
-  const onKey = e => { keys[e.key.toLowerCase()] = e.type==="keydown"; if(e.key==="p"||e.key==="P") paused=!paused; };
+  const onKey = e => { keys[e.key.toLowerCase()] = e.type === "keydown"; if(e.key === "p" || e.key === "P") paused = !paused; };
   hostEl.addEventListener("mousemove", onMouse);
-  hostEl.addEventListener("touchmove", onTouch, { passive:false });
+  hostEl.addEventListener("touchmove", onTouch, { passive: false });
   window.addEventListener("keydown", onKey);
   window.addEventListener("keyup", onKey);
-  const clickStart = () => { if(!running) { Object.assign(player,{shield:0,spread:0,rapid:0,bomb:0}); score=0;combo=0;wave=1;lives=3;bullets=[];enemies=[];drops=[];parts=[];boss=null;running=true;paused=false;spawnWave();syncHud();window.flokeSfx?.("wave"); } };
+  const clickStart = () => {
+    if(!running){
+      Object.assign(player, { shield: 0, spread: 0, rapid: 0, bomb: 0 });
+      score = 0; combo = 0; wave = 1; lives = 3; runTokens = 0;
+      bullets = []; enemies = []; drops = []; parts = []; tokens = []; boss = null;
+      advBiomeIdx = 0; advBiomeT0 = performance.now();
+      replay.events.length = 0; replay.t0 = performance.now();
+      logEv("run_start", mode + " · " + biomeOrder.slice(0, 3).join(" → "));
+      running = true; paused = false; spawnWave(); syncHud(); window.flokeSfx?.("wave");
+      if(adventure) try { window.flokeSfx?.("ambient"); } catch(_){}
+    }
+  };
+  const escMenu = e => {
+    if((e.key === "Escape" || e.key === "m" || e.key === "M") && running){
+      cleanup(false);
+      opts?.onEnd?.();
+    }
+  };
+  window.addEventListener("keydown", escMenu);
   hostEl.addEventListener("click", clickStart);
 
+  function cleanup(cancelLoop){
+    running = false; engineGameRunning = false;
+    if(cancelLoop !== false && engineGameLoop) cancelAnimationFrame(engineGameLoop);
+    hostEl.removeEventListener("mousemove", onMouse);
+    hostEl.removeEventListener("touchmove", onTouch);
+    hostEl.removeEventListener("click", clickStart);
+    window.removeEventListener("keydown", onKey);
+    window.removeEventListener("keyup", onKey);
+    window.removeEventListener("keydown", escMenu);
+  }
+
+  function drawBg(){
+    gCtx.fillStyle = biome.bg;
+    gCtx.fillRect(0, 0, gW, gH);
+    stars.forEach(s => {
+      gCtx.fillStyle = biome.star;
+      gCtx.globalAlpha = 0.35;
+      gCtx.fillRect(~~s.x, ~~s.y, s.s, s.s);
+      s.y += s.sp;
+      if(s.y > gH) s.y = 0;
+      gCtx.globalAlpha = 1;
+    });
+    if(bossFlash > 0){
+      gCtx.fillStyle = `rgba(200,169,110,${bossFlash * 0.08})`;
+      gCtx.fillRect(0, 0, gW, gH);
+      bossFlash -= 0.02;
+    }
+  }
   function drawShip(){
-    const {x,y}=player;
-    pxFill(x-PX*2, y-PX, 4, 2, "#1a1a2e");
-    pxFill(x-PX*1.5, y-PX*2, 3, 1, "#d7bc87");
-    pxFill(x-PX*.5, y-PX*3, 1, 2, "#8cf");
-    pxFill(x-PX*1.5, y+PX, 1, 1, "#4a7c59");
-    pxFill(x+PX*.5, y+PX, 1, 1, "#4a7c59");
-    if(player.shield>0){ gCtx.strokeStyle="rgba(120,200,255,.55)"; gCtx.lineWidth=2; gCtx.strokeRect(x-PX*3,y-PX*3,PX*6,PX*6); }
+    const { x, y } = player;
+    pxFill(x - PX * 2, y - PX, 4, 2, col(shipHull));
+    pxFill(x - PX * 1.5, y - PX * 2, 3, 1, col(shipAccent));
+    pxFill(x - PX * .5, y - PX * 3, 1, 2, col(shipDef.accent ? shipAccent : "#8cf"));
+    pxFill(x - PX * 1.5, y + PX, 1, 1, col(biome.px1));
+    pxFill(x + PX * .5, y + PX, 1, 1, col(biome.px1));
+    const pilot = echoLoadPortrait();
+    if(pilot){
+      gCtx.fillStyle = col(shipAccent);
+      pilot.forEach((on, i) => { if(on && i < 16) gCtx.fillRect(x - PX * 2 + (i % 4) * 2, y - PX * 2 + ((i / 4) | 0) * 2, 2, 2); });
+    }
+    if(player.shield > 0){
+      gCtx.strokeStyle = "rgba(120,200,255,.55)";
+      gCtx.lineWidth = 2;
+      gCtx.strokeRect(x - PX * 3, y - PX * 3, PX * 6, PX * 6);
+    }
   }
   function drawEnemy(e){
-    const c = e.type==="tank"?"#3d5a4a":e.type==="shooter"?"#6a5a9a":e.type==="diver"?"#c08862":"#9a4048";
-    pxFill(e.x-PX*2, e.y-PX, 4, 2, c);
-    pxFill(e.x-PX, e.y-PX*2, 2, 1, "#2a2a2a");
-    if(e.hp>1) pxFill(e.x-PX*.5, e.y-PX*3, 1, 1, "#d7bc87");
+    const c = e.type === "tank" ? biome.px1 : e.type === "shooter" ? biome.px2 : e.type === "diver" ? biome.star : "#9a4048";
+    pxFill(e.x - PX * 2, e.y - PX, 4, 2, c);
+    pxFill(e.x - PX, e.y - PX * 2, 2, 1, biome.px3);
+    if(e.hp > 1) pxFill(e.x - PX * .5, e.y - PX * 3, 1, 1, biome.star);
   }
   function drawBoss(b){
-    pxFill(b.x-PX*5, b.y-PX*2, 10, 4, "#2a1030");
-    pxFill(b.x-PX*3, b.y-PX, 6, 2, "#d7bc87");
-    pxFill(b.x-PX, b.y, 2, 1, "#f44");
+    pxFill(b.x - PX * 5, b.y - PX * 2, 10, 4, biome.px3);
+    pxFill(b.x - PX * 3, b.y - PX, 6, 2, biome.star);
+    pxFill(b.x - PX, b.y, 2, 1, "#f44");
+    gCtx.fillStyle = biome.px1;
+    gCtx.font = `${PX * 3}px monospace`;
+    gCtx.textAlign = "center";
+    gCtx.fillText("◈", b.x, b.y - PX * 4);
   }
 
   function loop(ts){
-    if(!running){ engineGameLoop=requestAnimationFrame(loop); return; }
+    if(!running){ engineGameLoop = requestAnimationFrame(loop); return; }
     if(paused){
-      gCtx.fillStyle="rgba(0,0,0,.55)"; gCtx.fillRect(0,0,gW,gH);
-      gCtx.fillStyle="#d7bc87"; gCtx.font="12px monospace"; gCtx.textAlign="center";
-      gCtx.fillText("PAUSED · P", gW/2, gH/2);
-      engineGameLoop=requestAnimationFrame(loop); return;
+      drawBg();
+      gCtx.fillStyle = "rgba(0,0,0,.55)"; gCtx.fillRect(0, 0, gW, gH);
+      gCtx.fillStyle = biome.star; gCtx.font = `${PX * 3}px monospace`; gCtx.textAlign = "center";
+      gCtx.fillText("PAUSED · P", gW / 2, gH / 2);
+      engineGameLoop = requestAnimationFrame(loop); return;
     }
-    gCtx.fillStyle="#080810"; gCtx.fillRect(0,0,gW,gH);
-    stars.forEach(s=>{ gCtx.fillStyle="rgba(200,169,110,.3)"; gCtx.fillRect(s.x,s.y,s.s,s.s); s.y+=s.sp; if(s.y>gH)s.y=0; });
-    if(keys["a"]) player.x-=4; if(keys["d"]) player.x+=4;
-    if(keys["w"]) player.y-=3; if(keys["s"]) player.y+=3;
+    drawBg();
+    const spd = speedBonus;
+    if(keys["a"]) player.x -= 4 * spd; if(keys["d"]) player.x += 4 * spd;
+    if(keys["w"]) player.y -= 3 * spd; if(keys["s"]) player.y += 3 * spd;
     const gp = navigator.getGamepads?.()?.[0];
-    if(gp){
-      player.x += (gp.axes[0] || 0) * 5;
-      player.y += (gp.axes[1] || 0) * 4;
-    }
-    player.x=Math.max(PX*3,Math.min(gW-PX*3,player.x));
-    player.y=Math.max(gH*0.4,Math.min(gH-PX*6,player.y));
+    if(gp){ player.x += (gp.axes[0] || 0) * 5 * spd; player.y += (gp.axes[1] || 0) * 4 * spd; }
+    player.x = Math.max(PX * 3, Math.min(gW - PX * 3, player.x));
+    player.y = Math.max(gH * 0.4, Math.min(gH - PX * 6, player.y));
 
-    const rate = player.rapid>0 ? 120 : 220;
-    if(ts-lastShot>rate){
-      const spread = player.spread>0 ? [-PX*2,0,PX*2] : [0];
-      spread.forEach(off=>bullets.push({x:player.x+off,y:player.y-PX*2,vy:-7,vx:0,pc:1}));
-      lastShot=ts; window.flokeSfx?.("shoot");
+    const rate = player.rapid > 0 ? 120 : baseRate;
+    if(!adventure && ts - lastShot > rate){
+      const offs = player.spread > 0 ? [-PX * 2, 0, PX * 2] : [0];
+      if(spreadExtra) offs.push(-PX * 4, PX * 4);
+      offs.forEach(off => bullets.push({ x: player.x + off, y: player.y - PX * 2, vy: -7, vx: 0, pc: 1 }));
+      lastShot = ts; window.flokeSfx?.("shoot");
     }
-    if(player.shield>0) player.shield--;
-    if(player.spread>0) player.spread--;
-    if(player.rapid>0) player.rapid--;
+    if(player.shield > 0) player.shield--;
+    if(player.spread > 0) player.spread--;
+    if(player.rapid > 0) player.rapid--;
 
-    bullets=bullets.filter(b=>{
-      b.x+=b.vx||0; b.y+=b.vy;
-      gCtx.fillStyle="#d7bc87"; gCtx.fillRect(b.x-1,b.y,2,PX*2);
-      return b.y>-10 && b.x>-10 && b.x<gW+10;
+    bullets = bullets.filter(b => {
+      b.x += b.vx || 0; b.y += b.vy;
+      gCtx.fillStyle = b.pc ? biome.star : "#f44";
+      gCtx.fillRect(~~(b.x - 1), ~~b.y, 2, PX * 2);
+      return b.y > -10 && b.x > -10 && b.x < gW + 10;
     });
 
-    if(boss){
-      boss.t+=0.016; boss.y=Math.min(gH*0.22, boss.y+0.6);
-      boss.x+=Math.sin(boss.t*1.2)*2.5;
-      if(ts-boss.phase>800){ boss.phase=ts; bullets.push({x:boss.x,y:boss.y+PX*4,vy:4,vx:(player.x-boss.x)*0.02,pc:0}); }
+    function finishRun(reason){
+      running = false; engineGameRunning = false;
+      if(runTokens > 0) echoAddTokens(Math.floor(runTokens * diff.token));
+      if(score > hi && !adventure){ hi = score; localStorage.setItem("floke-echo-hi", hi); replay.hi = hi;
+        document.getElementById("arcadeHiScore") && (document.getElementById("arcadeHiScore").textContent = "hi: " + hi); }
+      replay.durationMs = performance.now() - replay.t0;
+      logEv("game_over", reason + " · " + score);
+      echoLastReplay = { ...replay, events: [...replay.events] };
+      echoSavePortraitDraft(seed, score, echoGeneratePortrait(seed, score));
+      echoUpdateStreak();
+      gCtx.fillStyle = "rgba(0,0,0,.75)"; gCtx.fillRect(0, 0, gW, gH);
+      gCtx.fillStyle = biome.star; gCtx.font = `${PX * 4}px monospace`; gCtx.textAlign = "center";
+      gCtx.fillText(adventure ? "ADVENTURE" : `ECHO · ${score}`, gW / 2, gH / 2 - PX * 4);
+      gCtx.font = `${PX * 3}px monospace`; gCtx.fillStyle = "#aaa";
+      gCtx.fillText(`◈${runTokens} · HI ${hi}`, gW / 2, gH / 2 + PX);
+      gCtx.fillText(`click · Esc menu`, gW / 2, gH / 2 + PX * 4);
+    }
+
+    if(!adventure && boss){
+      if(ts - lastBossBeat > beatMs){ lastBossBeat = ts; window.echoBossBeat?.(); bossFlash = 1; }
+      boss.t += 0.016; boss.y = Math.min(gH * 0.22, boss.y + 0.6);
+      boss.x += Math.sin(boss.t * 1.2) * 2.5;
+      if(ts - boss.phase > 800){ boss.phase = ts; bullets.push({ x: boss.x, y: boss.y + PX * 4, vy: 4, vx: (player.x - boss.x) * 0.02, pc: 0 }); }
       drawBoss(boss);
-      bullets=bullets.filter(b=>{
-        if(Math.abs(b.x-boss.x)<PX*8 && Math.abs(b.y-boss.y)<PX*6){
-          boss.hp--; burst(b.x,b.y,"#d7bc87",4); window.flokeSfx?.("hit"); return false;
+      bullets = bullets.filter(b => {
+        if(Math.abs(b.x - boss.x) < PX * 8 && Math.abs(b.y - boss.y) < PX * 6){
+          boss.hp--; burst(b.x, b.y, biome.star, 4); window.flokeSfx?.("hit"); return false;
         }
         return true;
       });
-      if(boss.hp<=0){ burst(boss.x,boss.y,"#d7bc87",24); score+=500; combo+=5; boss=null; wave++; spawnWave(); window.flokeSfx?.("explode"); syncHud(); }
+      if(boss.hp <= 0){
+        burst(boss.x, boss.y, biome.star, 24); score += 500; combo += 5; boss = null;
+        logEv("boss_kill", `+500 · w${wave}`);
+        wave++; spawnWave(); window.flokeSfx?.("explode"); syncHud();
+      }
     }
 
-    enemies=enemies.filter(e=>{
-      e.t+=0.016; e.y+=e.vy; if(e.vx) e.x+=e.vx;
-      if(e.type==="diver") e.x+=Math.sin(e.t*3)*1.2;
-      if(e.shoot && ts-e.shoot>1200){ e.shoot=ts; bullets.push({x:e.x,y:e.y+PX*2,vy:3,vx:0,pc:0}); }
+    if(!adventure) enemies = enemies.filter(e => {
+      e.t += 0.016; e.y += e.vy; if(e.vx) e.x += e.vx;
+      if(e.type === "diver") e.x += Math.sin(e.t * 3) * 1.2;
+      if(e.shoot && ts - e.shoot > 1200){ e.shoot = ts; bullets.push({ x: e.x, y: e.y + PX * 2, vy: 3, vx: 0, pc: 0 }); }
       drawEnemy(e);
-      let kill=false;
-      bullets=bullets.filter(b=>{
-        if(b.pc && Math.abs(b.x-e.x)<PX*3 && Math.abs(b.y-e.y)<PX*3){
-          e.hp--; burst(b.x,b.y,"#fff",3); window.flokeSfx?.("hit");
-          if(e.hp<=0){ kill=true; score+=10*(1+Math.floor(combo/5)); combo++; burst(e.x,e.y,"#c08862",8);
-            if(Math.random()<.14) drops.push({x:e.x,y:e.y,vy:1.2,kind:["spread","rapid","shield","life","bomb"][Math.floor(Math.random()*5)]});
+      let kill = false;
+      bullets = bullets.filter(b => {
+        if(b.pc && Math.abs(b.x - e.x) < PX * 3 && Math.abs(b.y - e.y) < PX * 3){
+          e.hp--; burst(b.x, b.y, "#fff", 3); window.flokeSfx?.("hit");
+          if(e.hp <= 0){
+            kill = true; score += 10 * (1 + Math.floor(combo / 5)); combo++;
+            logEv("kill", `${e.type} · ${score}`);
+            burst(e.x, e.y, biome.star, 8);
+            if(Math.random() < .18 * diff.spawn) tokens.push({ x: e.x, y: e.y, vy: 0.6, val: 1 });
+            if(Math.random() < .14) drops.push({ x: e.x, y: e.y, vy: 1.2, kind: ["spread", "rapid", "shield", "life", "bomb"][Math.floor(Math.random() * 5)] });
           }
           return false;
         }
         return true;
       });
       if(kill){ window.flokeSfx?.("explode"); syncHud(); return false; }
-      if(Math.abs(e.x-player.x)<PX*4 && Math.abs(e.y-player.y)<PX*4){
-        if(player.shield>0) burst(player.x,player.y,"#8cf",6);
-        else { lives--; combo=0; burst(player.x,player.y,"#f44",12); window.flokeSfx?.("gameover");
-          if(lives<=0){ running=false; if(score>hi){ hi=score; localStorage.setItem("floke-void-signal-hi",hi); document.getElementById("arcadeHiScore") && (document.getElementById("arcadeHiScore").textContent = "hi: " + hi); }
-            gCtx.fillStyle="rgba(0,0,0,.7)"; gCtx.fillRect(0,0,gW,gH);
-            gCtx.fillStyle="#d7bc87"; gCtx.font="14px monospace"; gCtx.textAlign="center";
-            gCtx.fillText(`VOID SIGNAL · ${score} · HI ${hi}`, gW/2, gH/2-8);
-            gCtx.fillStyle="#aaa"; gCtx.font="11px monospace";
-            gCtx.fillText("click to restart", gW/2, gH/2+14);
-          }
+      if(Math.abs(e.x - player.x) < PX * 4 && Math.abs(e.y - player.y) < PX * 4){
+        if(player.shield > 0) burst(player.x, player.y, "#8cf", 6);
+        else {
+          lives--; combo = 0; burst(player.x, player.y, "#f44", 12); window.flokeSfx?.("gameover");
+          logEv("hit", `♥${lives}`);
+          if(lives <= 0){ finishRun("score " + score); }
         }
         return false;
       }
-      return e.y<gH+30;
+      return e.y < gH + 30;
     });
 
-    drops=drops.filter(d=>{
-      d.y+=d.vy; pxFill(d.x-PX*.5, d.y, 1, 1, d.kind==="life"?"#f66":d.kind==="bomb"?"#fa0":"#8cf");
-      if(Math.abs(d.x-player.x)<PX*4 && Math.abs(d.y-player.y)<PX*4){
-        if(d.kind==="life") lives=Math.min(5,lives+1);
-        else if(d.kind==="bomb"){ enemies.forEach(en=>burst(en.x,en.y,"#fa0",4)); enemies=[]; score+=50; }
-        else player[d.kind]=480;
+    if(!adventure) drops = drops.filter(d => {
+      d.y += d.vy;
+      pxFill(d.x - PX * .5, d.y, 1, 1, d.kind === "life" ? "#f66" : d.kind === "bomb" ? "#fa0" : "#8cf");
+      if(Math.abs(d.x - player.x) < PX * 4 && Math.abs(d.y - player.y) < PX * 4){
+        if(d.kind === "life") lives = Math.min(5, lives + 1);
+        else if(d.kind === "bomb"){ enemies.forEach(en => burst(en.x, en.y, "#fa0", 4)); enemies = []; score += 50; }
+        else player[d.kind] = 480 + shieldBonus;
         window.flokeSfx?.("powerup"); syncHud(); return false;
       }
-      return d.y<gH+20;
+      return d.y < gH + 20;
     });
 
-    bullets=bullets.filter(b=>{
-      if(!b.pc && Math.abs(b.x-player.x)<PX*3 && Math.abs(b.y-player.y)<PX*3){
-        if(player.shield<=0){ lives--; combo=0; burst(player.x,player.y,"#f88",8); syncHud(); }
+    if(!adventure) bullets = bullets.filter(b => {
+      if(!b.pc && Math.abs(b.x - player.x) < PX * 3 && Math.abs(b.y - player.y) < PX * 3){
+        if(player.shield <= 0){
+          lives -= diff.dmg > 1 ? 1 : 1;
+          if(diff.dmg > 1.2 && Math.random() < 0.25) lives--;
+          combo = 0; burst(player.x, player.y, "#f88", 8); syncHud();
+          if(lives <= 0) finishRun("hit");
+        }
         return false;
       }
       return true;
     });
 
-    if(!boss && enemies.length===0 && ts-spawnT>1800){
+    tokens = tokens.filter(tok => {
+      tok.y += tok.vy;
+      gCtx.fillStyle = "#c8a96e";
+      gCtx.fillRect(~~(tok.x - 2), ~~tok.y - 2, 4, 4);
+      gCtx.fillStyle = biome.star;
+      gCtx.font = "8px monospace";
+      gCtx.fillText("◈", tok.x - 3, tok.y + 3);
+      const dx = tok.x - player.x, dy = tok.y - player.y;
+      if(Math.hypot(dx, dy) < magnetR){ tok.x -= dx * 0.08; tok.y -= dy * 0.08; }
+      if(Math.abs(dx) < PX * 3 && Math.abs(dy) < PX * 3){
+        runTokens += tok.val; window.flokeSfx?.("powerup"); syncHud(); return false;
+      }
+      return tok.y < gH + 20;
+    });
+
+    if(adventure){
+      if(tokens.length < 3 && Math.random() < 0.015) tokens.push({ x: Math.random() * (gW - 40) + 20, y: -10, vy: 0.7, val: 1 });
+      if(performance.now() - advBiomeT0 > ECHO_ADV_BIOME_MS){ advBiomeT0 = performance.now(); spawnWave(); }
+      if(performance.now() - replay.t0 > ECHO_ADV_BIOME_MS * ECHO_BIOME_COUNT + 60000) finishRun("adventure");
+    } else if(!boss && enemies.length === 0 && ts - spawnT > 1800){
       wave++; spawnWave(); window.flokeSfx?.("wave"); syncHud();
     }
 
-    parts=parts.filter(p=>{ p.x+=p.vx; p.y+=p.vy; p.life--; gCtx.fillStyle=p.c; gCtx.globalAlpha=p.life/30; gCtx.fillRect(p.x,p.y,PX,PX); gCtx.globalAlpha=1; return p.life>0; });
+    parts = parts.filter(p => {
+      p.x += p.vx; p.y += p.vy; p.life--;
+      gCtx.fillStyle = p.c; gCtx.globalAlpha = p.life / 28;
+      gCtx.fillRect(~~p.x, ~~p.y, PX, PX);
+      gCtx.globalAlpha = 1;
+      return p.life > 0;
+    });
     drawShip();
-    gCtx.fillStyle="rgba(200,169,110,.6)"; gCtx.font="10px monospace"; gCtx.textAlign="left";
-    gCtx.fillText(`HI ${hi} · seed ${seed}`, 8, 14);
-    if(running && ts % 1200 < 20) localStorage.setItem("floke-void-signal-save", JSON.stringify({ seed, score, wave, lives }));
-    engineGameLoop=requestAnimationFrame(loop);
+    gCtx.fillStyle = biome.star; gCtx.font = `${PX * 2 + 2}px monospace`; gCtx.textAlign = "left";
+    gCtx.fillText(`HI${hi} · ${t(biome.labelKey) || biome.id}`, 8, 12);
+    if(running && ts % 1200 < 20) localStorage.setItem(echoSaveKey(), JSON.stringify({ seed, score, wave, lives }));
+    echoLastReplay = { ...replay, events: [...replay.events], durationMs: performance.now() - replay.t0 };
+    engineGameLoop = requestAnimationFrame(loop);
   }
-  engineGameRunning=true;
-  engineGameLoop=requestAnimationFrame(loop);
-  return ()=>{
-    running=false; engineGameRunning=false;
-    if(engineGameLoop) cancelAnimationFrame(engineGameLoop);
-    hostEl.removeEventListener("mousemove", onMouse);
-    hostEl.removeEventListener("touchmove", onTouch);
-    hostEl.removeEventListener("click", clickStart);
-    window.removeEventListener("keydown", onKey);
-    window.removeEventListener("keyup", onKey);
-  };
+  engineGameRunning = true;
+  engineGameLoop = requestAnimationFrame(loop);
+  return () => { cleanup(); opts?.onEnd?.(); };
+}
+
+function syncEchoDailyHint(){
+  const seed = dailySeed();
+  const order = echoDailyBiomeOrder(seed);
+  const el = document.getElementById("echoDailyBiomes");
+  if(el) el.textContent = "Today · " + order.join(" → ") + " · seed " + seed;
 }
 
 function initEngineGame(){
   const screen = document.getElementById("engineTeaserScreen");
   const gc = document.getElementById("engineGameCanvas");
-  const overlay = document.getElementById("engineTeaserOverlay");
   const scoreEl = document.getElementById("engineTeaserScore");
+  syncEchoDailyHint();
+  syncEchoStreakUi(+localStorage.getItem("floke-echo-streak") || 0);
+  echoBindMenu();
+  echoShowSplash();
+  initEchoPortraitUi();
   if(!screen || !gc || screen._bound) return;
   document.getElementById("engineExportScore")?.addEventListener("click", () => {
-    const hi = localStorage.getItem("floke-void-signal-hi") || "0";
-    const md = `# Void Signal score\n\nhi: ${hi}\nseed: ${dailySeed()}\n\`flokestudio.github.io/Floke/#engine\``;
+    const md = echoExportReplayMd(echoLastReplay);
     if(navigator.clipboard?.writeText) navigator.clipboard.writeText(md);
-    showFlokeToast("Score", "Markdown copied — paste into a Gist if you want", 2800);
+    showFlokeToast(t("engine.exportScore"), t("engine.exportScoreHint"), 3200);
   });
   if(navigator.getGamepads){
     setInterval(() => {
       const gp = [...navigator.getGamepads()].find(g => g && g.connected);
       const badge = document.getElementById("gamepadBadge");
       if(badge) badge.hidden = !gp;
+      syncEchoGamepadLine();
     }, 1000);
   }
   screen._bound = true;
-  screen.addEventListener("click", () => {
-    if(engineGameRunning) return;
-    startFlokePixelGame(gc, screen, { scoreEl, overlay });
-  });
   document.getElementById("engineFullscreenBtn")?.addEventListener("click", () => {
-    const modal = document.getElementById("engineGameModal");
-    const mc = document.getElementById("engineModalCanvas");
-    const body = modal?.querySelector(".engine-modal-body");
-    if(!modal || !mc || !body) return;
-    if(modal._stop) modal._stop();
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    modal._stop = startFlokePixelGame(mc, body, {});
+    echoToggleFullscreen(true);
     window.flokeSfx?.("nav");
   });
-  document.getElementById("engineModalClose")?.addEventListener("click", closeEngineModal);
-  document.getElementById("engineGameModal")?.addEventListener("click", e => {
-    if(e.target.id === "engineGameModal") closeEngineModal();
-  });
+  document.getElementById("echoFsBackdrop")?.addEventListener("click", () => echoToggleFullscreen(false));
   document.addEventListener("keydown", e => {
-    if(e.key === "Escape" && document.getElementById("engineGameModal")?.classList.contains("open")) closeEngineModal();
+    if(e.key === "Escape" && document.getElementById("engineTeaserWrap")?.classList.contains("is-fullscreen")){
+      echoToggleFullscreen(false);
+    }
   });
 }
 
@@ -5649,6 +6738,7 @@ function initEnginePage(){
   runTypewriter(tw, ENGINE_TW[locale] || ENGINE_TW.en, true);
   initEngineParticles();
   initEngineGame();
+  initPixelGrid();
 }
 
 let aboutParallaxBound = false;
@@ -6099,6 +7189,7 @@ function buildCmdItems(){
     { cat: "page", title: () => t("nav.privacy"), sub: "#privacy", hash: "#privacy", keys: ["privacy", "data", "tracking"], body: () => pageSearchBody(["privacy.lead","privacy.prose","privacy.l1","privacy.l2","privacy.l3"]) },
     { cat: "page", title: () => t("nav.support"), sub: "#support", hash: "#support", keys: ["support", "faq", "help", "bug", "email", "getfloke", "windows", "gpl", "changelog"], body: () => faqSearchBody() + " getfloke@gmail.com " + pageSearchBody(["support.lead"]) },
     { cat: "page", title: () => t("nav.feedback"), sub: "#feedback", hash: "#feedback", keys: ["feedback", "giscus", "comments", "discussions"], body: () => t("feedback.lead") },
+    { cat: "page", title: () => t("nav.flint"), sub: "#flint", hash: "#flint", keys: ["flint", "agent", "mnemo", "local ai", "q3 2026"], body: () => t("flint.lead") + " " + t("flint.qwenNote") },
     { cat: "page", title: () => t("spec.h1"), sub: "#glyph/spec", hash: "#glyph/spec", keys: ["glyph", "pipeline", "knn", "ollama", "spec"], body: () => pageSearchBody(["spec.lead","spec.s1p","spec.s2p","spec.s3p"]) },
     { cat: "action", title: () => t("cmd.theme"), sub: "theme", run: () => { theme = theme === "dark" ? "light" : "dark"; applyTheme(); }, keys: ["theme", "dark", "light"] },
     { cat: "action", title: () => t("shortcuts.title"), sub: "?", run: () => openShortcuts(), keys: ["shortcuts", "help", "keyboard"] }
@@ -6480,6 +7571,29 @@ function initDock(){
     window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     window.flokeSfx?.("click");
   });
+  initForgeIndicator();
+}
+
+async function checkForgeBuild(){
+  const repos = ["Flint", "Mnemo"];
+  let live = false;
+  for(const repo of repos){
+    try {
+      const r = await fetch(`https://api.github.com/repos/FlokeStudio/${repo}/actions/runs?per_page=3&status=in_progress`, {
+        headers: { Accept: "application/vnd.github+json" }
+      });
+      if(!r.ok) continue;
+      const j = await r.json();
+      if(j.workflow_runs?.some(w => w.status === "in_progress" || w.status === "queued")) live = true;
+    } catch(_){}
+  }
+  document.getElementById("dockShell")?.classList.toggle("forge-live", live);
+  document.querySelectorAll('a[href="#flint"], nav a[href="#flint"]').forEach(a => a.classList.toggle("forge-live", live));
+}
+
+function initForgeIndicator(){
+  checkForgeBuild();
+  setInterval(checkForgeBuild, 120000);
 }
 
 function initOriginTimeline(){
@@ -6720,23 +7834,7 @@ function initHeroMesh(){
   canvas._stop = () => cancelAnimationFrame(raf);
 }
 
-function initScrollStory(){
-  const fill = document.getElementById("scrollStoryFill");
-  const steps = document.querySelectorAll(".scroll-story-step");
-  const section = document.getElementById("scroll-story");
-  if(!fill || !section) return;
-  const tick = () => {
-    const r = section.getBoundingClientRect();
-    const vh = window.innerHeight;
-    const p = Math.max(0, Math.min(1, (vh * 0.7 - r.top) / (r.height + vh * 0.5)));
-    fill.style.width = (p * 100).toFixed(1) + "%";
-    steps.forEach((s, i) => s.classList.toggle("is-active", p >= i / steps.length));
-    const orbit = section.querySelector(".scroll-story-orbit i");
-    if(orbit) orbit.style.transform = `rotate(${p * 360}deg)`;
-  };
-  window.addEventListener("scroll", tick, { passive: true });
-  tick();
-}
+function initScrollStory(){ /* removed from landing */ }
 
 function initCompareSlider(){
   const slider = document.getElementById("compareSlider");
@@ -6795,31 +7893,228 @@ function initPrivacyContract(){
   tick();
 }
 
-function initStatusPage(){
-  const grid = document.getElementById("statusGrid");
-  if(!grid) return;
-  const rows = [
-    ["Senza", t("status.live") || "Live", "1.1.0"],
-    ["Cultiva", t("status.live"), verCache.cultiva || "1.1.0"],
-    ["BLIP", t("status.live"), verCache.blip || "1.1.1"],
-    ["Flint", t("tag.soon"), "Q3 2026"],
-    ["Glyph2.2-O", t("status.live"), "2.2-O"],
-    ["Mnemo", t("tag.soon"), "1.2-O"],
-    ["Site search", "IndexedDB", "Glyph 2.2-On"],
-    ["PWA shell", navigator.serviceWorker ? "sw.js" : "—", localStorage.getItem("floke-sw-ready") ? t("pwa.ready") : t("pwa.pending")]
-  ];
-  grid.innerHTML = rows.map(([a, b, c]) =>
-    `<div class="status-row"><span>${esc(a)} · ${esc(c)}</span><span>${esc(b)}</span></div>`
-  ).join("");
+let flintBgRaf = null;
+const FLINT_BG_SEED = (Math.random() * 1e9) | 0;
+
+function initFlintBg(){
+  const canvas = document.getElementById("flintBgCanvas");
+  if(!canvas) return;
+  if(flintBgRaf) cancelAnimationFrame(flintBgRaf);
+  const ctx = canvas.getContext("2d");
+  let W, H, t0 = 0;
+  let s = FLINT_BG_SEED;
+  const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const tokens = ["Mnemo","1.2-O","Ollama","FliCode","FliWriter","FliGeneral","ctx","token","offline","Y/N","diff","RAG","qwen","local","llm"];
+  const streams = Array.from({ length: 14 }, (_, i) => ({
+    x: rnd(), speed: 0.00008 + rnd() * 0.00012, offset: rnd() * 8,
+    words: Array.from({ length: 6 }, () => tokens[(rnd() * tokens.length) | 0]),
+    hue: i % 3 === 0 ? "#4a7c59" : i % 3 === 1 ? "#8fd4ff" : "#c8a96e"
+  }));
+  const attention = Array.from({ length: 6 }, () => ({
+    x: rnd(), y: rnd(), vx: (rnd() - .5) * 0.00012, vy: (rnd() - .5) * 0.0001,
+    r: 100 + rnd() * 160, ph: rnd() * Math.PI * 2
+  }));
+  const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+  resize();
+  if(!canvas._rsBound){ window.addEventListener("resize", resize, { passive: true }); canvas._rsBound = resize; }
+  function loop(ts){
+    if(document.getElementById("flintPage")?.style.display === "none") return;
+    ctx.fillStyle = "#0a0a10";
+    ctx.fillRect(0, 0, W, H);
+    const vignette = ctx.createRadialGradient(W * 0.5, H * 0.42, W * 0.08, W * 0.5, H * 0.45, W * 0.72);
+    vignette.addColorStop(0, "rgba(143,212,255,0.07)");
+    vignette.addColorStop(0.45, "rgba(74,124,89,0.04)");
+    vignette.addColorStop(1, "transparent");
+    ctx.fillStyle = vignette;
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "rgba(255,255,255,.04)";
+    ctx.lineWidth = 1;
+    const gridOx = W * 0.12, gridW = W * 0.76;
+    for(let gx = gridOx; gx <= gridOx + gridW; gx += 56){
+      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+    }
+    for(let gy = 0; gy < H; gy += 56){
+      ctx.beginPath(); ctx.moveTo(gridOx, gy); ctx.lineTo(gridOx + gridW, gy); ctx.stroke();
+    }
+    attention.forEach(a => {
+      a.x += a.vx; a.y += a.vy;
+      if(a.x < 0.15 || a.x > 0.85) a.vx *= -1;
+      if(a.y < 0.1 || a.y > 0.9) a.vy *= -1;
+      const cx = a.x * W, cy = a.y * H;
+      const pulse = 0.5 + Math.sin(ts * 0.0009 + a.ph) * 0.35;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, a.r * pulse);
+      g.addColorStop(0, "rgba(143,212,255,0.09)");
+      g.addColorStop(0.55, "rgba(200,169,110,0.04)");
+      g.addColorStop(1, "transparent");
+      ctx.fillStyle = g;
+      ctx.fillRect(cx - a.r, cy - a.r, a.r * 2, a.r * 2);
+    });
+    ctx.font = "10px ui-monospace,monospace";
+    streams.forEach(st => {
+      const x = W * 0.14 + st.x * (W * 0.72);
+      let y = ((ts * st.speed + st.offset) % 1) * (H + 140) - 70;
+      st.words.forEach((word, wi) => {
+        const yy = y + wi * 16;
+        if(yy < -24 || yy > H + 24) return;
+        ctx.fillStyle = st.hue;
+        ctx.globalAlpha = 0.05 + (wi === 1 ? 0.07 : 0);
+        ctx.fillText(word, x, yy);
+      });
+      ctx.globalAlpha = 1;
+    });
+    const scanY = (ts * 0.035) % H;
+    ctx.fillStyle = "rgba(143,212,255,0.025)";
+    ctx.fillRect(W * 0.1, scanY, W * 0.8, 2);
+    flintBgRaf = requestAnimationFrame(loop);
+  }
+  canvas._stop = () => { if(flintBgRaf) cancelAnimationFrame(flintBgRaf); flintBgRaf = null; };
+  loop(0);
 }
 
-function initFlintTerminalAnim(){
-  const el = document.getElementById("flintTerminal");
-  if(!el || el._anim) return;
-  el._anim = true;
-  let i = 0;
-  setInterval(() => { el.style.opacity = 0.85 + Math.sin(i++ * 0.2) * 0.15; }, 120);
+const FLINT_CHIP_PROMPTS = {
+  en: {
+    flicode: "FliCode: refactor src/parser.ts — show unified diff, wait for Y before writing.",
+    fliwriter: "FliWriter: draft Telegraph post for June release — Floke tone, 120 words, no hype.",
+    fligeneral: "FliGeneral: explain how Mnemo 1.2-O routes Code vs Writer vs General on my PC only.",
+    mnemo: "Mnemo 1.2-O: list agent tools available offline and which need Ollama running locally.",
+    rag: "Index ~/Docs/Floke — answer from disk only. Cite file paths, never invent URLs."
+  },
+  ru: {
+    flicode: "FliCode: рефактор parser.ts — unified diff, Y перед записью на диск.",
+    fliwriter: "FliWriter: черновик Telegraph про June release — голос Floke, без hype.",
+    fligeneral: "FliGeneral: как Mnemo 1.2-O выбирает Code / Writer / General только на ПК.",
+    mnemo: "Mnemo 1.2-O: какие tools offline и где нужен локальный Ollama.",
+    rag: "Индекс ~/Docs — ответы только с диска, с путями к файлам."
+  }
+};
+
+function flintDetectMode(text, chipMode){
+  const map = { flicode: "FliCode", fliwriter: "FliWriter", figeneral: "FliGeneral", mnemo: "Mnemo 1.2-O", rag: "RAG" };
+  if(chipMode && map[chipMode]) return map[chipMode];
+  const low = (text || "").toLowerCase();
+  if(low.includes("flicode") || low.includes("refactor") || low.includes("diff")) return "FliCode";
+  if(low.includes("fliwriter") || low.includes("release") || low.includes("telegraph")) return "FliWriter";
+  if(low.includes("mnemo")) return "Mnemo 1.2-O";
+  if(low.includes("rag") || low.includes("docs") || low.includes("index")) return "RAG";
+  return "FliGeneral";
 }
+
+function flintBuildTrace(mode){
+  const diff = mode === "FliWriter"
+    ? "--- draft.md\n+++ draft.md\n@@ -1,2 +1,4 @@\n-...\n+June release · offline-first\n+no cloud relay"
+    : "--- src/agent/stub.ts\n+++ src/agent/stub.ts\n@@ -1,3 +1,4 @@\n-// forge\n+// v0.6 sandbox\n+await user.confirm()";
+  return [
+    { step: "Mnemo 1.2-O", detail: "route → " + mode + " · 0 cloud tokens" },
+    { step: mode, detail: "parse prompt · load local context only" },
+    { step: "diff preview", detail: diff }
+  ];
+}
+
+function flintRenderTrace(mode){
+  const trace = document.getElementById("flintTrace");
+  const list = document.getElementById("flintTraceList");
+  const pill = document.getElementById("flintTracePill");
+  if(!trace || !list) return;
+  const rows = flintBuildTrace(mode);
+  list.innerHTML = rows.map(r =>
+    `<li><span class="flint-trace-step">${esc(r.step)}</span><span class="flint-trace-detail">${esc(r.detail)}</span></li>`
+  ).join("");
+  if(pill) pill.textContent = rows.map(r => r.step).join(" → ");
+  trace.hidden = false;
+  trace.open = true;
+}
+
+function flintTypeAnswer(el, text, onDone){
+  el.innerHTML = "";
+  let i = 0;
+  const tick = () => {
+    if(i >= text.length){
+      el.innerHTML = esc(text);
+      onDone?.();
+      return;
+    }
+    i += Math.max(1, (text.length > 120 ? 2 : 1));
+    el.innerHTML = esc(text.slice(0, i)) + '<span class="flint-cursor"></span>';
+    setTimeout(tick, 16 + Math.random() * 12);
+  };
+  tick();
+}
+
+function initFlintPage(){
+  initFlintBg();
+  const chips = document.getElementById("flintChips");
+  const prompt = document.getElementById("flintPrompt");
+  const composer = document.getElementById("flintComposer");
+  const reply = document.getElementById("flintReply");
+  const thinking = document.getElementById("flintThinking");
+  const thinkingLabel = document.getElementById("flintThinkingLabel");
+  const answer = document.getElementById("flintAnswer");
+  const trace = document.getElementById("flintTrace");
+  const sendBtn = document.getElementById("flintSend");
+  let busy = false;
+  let activeChipMode = null;
+
+  const send = () => {
+    const text = prompt?.value.trim();
+    if(!text || busy) return;
+    busy = true;
+    composer?.classList.add("is-busy");
+    if(sendBtn) sendBtn.disabled = true;
+    reply.hidden = false;
+    thinking.hidden = false;
+    if(trace){ trace.hidden = true; trace.open = false; }
+    answer.textContent = "";
+    answer.innerHTML = "";
+    window.flokeSfx?.("click");
+    const mode = flintDetectMode(text, activeChipMode);
+
+    const phases = [t("flint.thinking"), t("flint.thinkingTokens"), t("flint.thinkingOllama")];
+    let pi = 0;
+    thinkingLabel.textContent = phases[0];
+    const phaseIv = setInterval(() => {
+      pi = (pi + 1) % phases.length;
+      thinkingLabel.textContent = phases[pi];
+    }, 900);
+
+    setTimeout(() => {
+      clearInterval(phaseIv);
+      thinking.hidden = true;
+      flintTypeAnswer(answer, t("flint.stubReply"), () => {
+        flintRenderTrace(mode);
+        busy = false;
+        composer?.classList.remove("is-busy");
+        if(sendBtn) sendBtn.disabled = false;
+      });
+    }, 2600 + Math.min(text.length * 8, 1200));
+  };
+
+  if(chips && !chips._bound){
+    chips._bound = true;
+    chips.querySelectorAll(".flint-qwen__chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const mode = chip.dataset.flintMode;
+        if(mode === "waitlist"){ openWaitlist("flint"); return; }
+        activeChipMode = mode;
+        chips.querySelectorAll(".flint-qwen__chip").forEach(c => c.classList.toggle("is-on", c === chip));
+        const hints = FLINT_CHIP_PROMPTS[locale] || FLINT_CHIP_PROMPTS.en;
+        if(prompt && hints[mode]) prompt.value = hints[mode];
+        window.flokeSfx?.("click");
+      });
+    });
+  }
+  if(sendBtn && !sendBtn._bound){
+    sendBtn._bound = true;
+    sendBtn.addEventListener("click", send);
+  }
+  if(prompt && !prompt._bound){
+    prompt._bound = true;
+    prompt.addEventListener("keydown", e => {
+      if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); send(); }
+    });
+  }
+}
+
+function initStatusPage(){ /* page removed */ }
 
 function checkGiscusFallback(){
   const iframe = document.querySelector("iframe.giscus-frame");
@@ -6841,51 +8136,181 @@ function initGiscusFallbackForm(){
 }
 
 let shellOpen = false;
+let shellBooted = false;
+let shellHistory = [];
+let shellHistIdx = -1;
+
+function shellOutEl(){ return document.getElementById("flokeShellOut"); }
 function printShell(msg){
-  const out = document.getElementById("flokeShellOut");
-  if(out) out.textContent += "\n" + msg;
+  const out = shellOutEl();
+  if(!out) return;
+  out.textContent += (out.textContent ? "\n" : "") + msg;
+  out.scrollTop = out.scrollHeight;
 }
+function clearShellOut(){
+  const out = shellOutEl();
+  if(out) out.textContent = "";
+}
+
+function macLoginLine(){
+  const d = new Date();
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const pad = n => String(n).padStart(2, "0");
+  return `Last login: ${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} on ttys001`;
+}
+
+function bootFlokeShell(){
+  clearShellOut();
+  printShell(macLoginLine());
+  printShell("");
+  shellBooted = true;
+}
+
+const SHELL_MAN = {
+  help: "help — this list",
+  clear: "clear — wipe terminal buffer",
+  ls: "ls — list landing routes",
+  pwd: "pwd — you are on flokestudio.github.io/Floke",
+  whoami: "whoami — krwg @ floke studio",
+  date: "date — local time",
+  echo: "echo <text> — print line",
+  open: "open <app> — jump to #project/slug",
+  grep: "grep releases <app> — ⌘K with release filter",
+  theme: "theme dark|light|paper|pink — or cycle",
+  locale: "locale en|ru",
+  ambient: "ambient on|off|toggle",
+  routes: "routes — hash map",
+  graph: "graph — open studio graph",
+  play: "play — Echo mock on #engine",
+  flint: "flint — Flint stub page",
+  pixel: "pixel — 16×16 easter egg editor",
+  "cheat-code-echo": "cheat-code-echo — unlock Echo hangar (friends know)",
+  soundpack: "soundpack — copy ambient JSON",
+  version: "version — site + glyph build",
+  neofetch: "neofetch — floke ascii card",
+  man: "man <cmd> — one-line docs",
+  history: "history — recent commands",
+  exit: "exit — close window"
+};
+
 function runShellCmd(raw){
   const line = raw.trim();
   if(!line) return;
-  printShell("> " + line);
+  shellHistory.push(line);
+  shellHistIdx = shellHistory.length;
+  printShell("% " + line);
   const [cmd, ...rest] = line.split(/\s+/);
   const arg = rest.join(" ");
-  switch(cmd.toLowerCase()){
-    case "help": printShell(t("shell.help")); break;
+  const c = cmd.toLowerCase();
+  switch(c){
+    case "help":
+      printShell(t("shell.help"));
+      break;
+    case "clear":
+      clearShellOut();
+      break;
+    case "ls":
+      printShell("products  glyph  releases  engine  flint  about  graph  news");
+      printShell("compare  privacy  support  feedback  glyph/spec  project/*");
+      break;
+    case "pwd":
+      printShell("~/Floke (GitHub Pages · single-file landing)");
+      break;
+    case "whoami":
+      printShell("krwg — independent · offline-first · floke studio");
+      break;
+    case "date":
+      printShell(new Date().toString());
+      break;
+    case "echo":
+      printShell(arg || "");
+      break;
     case "open":
-      if(arg) location.hash = "#project/" + arg.toLowerCase();
-      else printShell("usage: open senza|cultiva|blip|flint|glyph");
-      closeFlokeShell();
+      if(["senza","cultiva","blip","flint","glyph","mnemo"].includes(arg.toLowerCase())){
+        location.hash = "#project/" + arg.toLowerCase();
+        closeFlokeShell();
+      } else if(arg === "flint"){ location.hash = "#flint"; closeFlokeShell(); }
+      else printShell("usage: open senza|cultiva|blip|flint|glyph|mnemo");
       break;
     case "grep":
-      if(line.includes("releases")) openCmdPalette(), setTimeout(() => {
-        document.getElementById("cmdInput").value = "type:release " + (rest.slice(1).join(" ") || "cultiva");
-        renderCmdList(document.getElementById("cmdInput").value);
-      }, 50);
-      else printShell("try: grep releases cultiva");
+      if(line.includes("releases")){
+        openCmdPalette();
+        setTimeout(() => {
+          document.getElementById("cmdInput").value = "type:release " + (rest.slice(1).join(" ") || "cultiva");
+          renderCmdList(document.getElementById("cmdInput").value);
+        }, 50);
+      } else printShell("try: grep releases cultiva");
       break;
     case "theme":
-      if(["dark","light","paper"].includes(arg)) { theme = arg; applyTheme(); }
-      else cycleTheme();
+      if(["dark","light","paper","pink"].includes(arg)){ theme = arg; applyTheme(); printShell("theme → " + theme); }
+      else { cycleTheme(); printShell("theme → " + theme); }
       break;
-    case "graph": location.hash = "#graph"; closeFlokeShell(); break;
-    case "play": location.hash = "#engine"; closeFlokeShell(); break;
-    case "pixel": openPixelEditor(); break;
-    case "soundpack": exportSoundPack(); break;
-    default: printShell("unknown — type help");
+    case "locale":
+    case "lang":
+      if(arg === "en" || arg === "ru"){ locale = arg; applyLocale(); loadReleases(); printShell("locale → " + locale); }
+      else printShell("locale en|ru · current: " + locale);
+      break;
+    case "ambient":
+      if(arg === "on"){ if(!ambientOn) toggleAmbient(); printShell("ambient on"); }
+      else if(arg === "off"){ if(ambientOn) toggleAmbient(); printShell("ambient off"); }
+      else { toggleAmbient(); printShell("ambient → " + (ambientOn ? "on" : "off")); }
+      break;
+    case "routes":
+      printShell("#products #glyph #releases #engine #flint #about #graph #news");
+      printShell("#compare #privacy #support #feedback #glyph/spec #project/<slug>");
+      break;
+    case "graph":
+      location.hash = "#graph"; closeFlokeShell(); break;
+    case "flint":
+      location.hash = "#flint"; closeFlokeShell(); break;
+    case "play":
+      location.hash = "#engine"; closeFlokeShell(); break;
+    case "pixel":
+      openPixelEditor(); break;
+    case "cheat-code-echo":
+      echoUnlockAllCheats();
+      printShell("echo hangar · all ships · upgrades max · tokens 9999");
+      break;
+    case "soundpack":
+      exportSoundPack(); printShell("sound preset copied to clipboard"); break;
+    case "version":
+      printShell("Floke landing · Glyph 2.2-On search · Echo mock · Flint Q3 2026");
+      break;
+    case "neofetch":
+      printShell("       _____ _                   ");
+      printShell("      |  ___| | ___  _ __ ___    ");
+      printShell("      | |_  | |/ _ \\| '__/ _ \\   ");
+      printShell("      |  _| | | (_) | | | (_) |  ");
+      printShell("      |_|   |_|\\___/|_|  \\___/   ");
+      printShell("  studio krwg · theme " + theme + " · lang " + locale);
+      printShell("  apps: senza cultiva blip · intel: glyph mnemo");
+      break;
+    case "man":
+      printShell(SHELL_MAN[arg] || "no manual entry — try: man help");
+      break;
+    case "history":
+      shellHistory.slice(-12).forEach((h, i) => printShell(String(i + 1).padStart(2) + "  " + h));
+      break;
+    case "exit":
+    case "quit":
+      closeFlokeShell(); break;
+    default:
+      printShell("zsh: command not found: " + cmd + " — type help");
   }
 }
 function openFlokeShell(){
   const el = document.getElementById("flokeShell");
   if(!el) return;
   shellOpen = true; el.hidden = false; el.classList.add("open");
+  if(!shellBooted) bootFlokeShell();
   document.getElementById("flokeShellInput")?.focus();
 }
 function closeFlokeShell(){
   shellOpen = false;
   document.getElementById("flokeShell")?.classList.remove("open");
-  document.getElementById("flokeShell").hidden = true;
+  const el = document.getElementById("flokeShell");
+  if(el) el.hidden = true;
 }
 function initFlokeShell(){
   document.getElementById("dockShell")?.addEventListener("click", () => shellOpen ? closeFlokeShell() : openFlokeShell());
@@ -6893,7 +8318,19 @@ function initFlokeShell(){
   const inp = document.getElementById("flokeShellInput");
   inp?.addEventListener("keydown", e => {
     if(e.key === "Escape") closeFlokeShell();
-    if(e.key === "Enter"){ runShellCmd(inp.value); inp.value = ""; }
+    if(e.key === "ArrowUp"){
+      e.preventDefault();
+      if(!shellHistory.length) return;
+      shellHistIdx = Math.max(0, shellHistIdx - 1);
+      inp.value = shellHistory[shellHistIdx] || "";
+    }
+    if(e.key === "ArrowDown"){
+      e.preventDefault();
+      shellHistIdx = Math.min(shellHistory.length, shellHistIdx + 1);
+      inp.value = shellHistIdx >= shellHistory.length ? "" : shellHistory[shellHistIdx];
+    }
+    if(e.key === "l" && e.ctrlKey){ e.preventDefault(); clearShellOut(); return; }
+    if(e.key === "Enter"){ runShellCmd(inp.value); inp.value = ""; shellHistIdx = shellHistory.length; }
   });
   document.getElementById("flokeShell")?.addEventListener("click", e => { if(e.target.id === "flokeShell") closeFlokeShell(); });
 }
@@ -6945,79 +8382,109 @@ function initPWA(){
   });
 }
 
-function initFlintMeter(){
-  const fill = document.getElementById("flintMeterFill");
-  if(!fill) return;
-  let p = 62;
-  setInterval(() => {
-    p = 58 + Math.sin(Date.now() / 900) * 8;
-    fill.style.width = p.toFixed(0) + "%";
-  }, 120);
-}
+function initFlintMeter(){ /* removed from landing */ }
 
 function dailySeed(){
   const d = new Date();
   return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
 }
 
-function openPixelEditor(){
-  const modal = document.getElementById("pixelEditorModal");
+function exportPixelPng(withFrame){
   const grid = document.getElementById("pixelGrid");
-  if(!modal || !grid || grid._built) {
-    modal?.classList.add("open");
-    modal?.setAttribute("aria-hidden", "false");
-    return;
+  const pixels = grid?._pixels;
+  if(!pixels) return;
+  const SCALE = 64;
+  const CELL = SCALE;
+  const ART = 16 * CELL;
+  const PAD = withFrame ? 96 : 0;
+  const W = ART + PAD * 2;
+  const H = ART + PAD * 2 + (withFrame ? 72 : 0);
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  if(withFrame){
+    const bg = x.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#0c0c10"); bg.addColorStop(1, "#141018");
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+    x.strokeStyle = "#c8a96e"; x.lineWidth = 3;
+    x.strokeRect(PAD - 12, PAD - 12, ART + 24, ART + 24 + 72);
+    x.strokeStyle = "rgba(200,169,110,0.35)"; x.lineWidth = 1;
+    x.strokeRect(PAD - 4, PAD - 4, ART + 8, ART + 8);
+  } else {
+    x.fillStyle = "#080808"; x.fillRect(0, 0, W, H);
   }
+  const ox = PAD, oy = PAD;
+  x.fillStyle = "#c8a96e";
+  pixels.forEach((on, i) => {
+    if(on) x.fillRect(ox + (i % 16) * CELL, oy + ((i / 16) | 0) * CELL, CELL, CELL);
+  });
+  if(withFrame){
+    x.fillStyle = "#c8a96e";
+    x.font = "700 28px system-ui,sans-serif";
+    x.textAlign = "center";
+    x.fillText("FLOKE", W / 2, oy + ART + 48);
+    x.font = "500 11px ui-monospace,monospace";
+    x.fillStyle = "rgba(200,169,110,0.55)";
+    x.fillText("flokestudio · 16×16 easter egg", W / 2, oy + ART + 68);
+  }
+  c.toBlob(b => {
+    const u = URL.createObjectURL(b);
+    const a = document.createElement("a");
+    a.href = u;
+    a.download = withFrame ? "floke-pixel-framed.png" : "floke-pixel-art.png";
+    a.click();
+    URL.revokeObjectURL(u);
+  });
+}
+
+function initPixelGrid(){
+  const grid = document.getElementById("pixelGrid");
+  const modal = document.getElementById("pixelEditorModal");
+  if(!grid || grid._built) return;
   grid._built = true;
-  const pixels = Array(256).fill(0);
-  grid.innerHTML = pixels.map((_, i) => `<button type="button" class="pixel-cell" data-i="${i}"></button>`).join("");
+  grid._pixels = Array(256).fill(0);
+  grid.innerHTML = grid._pixels.map((_, i) => `<button type="button" class="pixel-cell" data-i="${i}" aria-label="pixel ${i}"></button>`).join("");
   grid.querySelectorAll(".pixel-cell").forEach(cell => {
     cell.addEventListener("click", () => {
       const i = +cell.dataset.i;
-      pixels[i] = pixels[i] ? 0 : 1;
-      cell.classList.toggle("on", !!pixels[i]);
+      grid._pixels[i] = grid._pixels[i] ? 0 : 1;
+      cell.classList.toggle("on", !!grid._pixels[i]);
+      window.flokeSfx?.("click");
     });
   });
   document.getElementById("pixelClear")?.addEventListener("click", () => {
-    pixels.fill(0);
+    grid._pixels.fill(0);
     grid.querySelectorAll(".pixel-cell").forEach(c => c.classList.remove("on"));
   });
-  document.getElementById("pixelExport")?.addEventListener("click", () => {
-    const c = document.createElement("canvas");
-    c.width = c.height = 16;
-    const x = c.getContext("2d");
-    x.fillStyle = "#080808"; x.fillRect(0, 0, 16, 16);
-    x.fillStyle = "#c8a96e";
-    pixels.forEach((on, i) => { if(on) x.fillRect(i % 16, (i / 16) | 0, 1, 1); });
-    c.toBlob(b => {
-      const u = URL.createObjectURL(b);
-      const a = document.createElement("a");
-      a.href = u; a.download = "floke-pixel.png"; a.click();
-      URL.revokeObjectURL(u);
-    });
-  });
+  document.getElementById("pixelExport")?.addEventListener("click", () => exportPixelPng(false));
+  document.getElementById("pixelExportFrame")?.addEventListener("click", () => exportPixelPng(true));
   document.getElementById("pixelClose")?.addEventListener("click", () => {
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
+    modal?.classList.remove("open");
+    modal?.setAttribute("aria-hidden", "true");
   });
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
 }
 
-function initFootGeek(){
-  document.getElementById("footCopyLink")?.addEventListener("click", () => {
-    const url = location.href;
-    if(navigator.clipboard?.writeText){
-      navigator.clipboard.writeText(url).then(() => showFlokeToast(t("foot.copied"), location.pathname + location.hash, 2400));
-    } else {
-      showFlokeToast(t("foot.copied"), url, 2400);
-    }
-  });
-  document.getElementById("footViewSource")?.addEventListener("click", () => {
-    window.open("view-source:" + location.href, "_blank", "noopener");
-  });
-  document.getElementById("footSoundPack")?.addEventListener("click", exportSoundPack);
+function openPixelEditor(showPortrait){
+  const modal = document.getElementById("pixelEditorModal");
+  const grid = document.getElementById("pixelGrid");
+  const portraitBlock = document.getElementById("pixelPortraitBlock");
+  const portraitPreview = document.getElementById("pixelPortraitPreview");
+  if(!modal) return;
+  initPixelGrid();
+  if(portraitBlock) portraitBlock.hidden = false;
+  if(portraitPreview){
+    const draft = echoLoadPortraitDraft();
+    const active = echoLoadPortrait();
+    const px = draft?.pixels || active;
+    if(px) renderPortraitPreview(portraitPreview, px);
+  }
+  initEchoPortraitUi();
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  window.flokeSfx?.("nav");
 }
+
+function initFootGeek(){ /* footer geek bar removed */ }
 
 document.getElementById("themeBtn").addEventListener("click",()=>{ cycleTheme(); if(graphSim?.active) graphSim.refreshLabels(); });
 document.getElementById("btnEn").addEventListener("click",()=>{ locale="en"; applyLocale(); loadReleases(); });
@@ -7027,13 +8494,13 @@ document.getElementById("storeBack").addEventListener("click",e=>{e.preventDefau
 document.getElementById("engineBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
 document.getElementById("aboutBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
 document.getElementById("graphBack").addEventListener("click",e=>{e.preventDefault();location.hash="";});
-["compareBack","privacyBack","supportBack","glyphSpecBack","feedbackBack","flintBack","statusBack"].forEach(id => {
+["compareBack","privacyBack","supportBack","glyphSpecBack","feedbackBack","flintBack"].forEach(id => {
   document.getElementById(id)?.addEventListener("click", e => { e.preventDefault(); location.hash = ""; });
 });
 document.getElementById("errorHome")?.addEventListener("click", e => { e.preventDefault(); location.hash = ""; });
 document.getElementById("errorSearch")?.addEventListener("click", () => openCmdPalette());
-document.getElementById("flintWaitlistLanding")?.addEventListener("click", () => openWaitlist("flint"));
-document.getElementById("enginePixelBtn")?.addEventListener("click", openPixelEditor);
+document.getElementById("enginePixelBtn")?.addEventListener("click", () => openPixelEditor(false));
+document.getElementById("enginePortraitBtn")?.addEventListener("click", () => openPixelEditor(true));
 document.getElementById("newsBack").addEventListener("click",e=>{
   e.preventDefault();
   const h = location.hash || "";
@@ -7062,19 +8529,17 @@ initOriginTimeline();
 initReleaseCountdown();
 initFlokeSfx();
 initHeroMesh();
-initScrollStory();
 initCompareSlider();
 initFlokeShell();
 initGiscusFallbackForm();
 initPWA();
-initFlintMeter();
 loadSearchCorpus().then(applyOfflineCorpus);
 syncEngineTitleUI();
 loadReleases();
 routeHash();
 setTimeout(()=>{
   initReveal(document.querySelectorAll("#glyph .rv, #glyphSlides"));
-  initReveal(document.querySelectorAll("#products .rv, #release-rhythm .rv, #releases .rv, #origin .rv, #workspace .rv, #scroll-story .rv, #flint-landing, .ecosystem-finale .rv, #engine-preview .rv, .manifesto .rv"));
+  initReveal(document.querySelectorAll("#products .rv, #release-rhythm .rv, #releases .rv, #origin .rv, #workspace .rv, .ecosystem-finale .rv, #engine-preview .rv, .manifesto .rv"));
   initReveal(document.querySelectorAll("#newsListView .rv"));
 },120);
 </script>
