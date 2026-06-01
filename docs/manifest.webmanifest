@@ -1,11 +1,15 @@
 {
+  "id": "./index.html",
   "name": "Floke Studio",
   "short_name": "Floke",
-  "description": "Offline-first desktop apps, Glyph intelligence, and indie games.",
-  "start_url": "./index.html",
+  "description": "Offline-first desktop apps, Glyph intelligence, and Echo — a browser mini-game.",
+  "start_url": "./index.html#engine",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#080808",
-  "theme_color": "#080808",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "background_color": "#080810",
+  "theme_color": "#080810",
+  "orientation": "any",
   "icons": [
     {
       "src": "assets/icons/floke-studio.svg",
@@ -21,9 +25,10 @@
     }
   ],
   "shortcuts": [
+    { "name": "Echo", "short_name": "Echo", "url": "./index.html#engine", "description": "Play Echo mini-game" },
     { "name": "Senza", "url": "./index.html#project/senza", "description": "Music library" },
     { "name": "Cultiva", "url": "./index.html#project/cultiva", "description": "Habit tracker" },
-    { "name": "News", "url": "./index.html#news", "description": "Studio news" },
-    { "name": "Search", "url": "./index.html#products", "description": "Browse & ⌘K" }
-  ]
+    { "name": "News", "url": "./index.html#news", "description": "Studio news" }
+  ],
+  "categories": ["games", "entertainment", "productivity"]
 }

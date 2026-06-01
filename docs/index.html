@@ -1500,17 +1500,36 @@ footer{
 .engine-teaser-light{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .engine-teaser-light.r{background:#ff5f57}.engine-teaser-light.y{background:#febc2e}.engine-teaser-light.g{background:#28c840}
 .engine-teaser-bar-title{font-size:10px;letter-spacing:.06em;color:var(--muted);margin-left:auto;margin-right:auto}
-.engine-teaser-screen{position:relative;height:min(580px,64vw);background:#000;overflow:hidden;cursor:crosshair;min-height:400px}
-.engine-teaser-screen.is-menu{overflow:visible;min-height:440px;height:min(600px,66vw)}
-.engine-teaser-screen canvas{width:100%;height:100%;display:block}
+.engine-teaser-screen{
+  position:relative;height:min(640px,72vw);background:#080810;overflow:hidden;cursor:crosshair;min-height:480px;
+}
+.engine-teaser-screen.is-idle,
+.engine-teaser-screen.is-menu{
+  background-color:#080810;
+  background-image:url(assets/pixel_space/menu-bg.jpg);
+  background-size:cover;background-position:center center;background-repeat:no-repeat;
+  image-rendering:pixelated;
+}
+.engine-teaser-screen canvas{width:100%!important;height:100%!important;display:block;position:absolute;inset:0}
 .engine-teaser-wrap{position:relative}
 .engine-teaser-wrap.is-fullscreen{
-  position:fixed;inset:max(52px,8px) 8px 72px;z-index:10006;
+  position:fixed;inset:max(56px,10px) 10px max(84px,76px);z-index:10006;
   display:flex;flex-direction:column;border:2px solid var(--border);border-radius:6px;
   box-shadow:0 0 0 1px #000,0 24px 80px rgba(0,0,0,.65);background:var(--bg2);
-  max-width:1200px;margin:0 auto;left:0;right:0;
+  max-width:min(1200px,calc(100vw - 20px));margin:0 auto;left:0;right:0;
+  max-height:calc(100dvh - max(56px,10px) - max(84px,76px));
 }
-.engine-teaser-wrap.is-fullscreen .engine-teaser-screen{flex:1;height:auto;min-height:min(78vh,820px)}
+.engine-teaser-wrap.is-fullscreen.is-native-fs,
+.engine-teaser-wrap.is-fullscreen:fullscreen,
+.engine-teaser-wrap.is-fullscreen:-webkit-full-screen{
+  inset:0!important;max-width:none!important;max-height:none!important;width:100vw!important;height:100dvh!important;
+  border-radius:0;border:none;box-shadow:none;
+}
+.engine-teaser-wrap.is-fullscreen.is-native-fs .engine-teaser-screen{min-height:0!important}
+.engine-teaser-wrap.is-fullscreen .engine-teaser{
+  flex:1;display:flex;flex-direction:column;min-height:0;margin-top:0!important;
+}
+.engine-teaser-wrap.is-fullscreen .engine-teaser-screen{flex:1;height:auto;min-height:min(72vh,760px)}
 .echo-fs-backdrop{
   position:fixed;inset:0;z-index:10005;background:rgba(0,0,0,.72);opacity:0;pointer-events:none;transition:opacity .25s;
 }
@@ -1521,7 +1540,8 @@ footer{
 .engine-teaser-overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:14px;transition:opacity .4s;text-align:center;padding:20px;z-index:4;
-  background:rgba(4,4,10,.55);pointer-events:auto;cursor:pointer;
+  background:linear-gradient(180deg,rgba(4,4,10,.72),rgba(4,4,10,.48));pointer-events:auto;cursor:pointer;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
 }
 .engine-teaser-overlay.hidden{opacity:0;pointer-events:none}
 .engine-teaser-hint{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);animation:pulse 2s ease-in-out infinite;max-width:28ch;line-height:1.6}
@@ -1536,7 +1556,7 @@ footer{
 }
 .engine-teaser-score{
   position:absolute;top:14px;right:16px;font-size:11px;color:var(--accent);letter-spacing:.08em;
-  opacity:0;transition:opacity .3s;
+  opacity:0;transition:opacity .3s;z-index:5;
 }
 .engine-teaser-score.visible{opacity:1}
 .engine-teaser-foot{
@@ -1735,78 +1755,205 @@ footer{
   text-shadow:1px 1px 0 var(--bg4),2px 2px 0 rgba(0,0,0,.35);
 }
 .echo-tabbar-meta{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;
-  font-size:9px;color:var(--muted2);letter-spacing:.04em;font-family:ui-monospace,monospace;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;
+  font-size:9px;color:var(--text);letter-spacing:.04em;font-family:ui-monospace,monospace;
+}
+.echo-tabbar-stat,.echo-tool{
+  padding:3px 7px;border-radius:4px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);
+  color:var(--muted);white-space:nowrap;font-size:8px;letter-spacing:.04em;
+  font-family:ui-monospace,monospace;
+}
+.echo-tool{
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:border-color .15s,color .15s,background .15s;
+  appearance:none;-webkit-appearance:none;
+}
+.echo-tool:hover{border-color:rgba(200,169,110,.45);color:var(--accent);background:rgba(0,0,0,.45)}
+.echo-tool:active{opacity:.88}
+.echo-tool__label{font-size:inherit;letter-spacing:inherit;text-transform:none;line-height:1.2}
+@media (max-width:900px){
+  .echo-tabbar{
+    grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:8px;padding:8px 10px;
+  }
+  .echo-tabbar-title{grid-column:1/-1;justify-self:center;font-size:10px}
+  .echo-tabbar-meta{
+    grid-column:1/-1;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px;padding-bottom:2px;
+  }
+  .echo-tabbar-meta::-webkit-scrollbar{display:none}
+  .echo-tabbar-stat,.echo-tool{font-size:7px;padding:2px 6px;flex-shrink:0}
+  .engine-teaser-screen{height:min(520px,88vw);min-height:min(380px,58vh)}
 }
 .echo-screen{background:#080810;image-rendering:pixelated;image-rendering:crisp-edges;position:relative}
 .echo-screen canvas{image-rendering:pixelated;image-rendering:crisp-edges}
 .echo-menu{
-  position:absolute;inset:0;z-index:10;display:flex;align-items:flex-start;justify-content:center;padding:10px 8px;
-  image-rendering:pixelated;pointer-events:auto;overflow-y:auto;
+  position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;
+  image-rendering:pixelated;pointer-events:auto;overflow:hidden;
 }
 .echo-menu[hidden]{display:none!important}
 .echo-menu__frame{
-  position:relative;width:min(380px,100%);margin-top:4px;
-  border:3px solid #2a2a38;outline:2px solid #0a0a12;box-shadow:inset 0 0 0 2px #4a4a58,4px 4px 0 rgba(0,0,0,.45);
-  background:#0c0c14;font-family:"Courier New",ui-monospace,monospace;
+  position:absolute;inset:0;margin:0;border:none;outline:none;box-shadow:none;border-radius:0;
+  background:transparent;font-family:"Courier New",ui-monospace,monospace;overflow:hidden;
 }
+.echo-menu__panel{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px;box-sizing:border-box;overflow:hidden;text-align:center;
+  background:transparent;
+}
+.echo-menu__panel[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.echo-menu__card{
+  width:min(340px,92vw);max-height:none;overflow:visible;
+  padding:22px 20px 18px;
+  background:rgba(6,6,14,.58);border:2px solid rgba(255,255,255,.16);
+  border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.echo-menu__panel--main .echo-menu__card{width:min(360px,94vw)}
+.echo-menu__panel--main .echo-menu__nav{gap:10px;margin-top:14px}
+.echo-menu__panel--main .echo-pbtn{font-size:11px;padding:14px 18px;min-height:46px;line-height:1.35}
+.echo-menu__stack{
+  width:100%;display:flex;flex-direction:column;align-items:stretch;
+}
+.echo-menu__panel--main{justify-content:center;padding-bottom:6vh}
+.echo-menu__panel--arcade,.echo-menu__panel--saves,.echo-menu__panel--about,.echo-menu__panel--music{
+  justify-content:center;padding-bottom:5vh;
+}
+.echo-menu__nav{display:grid;gap:8px;margin-top:10px;width:100%}
+.echo-pbtn{
+  font-family:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:11px 14px;min-height:40px;
+  border:2px solid #4a4a58;background:linear-gradient(180deg,rgba(36,36,50,.92) 0%,rgba(18,18,26,.88) 100%);color:#ececf4;
+  cursor:pointer;box-shadow:0 3px 0 rgba(8,8,16,.8);transition:transform .08s,filter .12s,border-color .12s;
+  width:100%;box-sizing:border-box;pointer-events:auto;
+}
+.echo-pbtn:hover{filter:brightness(1.15);border-color:rgba(200,169,110,.55);color:var(--accent)}
+.echo-pbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #080810}
+.echo-pbtn.is-sel,.echo-pbtn--start{border-color:var(--accent);color:var(--accent);box-shadow:0 3px 0 #1a1008,0 0 10px rgba(200,169,110,.22)}
+.echo-pbtn--back{font-size:9px;padding:6px 10px;margin-bottom:8px;opacity:.9;width:auto;align-self:flex-start}
+.echo-pbtn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+.echo-menu__panel--hangar{
+  justify-content:flex-end;align-items:stretch;padding:0;background:transparent;
+}
+.echo-hangar-back{
+  position:absolute;top:10px;left:10px;z-index:6;width:auto!important;padding:6px 12px!important;
+}
+.echo-hangar-view{
+  flex:1;display:flex;align-items:center;justify-content:center;min-height:0;
+  padding:48px 16px 8px;background:transparent;
+}
+.echo-hangar-ship-stage{text-align:center}
+.echo-hangar-canvas-wrap{
+  display:inline-block;border:2px solid rgba(255,255,255,.28);background:rgba(0,0,0,.18);
+  padding:12px;border-radius:8px;image-rendering:pixelated;
+}
+.echo-hangar-canvas-wrap canvas{width:160px;height:120px;display:block;image-rendering:pixelated}
+.echo-hangar-modules{
+  display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap;
+}
+.echo-mod{
+  width:52px;height:52px;border:2px solid rgba(255,255,255,.22);background:rgba(0,0,0,.28);
+  display:grid;place-items:center;color:#889;border-radius:8px;position:relative;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.echo-mod svg{width:24px;height:24px;display:block}
+.echo-mod.is-on{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,.12);box-shadow:0 0 12px rgba(200,169,110,.28)}
+.echo-mod__lv{position:absolute;bottom:3px;right:5px;font-size:7px;letter-spacing:.04em;color:inherit;opacity:.85}
+.echo-hangar-sheet{
+  flex-shrink:0;padding:14px 16px max(16px,env(safe-area-inset-bottom));
+  background:rgba(6,6,14,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-top:1px solid rgba(255,255,255,.16);opacity:1;visibility:visible;
+}
+.echo-hangar-tabs{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
+.echo-hangar-tab{
+  font-family:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;min-height:44px;
+  border:2px solid rgba(255,255,255,.22);background:rgba(0,0,0,.35);color:#c8c8d4;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.echo-hangar-tab svg{width:16px;height:16px;flex-shrink:0;display:block}
+.echo-hangar-tab.is-on{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,.14)}
+.echo-hangar-carousel-wrap{display:flex;align-items:center;gap:10px}
+.echo-hangar-carousel__nav{
+  flex-shrink:0;width:44px;height:44px;border:2px solid rgba(255,255,255,.22);background:rgba(0,0,0,.4);
+  color:var(--text);border-radius:8px;cursor:pointer;padding:0;display:grid;place-items:center;
+  opacity:1;visibility:visible;
+}
+.echo-hangar-carousel__nav svg{width:18px;height:18px;display:block}
+.echo-hangar-carousel__nav:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,.1)}
+.echo-hangar-carousel{
+  flex:1;display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:thin;min-height:46px;align-items:center;
+}
+.echo-hangar-carousel .echo-pbtn{
+  flex:0 0 auto;width:auto;min-width:112px;max-width:148px;padding:11px 12px;font-size:9px;min-height:42px;
+  scroll-snap-align:center;white-space:nowrap;
+}
+.echo-install-toast{
+  position:absolute;bottom:72px;left:50%;transform:translateX(-50%);z-index:12;
+  padding:8px 14px;border-radius:8px;background:rgba(6,6,14,.92);border:1px solid var(--accent);
+  font-size:9px;color:var(--text);white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+.echo-install-toast[hidden]{display:none!important}
 .echo-menu__bg{
-  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
-  image-rendering:pixelated;filter:contrast(1.1) saturate(.85);
+  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block;
+  image-rendering:pixelated;filter:contrast(1.08) saturate(.9);
 }
 .echo-menu__bg img{
-  width:100%;height:100%;object-fit:cover;opacity:.28;
+  width:100%;height:100%;object-fit:cover;object-position:center;opacity:.46;
   image-rendering:pixelated;
 }
 .echo-menu__scanlines{
-  position:absolute;inset:0;pointer-events:none;opacity:.12;
+  position:absolute;inset:0;pointer-events:none;opacity:.1;z-index:1;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.35) 2px,rgba(0,0,0,.35) 4px);
 }
-.echo-menu__panel{
-  position:relative;z-index:2;padding:14px 14px 12px;text-align:center;
+.echo-menu__logo-pixel{display:block;margin:0 auto 14px;image-rendering:pixelated}
+.echo-menu__logo-pixel svg{display:block;width:min(200px,72vw);height:auto;margin:0 auto;filter:drop-shadow(0 2px 0 rgba(0,0,0,.85)) drop-shadow(0 0 12px rgba(140,200,255,.25))}
+.echo-menu__logo{font-size:18px;letter-spacing:.32em;color:#e8e8f0;text-shadow:0 0 12px rgba(0,0,0,.85),2px 2px 0 #000;margin-bottom:4px}
+.echo-menu__panel--main .echo-menu__logo{display:none}
+.echo-menu__tag{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#c8c8d8;margin-bottom:6px;line-height:1.5;text-shadow:0 0 8px rgba(0,0,0,.9)}
+.echo-menu__meta{font-size:8px;color:#c8a96e;margin-bottom:8px;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,0,0,.9)}
+.echo-menu__row .echo-pbtn{flex:1;min-width:68px}
+.echo-touch{
+  position:absolute;inset:0;z-index:8;pointer-events:none;display:none;
 }
-.echo-menu__panel[hidden]{display:none!important}
-.echo-menu__nav{display:grid;gap:5px;margin-top:6px}
-.echo-pbtn{
-  font-family:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 10px;
-  border:2px solid #3a3a48;background:linear-gradient(180deg,#222230 0%,#14141c 100%);color:#e0e0ea;
-  cursor:pointer;box-shadow:0 3px 0 #080810,0 0 0 1px #000;transition:transform .08s,filter .12s;
-  width:100%;pointer-events:auto;
+.engine-teaser-screen.is-playing .echo-touch.is-on{display:block}
+.echo-touch-grid{
+  position:absolute;inset:0;pointer-events:none;
 }
-.echo-pbtn:hover{filter:brightness(1.12);color:var(--accent)}
-.echo-pbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #080810}
-.echo-pbtn.is-sel,.echo-pbtn--start{border-color:var(--accent);color:var(--accent);box-shadow:0 3px 0 #1a1008,0 0 8px rgba(200,169,110,.25)}
-.echo-pbtn--back{font-size:9px;padding:6px 10px;margin-bottom:10px;opacity:.85}
-.echo-pbtn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
-.echo-menu__logo{font-size:16px;letter-spacing:.28em;color:#e8e8f0;text-shadow:2px 2px 0 #000;margin-bottom:4px}
-.echo-menu__tag{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#8888a0;margin-bottom:6px;line-height:1.5}
-.echo-menu__meta{font-size:8px;color:#c8a96e;margin-bottom:8px;letter-spacing:.06em}
-.echo-menu__row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
-.echo-menu__row .echo-pbtn{flex:1;min-width:72px}
-.echo-menu__copy{font-size:9px;line-height:1.7;color:#a0a0b0;text-align:left;margin:8px 0}
-.echo-hangar-preview{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;margin:10px 0;text-align:left;
+.echo-touch-btn{
+  position:absolute;pointer-events:auto;width:min(14vw,56px);height:min(14vw,56px);min-width:44px;min-height:44px;
+  border:2px solid rgba(255,255,255,.28);background:rgba(8,8,16,.42);color:rgba(255,255,255,.88);
+  border-radius:8px;font-size:16px;line-height:1;cursor:pointer;touch-action:none;user-select:none;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
 }
-.echo-hangar-canvas-wrap{
-  border:2px solid #333;background:#06060c;padding:6px;image-rendering:pixelated;
+.echo-touch-btn:active{background:rgba(200,169,110,.25);border-color:var(--accent)}
+.echo-touch-btn--up{left:12%;bottom:28%}
+.echo-touch-btn--down{left:12%;bottom:8%}
+.echo-touch-btn--left{left:4%;bottom:18%}
+.echo-touch-btn--right{left:20%;bottom:18%}
+.echo-touch-btn--pause{right:6%;bottom:8%;font-size:11px;letter-spacing:.06em}
+.echo-touch-btn--fire{right:6%;bottom:28%;font-size:18px}
+.pixel-editor-modal--portrait .pixel-editor-card{grid-template-columns:1fr;max-width:420px}
+.pixel-editor-modal--portrait .pixel-editor-side{border-top:1px solid var(--border)}
+.pixel-editor-modal--portrait .pixel-editor-side .pixel-editor-sub{display:none}
+.pixel-editor-modal--portrait .pixel-editor-main .pixel-editor-actions{margin-top:12px}
+.echo-audio-sliders{
+  width:100%;display:grid;gap:10px;margin:10px 0 12px;text-align:left;
 }
-.echo-hangar-canvas-wrap canvas{width:100%;height:auto;display:block;image-rendering:pixelated}
-.echo-hangar-modules{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0}
-.echo-mod{
-  aspect-ratio:1;border:2px solid #333;background:#101018;display:grid;place-items:center;font-size:7px;
-  color:#666;position:relative;
-}
-.echo-mod.is-on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 6px rgba(200,169,110,.35)}
-.echo-mod__lv{position:absolute;bottom:2px;right:3px;font-size:6px}
-.echo-hangar-ships,.echo-hangar-ups{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0}
-.echo-hangar-ships .echo-pbtn,.echo-hangar-ups .echo-pbtn{min-width:64px;padding:7px 8px;font-size:8px}
+.echo-audio-row{display:grid;grid-template-columns:72px 1fr 34px;gap:8px;align-items:center;font-size:8px;color:#b0b0c0}
+.echo-audio-row input[type=range]{width:100%;accent-color:var(--accent)}
+.echo-audio-row span:last-child{text-align:right;color:var(--accent);font-variant-numeric:tabular-nums}
+.echo-menu__copy{font-size:9px;line-height:1.7;color:#d0d0dc;text-align:left;margin:8px 0;text-shadow:0 0 10px rgba(0,0,0,.85)}
+.echo-menu__row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0;width:100%}
 .echo-save-row{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.echo-music-list{display:grid;gap:4px;margin:8px 0;max-height:140px;overflow:auto;text-align:left}
+.echo-music-list{display:grid;gap:4px;margin:8px 0;max-height:168px;overflow:auto;text-align:left;width:100%}
 .echo-music-item{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;
-  border:1px solid #333;font-size:8px;color:#aaa;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;
+  border:1px solid rgba(255,255,255,.14);font-size:8px;color:#ccc;width:100%;
+  background:rgba(0,0,0,.35);cursor:pointer;font-family:inherit;text-align:left;
+  transition:border-color .15s,background .15s;
 }
-.echo-music-item.is-now{border-color:var(--accent);color:var(--accent)}
+.echo-music-item:hover{border-color:rgba(200,169,110,.45);background:rgba(0,0,0,.5)}
+.echo-music-item.is-now{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,.12)}
 .echo-tutor{
   position:absolute;left:10px;bottom:10px;z-index:6;max-width:220px;padding:10px 12px;
   background:rgba(0,0,0,.72);border:1px solid var(--border);border-radius:8px;
@@ -1868,7 +2015,7 @@ footer{
 }
 .compare-card.is-dim{opacity:.45}
 .compare-card.is-active{border-color:var(--accent);color:var(--text)}
-.compare-card-icon{font-size:18px;margin-bottom:8px}
+.compare-card-icon{display:none}
 .privacy-contract{margin:20px 0}
 .privacy-contract-bar{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px}
 .privacy-contract-fill{height:100%;width:0;background:var(--accent2);transition:width .15s}
@@ -1891,6 +2038,10 @@ footer{
   background:rgba(0,0,0,.75);opacity:0;pointer-events:none;transition:opacity .2s;
 }
 .pixel-editor-modal.open{opacity:1;pointer-events:auto}
+.pixel-editor-modal--portrait .pixel-art-col{display:none!important}
+.pixel-editor-modal--portrait .pixel-only-side{display:none!important}
+.pixel-editor-modal--pixel .pixel-portrait-block{display:none!important}
+.pixel-editor-modal--pixel .portrait-only-side{display:none!important}
 .pixel-editor-card{
   width:min(960px,96vw);aspect-ratio:18/9;max-height:min(88vh,540px);
   border:2px solid var(--border);background:var(--bg2);border-radius:8px;padding:0;
@@ -2380,18 +2531,29 @@ footer{
       <div class="echo-tabbar-lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
       <span class="echo-tabbar-title" data-k="engine.game.name">Echo</span>
       <div class="echo-tabbar-meta">
-        <span id="arcadeBiome">biome —</span>
-        <span id="arcadeDailySeed">seed —</span>
-        <span id="arcadeHiScore">hi 0</span>
-        <span id="arcadeStreak" class="echo-streak-badge" hidden title="Echo streak"></span>
-        <span id="gamepadBadge" class="gamepad-badge" hidden>
+        <span class="echo-tabbar-stat" id="arcadeBiome">biome —</span>
+        <span class="echo-tabbar-stat" id="arcadeDailySeed">seed —</span>
+        <span class="echo-tabbar-stat" id="arcadeHiScore">hi 0</span>
+        <span id="arcadeStreak" class="echo-streak-badge echo-tabbar-stat" hidden title="Echo streak"></span>
+        <span id="gamepadBadge" class="gamepad-badge echo-tabbar-stat" hidden>
           <svg class="echo-icon-gamepad" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="5" width="12" height="7" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="5.5" cy="8.5" r="1" fill="currentColor"/><circle cx="8" cy="8.5" r="1" fill="currentColor"/><rect x="10.5" y="7.5" width="1.5" height="2" rx=".3" fill="currentColor"/></svg>
           <span data-k="engine.gamepad.on">pad</span>
         </span>
-        <button type="button" class="graph-tool" id="engineExportScore" data-k="engine.exportScore">Export</button>
-        <button type="button" class="graph-tool" id="enginePortraitBtn" data-k="engine.portrait">8×8 pilot</button>
-        <button type="button" class="graph-tool" id="enginePixelBtn" data-k="engine.pixel">16×16</button>
-        <button type="button" class="graph-tool" id="engineFullscreenBtn" data-k="engine.teaser.fullscreen">Fullscreen</button>
+        <button type="button" class="echo-tool" id="engineExportScore" title="Export replay">
+          <span class="echo-tool__label" data-k="engine.exportScore">Export</span>
+        </button>
+        <button type="button" class="echo-tool" id="enginePortraitBtn" title="8×8 pilot">
+          <span class="echo-tool__label" data-k="engine.portrait">8×8</span>
+        </button>
+        <button type="button" class="echo-tool" id="enginePixelBtn" title="16×16">
+          <span class="echo-tool__label" data-k="engine.pixel">16×16</span>
+        </button>
+        <button type="button" class="echo-tool" id="engineFullscreenBtn" title="Fullscreen">
+          <span class="echo-tool__label" data-k="engine.teaser.fullscreen">Full</span>
+        </button>
+        <button type="button" class="echo-tool" id="echoInstallBtn" hidden title="Install Echo">
+          <span class="echo-tool__label" data-k="pwa.install">Install</span>
+        </button>
       </div>
     </div>
     <div class="engine-teaser-screen echo-screen is-idle" id="engineTeaserScreen">
@@ -2404,60 +2566,112 @@ footer{
             <img src="assets/pixel_space/menu-bg.jpg" alt="" width="420" height="280" decoding="async">
           </picture>
           <div class="echo-menu__scanlines"></div>
-          <div class="echo-menu__panel is-active" id="echoPanelMain" data-echo-panel="main">
-            <div class="echo-menu__logo">ECHO</div>
-            <div class="echo-menu__tag" data-k="engine.teaser.hint">Мини-демо · не настоящий тайтл</div>
-            <div class="echo-menu__meta" id="echoMenuMeta">tokens 0 · ship scout</div>
-            <nav class="echo-menu__nav">
-              <button type="button" class="echo-pbtn" data-echo-nav="arcade" data-k="echo.menu.arcade">Arcade</button>
-              <button type="button" class="echo-pbtn" data-echo-nav="adventure" data-k="echo.menu.adventure">Adventure</button>
-              <button type="button" class="echo-pbtn" data-echo-nav="hangar" data-k="echo.menu.hangar">Hangar</button>
-              <button type="button" class="echo-pbtn" data-echo-nav="saves" data-k="echo.menu.saves">Saves</button>
-              <button type="button" class="echo-pbtn" data-echo-nav="about" data-k="echo.menu.about">About</button>
-              <button type="button" class="echo-pbtn" data-echo-nav="music" data-k="echo.menu.music">Music</button>
-            </nav>
-          </div>
-          <div class="echo-menu__panel" id="echoPanelArcade" data-echo-panel="arcade" hidden>
-            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
-            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.arcade">Arcade</div>
-            <div class="echo-menu__row">
-              <button type="button" class="echo-pbtn" data-echo-diff="easy" data-k="echo.diff.easy">Easy</button>
-              <button type="button" class="echo-pbtn is-sel" data-echo-diff="normal" data-k="echo.diff.normal">Normal</button>
-              <button type="button" class="echo-pbtn" data-echo-diff="hard" data-k="echo.diff.hard">Hard</button>
-            </div>
-            <button type="button" class="echo-pbtn echo-pbtn--start" id="echoArcadeStart" data-k="echo.menu.launch">Launch</button>
-          </div>
-          <div class="echo-menu__panel" id="echoPanelHangar" data-echo-panel="hangar" hidden>
-            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
-            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.hangar">Hangar</div>
-            <div class="echo-hangar-preview">
-              <div class="echo-hangar-canvas-wrap"><canvas id="echoHangarCanvas" width="96" height="64"></canvas></div>
-              <div class="echo-hangar-modules" id="echoHangarModules"></div>
-            </div>
-            <div class="echo-hangar-ships" id="echoHangarShips"></div>
-            <div class="echo-hangar-ups" id="echoHangarUps"></div>
-          </div>
-          <div class="echo-menu__panel" id="echoPanelSaves" data-echo-panel="saves" hidden>
-            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
-            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.saves">Saves</div>
-            <div class="echo-menu__copy" id="echoSavesCopy">—</div>
-            <div class="echo-save-row">
-              <button type="button" class="echo-pbtn" id="echoSaveContinue" data-k="echo.saves.continue">Continue daily</button>
-              <button type="button" class="echo-pbtn" id="echoSaveReset" data-k="echo.saves.reset">Reset all</button>
+          <div class="echo-menu__panel echo-menu__panel--main is-active" id="echoPanelMain" data-echo-panel="main">
+            <div class="echo-menu__card">
+              <div class="echo-menu__stack">
+                <div class="echo-menu__logo-pixel" aria-hidden="true">
+                  <svg viewBox="0 0 56 16" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="#e8e8f0" x="0" y="0" width="10" height="2"/><rect fill="#e8e8f0" x="0" y="2" width="2" height="12"/><rect fill="#e8e8f0" x="0" y="6" width="10" height="2"/><rect fill="#e8e8f0" x="0" y="12" width="10" height="2"/>
+                    <rect fill="#c8a96e" x="16" y="0" width="8" height="2"/><rect fill="#c8a96e" x="14" y="2" width="2" height="12"/><rect fill="#c8a96e" x="16" y="12" width="8" height="2"/>
+                    <rect fill="#8cf" x="28" y="0" width="2" height="14"/><rect fill="#8cf" x="36" y="0" width="2" height="14"/><rect fill="#8cf" x="28" y="6" width="10" height="2"/>
+                    <rect fill="#e8e8f0" x="44" y="0" width="6" height="2"/><rect fill="#e8e8f0" x="42" y="2" width="2" height="12"/><rect fill="#e8e8f0" x="50" y="2" width="2" height="12"/><rect fill="#e8e8f0" x="44" y="12" width="6" height="2"/>
+                  </svg>
+                </div>
+                <div class="echo-menu__logo">ECHO</div>
+                <div class="echo-menu__tag" data-k="engine.teaser.hint">Мини-демо · не настоящий тайтл</div>
+                <div class="echo-menu__meta" id="echoMenuMeta">tokens 0 · ship scout</div>
+                <nav class="echo-menu__nav">
+                  <button type="button" class="echo-pbtn" data-echo-nav="arcade" data-k="echo.menu.arcade">Arcade</button>
+                  <button type="button" class="echo-pbtn" data-echo-nav="adventure" data-k="echo.menu.adventure">Adventure</button>
+                  <button type="button" class="echo-pbtn" data-echo-nav="hangar" data-k="echo.menu.hangar">Hangar</button>
+                  <button type="button" class="echo-pbtn" data-echo-nav="saves" data-k="echo.menu.saves">Saves</button>
+                  <button type="button" class="echo-pbtn" data-echo-nav="about" data-k="echo.menu.about">About</button>
+                  <button type="button" class="echo-pbtn" data-echo-nav="music" data-k="echo.menu.music">Music</button>
+                </nav>
+              </div>
             </div>
           </div>
-          <div class="echo-menu__panel" id="echoPanelAbout" data-echo-panel="about" hidden>
-            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
-            <div class="echo-menu__logo" style="font-size:12px">Echo</div>
-            <div class="echo-menu__copy" data-k="echo.about.body">Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.</div>
-          </div>
-          <div class="echo-menu__panel" id="echoPanelMusic" data-echo-panel="music" hidden>
-            <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
-            <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.music">Music</div>
-            <div class="echo-menu__row">
-              <button type="button" class="echo-pbtn is-sel" id="echoMusicToggle" data-k="echo.music.on">On</button>
+          <div class="echo-menu__panel echo-menu__panel--arcade" id="echoPanelArcade" data-echo-panel="arcade" hidden>
+            <div class="echo-menu__card">
+              <div class="echo-menu__stack">
+                <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+                <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.arcade">Arcade</div>
+                <div class="echo-menu__row">
+                  <button type="button" class="echo-pbtn" data-echo-diff="easy" data-k="echo.diff.easy">Easy</button>
+                  <button type="button" class="echo-pbtn is-sel" data-echo-diff="normal" data-k="echo.diff.normal">Normal</button>
+                  <button type="button" class="echo-pbtn" data-echo-diff="hard" data-k="echo.diff.hard">Hard</button>
+                </div>
+                <button type="button" class="echo-pbtn echo-pbtn--start" id="echoArcadeStart" data-k="echo.menu.launch">Launch</button>
+              </div>
             </div>
-            <div class="echo-music-list" id="echoMusicList"></div>
+          </div>
+          <div class="echo-menu__panel echo-menu__panel--hangar" id="echoPanelHangar" data-echo-panel="hangar" hidden>
+            <button type="button" class="echo-pbtn echo-pbtn--back echo-hangar-back" data-echo-back data-k="echo.menu.back">Back</button>
+            <div class="echo-hangar-view">
+              <div class="echo-hangar-ship-stage">
+                <div class="echo-hangar-canvas-wrap"><canvas id="echoHangarCanvas" width="128" height="96"></canvas></div>
+                <div class="echo-hangar-modules" id="echoHangarModules"></div>
+              </div>
+            </div>
+            <div class="echo-hangar-sheet">
+              <div class="echo-hangar-tabs">
+                <button type="button" class="echo-hangar-tab is-on" data-hangar-tab="ships">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M8 2L3 12h10L8 2z"/><path fill="currentColor" d="M7 8h2v3H7z"/></svg>
+                  <span data-k="echo.hangar.ships">Ships</span>
+                </button>
+                <button type="button" class="echo-hangar-tab" data-hangar-tab="mods">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M3 8l2-2 2 2-2 2-2-2zm6 0l2-2 2 2-2 2-2-2z"/><circle fill="currentColor" cx="8" cy="8" r="1.2"/></svg>
+                  <span data-k="echo.hangar.ups">Mods</span>
+                </button>
+              </div>
+              <div class="echo-hangar-carousel-wrap">
+                <button type="button" class="echo-hangar-carousel__nav" data-hangar-scroll="-1" aria-label="Prev">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M10 3L5 8l5 5"/></svg>
+                </button>
+                <div class="echo-hangar-carousel" id="echoHangarCarousel"></div>
+                <button type="button" class="echo-hangar-carousel__nav" data-hangar-scroll="1" aria-label="Next">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6 3l5 5-5 5"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="echo-menu__panel echo-menu__panel--saves" id="echoPanelSaves" data-echo-panel="saves" hidden>
+            <div class="echo-menu__card">
+              <div class="echo-menu__stack">
+                <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+                <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.saves">Saves</div>
+                <div class="echo-menu__copy" id="echoSavesCopy">—</div>
+                <div class="echo-save-row">
+                  <button type="button" class="echo-pbtn" id="echoSaveContinue" data-k="echo.saves.continue">Continue daily</button>
+                  <button type="button" class="echo-pbtn" id="echoSaveReset" data-k="echo.saves.reset">Reset all</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="echo-menu__panel echo-menu__panel--about" id="echoPanelAbout" data-echo-panel="about" hidden>
+            <div class="echo-menu__card">
+              <div class="echo-menu__stack">
+                <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+                <div class="echo-menu__logo" style="font-size:12px">Echo</div>
+                <div class="echo-menu__copy" data-k="echo.about.body">Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.</div>
+              </div>
+            </div>
+          </div>
+          <div class="echo-menu__panel echo-menu__panel--music" id="echoPanelMusic" data-echo-panel="music" hidden>
+            <div class="echo-menu__card">
+              <div class="echo-menu__stack">
+                <button type="button" class="echo-pbtn echo-pbtn--back" data-echo-back data-k="echo.menu.back">Back</button>
+                <div class="echo-menu__logo" style="font-size:12px" data-k="echo.menu.music">Music</div>
+                <div class="echo-menu__row">
+                  <button type="button" class="echo-pbtn is-sel" id="echoMusicToggle" data-k="echo.music.on">On</button>
+                </div>
+                <div class="echo-audio-sliders">
+                  <label class="echo-audio-row"><span data-k="echo.audio.music">Music</span><input type="range" id="echoMusicVol" min="0" max="100" value="85"><span id="echoMusicVolVal">85</span></label>
+                  <label class="echo-audio-row"><span data-k="echo.audio.sfx">SFX</span><input type="range" id="echoSfxVol" min="0" max="100" value="85"><span id="echoSfxVolVal">85</span></label>
+                </div>
+                <div class="echo-music-list" id="echoMusicList"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2472,6 +2686,16 @@ footer{
         <div class="engine-teaser-hint" data-k="engine.teaser.hint">Мини-демо · не настоящий тайтл</div>
         <div class="engine-teaser-hint echo-splash-cta" data-k="echo.splash.tap">click to open</div>
         <div class="engine-teaser-hint" id="echoDailyBiomes" style="animation:none;font-size:9px;opacity:.7"></div>
+      </div>
+      <div class="echo-touch" id="echoTouch" aria-hidden="true">
+        <div class="echo-touch-grid">
+          <button type="button" class="echo-touch-btn echo-touch-btn--up" data-touch="w" aria-label="Up">▲</button>
+          <button type="button" class="echo-touch-btn echo-touch-btn--down" data-touch="s" aria-label="Down">▼</button>
+          <button type="button" class="echo-touch-btn echo-touch-btn--left" data-touch="a" aria-label="Left">◀</button>
+          <button type="button" class="echo-touch-btn echo-touch-btn--right" data-touch="d" aria-label="Right">▶</button>
+          <button type="button" class="echo-touch-btn echo-touch-btn--fire" data-touch="fire" aria-label="Fire">●</button>
+          <button type="button" class="echo-touch-btn echo-touch-btn--pause" data-touch="pause" aria-label="Pause">Ⅱ</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2576,11 +2800,9 @@ footer{
     <input type="range" class="compare-slider" id="compareSlider" min="0" max="100" value="15" aria-label="Floke vs cloud">
     <div class="compare-slider-cards">
       <div class="compare-card is-active" id="compareCardFloke">
-        <div class="compare-card-icon">🔒</div>
         <span id="compareFlokeText" data-k="compare.r1f">Core features · local data</span>
       </div>
       <div class="compare-card is-dim" id="compareCardCloud">
-        <div class="compare-card-icon">☁️</div>
         <span id="compareCloudText" data-k="compare.r1c">Often limited or read-only</span>
       </div>
     </div>
@@ -2836,8 +3058,8 @@ footer{
 <div class="pixel-editor-modal" id="pixelEditorModal" aria-hidden="true">
   <div class="pixel-editor-card">
     <div class="pixel-editor-main">
-      <h3 class="pixel-editor-head" data-k="engine.pixelStudio">Echo · pilot studio</h3>
-      <p class="pixel-editor-sub" data-k="engine.pixelHint">16×16 art · 8×8 pilot · export hi-res PNG</p>
+      <h3 class="pixel-editor-head" id="pixelEditorHead" data-k="engine.pixelStudio">Echo · pilot studio</h3>
+      <p class="pixel-editor-sub" id="pixelEditorSub" data-k="engine.pixelHint">16×16 art · 8×8 pilot · export hi-res PNG</p>
       <div class="pixel-workspace">
         <div class="pixel-art-col">
           <span class="pixel-editor-sub" data-k="engine.pixel">16×16</span>
@@ -2856,11 +3078,15 @@ footer{
       </div>
     </div>
     <div class="pixel-editor-side">
-      <p class="pixel-editor-sub" data-k="engine.pixelStudioNote">Echo is the landing's hidden gem — mock label, real depth.</p>
-      <div class="pixel-editor-actions" style="flex-direction:column;align-items:stretch">
+      <p class="pixel-editor-sub" id="pixelEditorSideNote" data-k="engine.pixelStudioNote">Echo is the landing's hidden gem — mock label, real depth.</p>
+      <div class="pixel-editor-actions pixel-only-side" style="flex-direction:column;align-items:stretch">
         <button type="button" class="btn btn-outline" id="pixelClear" data-k="engine.pixelClear">Clear 16×16</button>
         <button type="button" class="btn btn-solid" id="pixelExport" data-k="engine.pixelExport">Art only</button>
         <button type="button" class="btn btn-outline" id="pixelExportFrame" data-k="engine.pixelExportFrame">FLOKE frame</button>
+      </div>
+      <div class="pixel-editor-actions portrait-only-side" style="flex-direction:column;align-items:stretch;display:none">
+      </div>
+      <div class="pixel-editor-actions" style="flex-direction:column;align-items:stretch">
         <button type="button" class="btn btn-outline" id="pixelClose" data-k="waitlist.close">Close</button>
       </div>
     </div>
@@ -3071,7 +3297,7 @@ const STR = {
     "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Test: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
     "compare.sliderHint":"drag",
     "feedback.fallback":"Embed blocked? Post via GitHub — we copy your draft and open Discussion #1.","feedback.fallbackTitle":"Title","feedback.fallbackBody":"Your feedback…","feedback.fallbackBtn":"Open Discussion #1 →",
-    "engine.game.name":"Echo","engine.gamepad.on":"pad connected","engine.gamepadLine":"Have a controller nearby? Plug it in and try — left stick to move, face buttons optional.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay for Gist leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 pilot · generate, then set as active","engine.portraitGen":"Generate","engine.portraitSet":"Set active","engine.portraitExport":"Export PNG","engine.portraitDraft":"Draft ready — Set active to use in runs","engine.portraitActive":"Active pilot set","engine.portraitEmpty":"Generate a pilot first","engine.streak":"day streak","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Hangar","echo.menu.saves":"Saves","echo.menu.about":"About","echo.menu.music":"Music","echo.menu.back":"Back","echo.menu.launch":"Launch","echo.menu.meta":"tokens {t} · ship {s}","echo.splash.tap":"click to open","echo.saves.hi":"Hi","echo.saves.daily":"Daily run saved","echo.saves.fresh":"No daily save","echo.saves.continue":"Continue daily","echo.saves.reset":"Reset all","echo.saves.resetConfirm":"Reset all Echo progress? Tokens, ships, saves, pilot — gone.","echo.saves.resetDone":"Progress cleared","echo.about.body":"Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.","echo.music.on":"On","echo.music.off":"Off","engine.pixelStudio":"Echo · pilot studio","engine.pixelStudioNote":"Echo is the landing's hidden gem — mock label, real depth.","echo.diff.easy":"Easy","echo.diff.normal":"Normal","echo.diff.hard":"Hard","echo.tutor.l1":"Move · mouse / WASD / gamepad","echo.tutor.l2":"P · pause","echo.tutor.l3":"Export · replay markdown in tabbar","echo.tutor.ok":"Got it","echo.hangar.title":"Hangar","echo.hangar.upgrades":"Upgrades","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Not enough tokens","echo.cheat.ok":"All unlocked","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 · easter egg","engine.pixelHint":"Click pixels · export hi-res PNG (1024px)","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
+    "engine.game.name":"Echo","engine.gamepad.on":"pad connected","engine.gamepadLine":"Have a controller nearby? Plug it in and try — left stick to move, face buttons optional.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay for Gist leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 pilot · generate, then set as active","engine.portraitGen":"Generate","engine.portraitSet":"Set active","engine.portraitExport":"Export PNG","engine.portraitDraft":"Draft ready — Set active to use in runs","engine.portraitActive":"Active pilot set","engine.portraitEmpty":"Generate a pilot first","engine.streak":"day streak","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Hangar","echo.menu.saves":"Saves","echo.menu.about":"About","echo.menu.music":"Music","echo.menu.back":"Back","echo.menu.launch":"Launch","echo.menu.meta":"tokens {t} · ship {s}","echo.splash.tap":"click to open","echo.saves.hi":"Hi","echo.saves.daily":"Daily run saved","echo.saves.fresh":"No daily save","echo.saves.continue":"Continue daily","echo.saves.reset":"Reset all","echo.saves.resetConfirm":"Reset all Echo progress? Tokens, ships, saves, pilot — gone.","echo.saves.resetDone":"Progress cleared","echo.about.body":"Offline pixel mock on the landing. Daily seed, biomes, tokens — nothing leaves your browser.","echo.music.on":"On","echo.music.off":"Off","echo.audio.music":"Music","echo.audio.sfx":"SFX","engine.portraitStudio":"8×8 pilot","engine.portraitSide":"Pilot portrait for Echo runs and replays.","engine.pixelSide":"Pixel art easter egg — export plain or with FLOKE frame.","engine.pixelStudio":"Echo · pilot studio","engine.pixelStudioNote":"Echo is the landing's hidden gem — mock label, real depth.","echo.diff.easy":"Easy","echo.diff.normal":"Normal","echo.diff.hard":"Hard","echo.tutor.l1":"Move · mouse / WASD / gamepad","echo.tutor.l2":"P · pause","echo.tutor.l3":"Export · replay markdown in tabbar","echo.tutor.ok":"Got it","echo.hangar.ships":"Ships","echo.hangar.ups":"Mods","echo.hangar.upgrades":"Upgrades","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Not enough tokens","echo.cheat.ok":"All unlocked","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 · easter egg","engine.pixelHint":"Click pixels · export hi-res PNG (1024px)","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
     "cmd.history":"Recent","cmd.pinned":"Pinned","shortcuts.shell":"Floke shell","shortcuts.products":"Products (vim g p)","shortcuts.focusSearch":"Focus search /",
     "shell.help":"help · clear · ls · pwd · whoami · date · echo · open · grep releases · theme · locale · ambient · routes · graph · flint · play · pixel · cheat-code-echo · soundpack · version · neofetch · man · history · exit",
     "privacy.promise":"You've read the promise — no cookie, just scroll.","foot.copied":"Link copied",
@@ -3150,7 +3376,7 @@ const STR = {
     "feedback.loading":"Loading comments from GitHub…",
     "feedback.fallback":"Could not load giscus — open Discussions on GitHub or try again after granting the app access to FlokeStudio/Floke.",
     "graph.filter.all":"All","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Pages",
-    "engine.teaser.fullscreen":"Fullscreen →","engine.modal.close":"Close",
+    "engine.teaser.fullscreen":"Fullscreen →","engine.teaser.fullscreenExit":"Exit fullscreen","engine.modal.close":"Close",
     "spec.deep":"Pipeline spec →",
     "graph.node.engineTitle":"Echo",
     "graph.syncNote":"Auto-synced from site map",
@@ -3418,14 +3644,14 @@ const STR = {
     "error.home":"← Home","error.search":"⌘K Search","error.testHint":"Тест: #error/404 · #error/400 · #error/403 · #error/500 · #error/503",
     "compare.sliderHint":"тяните",
     "feedback.fallback":"Embed заблокирован? Черновик в буфер + Discussion #1.","feedback.fallbackTitle":"Заголовок","feedback.fallbackBody":"Feedback…","feedback.fallbackBtn":"Открыть Discussion #1 →",
-    "engine.game.name":"Echo","engine.gamepad.on":"геймпад","engine.gamepadLine":"Есть геймпад? Подключите и попробуйте — левый стик для движения, кнопки по желанию.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay для Gist-leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 пилот · сгенерировать, затем установить","engine.portraitGen":"Сгенерировать","engine.portraitSet":"Установить","engine.portraitExport":"Export PNG","engine.portraitDraft":"Черновик готов — установите как активный","engine.portraitActive":"Активный пилот установлен","engine.portraitEmpty":"Сначала сгенерируйте пилота","engine.streak":"дней подряд","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Ангар","echo.menu.saves":"Сохранения","echo.menu.about":"Об игре","echo.menu.music":"Музыка","echo.menu.back":"Назад","echo.menu.launch":"Старт","echo.menu.meta":"токены {t} · корабль {s}","echo.splash.tap":"нажмите, чтобы открыть","echo.saves.hi":"Рекорд","echo.saves.daily":"Есть daily-save","echo.saves.fresh":"Нет сохранения","echo.saves.continue":"Продолжить daily","echo.saves.reset":"Сбросить всё","echo.saves.resetConfirm":"Сбросить весь прогресс Echo? Токены, корабли, сохранения, пилот — всё удалится.","echo.saves.resetDone":"Прогресс сброшен","echo.about.body":"Офлайн pixel-mock на лендинге. Daily seed, биомы, токены — ничего не уходит из браузера.","echo.music.on":"Вкл","echo.music.off":"Выкл","engine.pixelStudio":"Echo · студия пилота","engine.pixelStudioNote":"Echo — главная фишка лендинга. Mock снаружи, игра внутри.","echo.diff.easy":"Легко","echo.diff.normal":"Норма","echo.diff.hard":"Сложно","echo.tutor.l1":"Движение · мышь / WASD / геймпад","echo.tutor.l2":"P · пауза","echo.tutor.l3":"Export · replay markdown в tabbar","echo.tutor.ok":"Понятно","echo.hangar.title":"Ангар","echo.hangar.upgrades":"Улучшения","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Не хватает токенов","echo.cheat.ok":"Всё открыто","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 easter egg","engine.pixelHint":"Клик · hi-res PNG 1024px","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
+    "engine.game.name":"Echo","engine.gamepad.on":"геймпад","engine.gamepadLine":"Есть геймпад? Подключите и попробуйте — левый стик для движения, кнопки по желанию.","engine.exportScore":"Export replay","engine.exportScoreHint":"Markdown replay для Gist-leaderboard","engine.biome.void":"Void Rift","engine.biome.forge":"Floke Forge","engine.biome.deep":"Deep Echo","engine.biome.ember":"Ember Drift","engine.biome.moss":"Moss Belt","engine.biome.ice":"Ice Shelf","engine.biome.dust":"Dust Ring","engine.biome.neon":"Neon Veil","engine.biome.rust":"Rust Orbit","engine.biome.aurora":"Aurora Lane","engine.biome.mono":"Monochrome","engine.biome.sepia":"Sepia Archive","engine.biome.coral":"Coral Deep","engine.biome.slate":"Slate Field","engine.biome.haze":"Haze Nebula","engine.biome.solar":"Solar Wind","engine.biome.tide":"Tide Pool","engine.biome.ash":"Ash Cloud","engine.biome.bloom":"Bloom Garden","engine.biome.echo":"Echo Core","engine.portrait":"8×8 pilot","engine.portraitHint":"8×8 пилот · сгенерировать, затем установить","engine.portraitGen":"Сгенерировать","engine.portraitSet":"Установить","engine.portraitExport":"Export PNG","engine.portraitDraft":"Черновик готов — установите как активный","engine.portraitActive":"Активный пилот установлен","engine.portraitEmpty":"Сначала сгенерируйте пилота","engine.streak":"дней подряд","echo.menu.arcade":"Arcade","echo.menu.adventure":"Adventure","echo.menu.hangar":"Ангар","echo.menu.saves":"Сохранения","echo.menu.about":"Об игре","echo.menu.music":"Музыка","echo.menu.back":"Назад","echo.menu.launch":"Старт","echo.menu.meta":"токены {t} · корабль {s}","echo.splash.tap":"нажмите, чтобы открыть","echo.saves.hi":"Рекорд","echo.saves.daily":"Есть daily-save","echo.saves.fresh":"Нет сохранения","echo.saves.continue":"Продолжить daily","echo.saves.reset":"Сбросить всё","echo.saves.resetConfirm":"Сбросить весь прогресс Echo? Токены, корабли, сохранения, пилот — всё удалится.","echo.saves.resetDone":"Прогресс сброшен","echo.about.body":"Офлайн pixel-mock на лендинге. Daily seed, биомы, токены — ничего не уходит из браузера.","echo.music.on":"Вкл","echo.music.off":"Выкл","echo.audio.music":"Музыка","echo.audio.sfx":"Звуки","engine.portraitStudio":"8×8 пилот","engine.portraitSide":"Портрет пилота для забегов Echo и replay.","engine.pixelSide":"Pixel art easter egg — экспорт с рамкой FLOKE или без.","engine.pixelStudio":"Echo · студия пилота","engine.pixelStudioNote":"Echo — главная фишка лендинга. Mock снаружи, игра внутри.","echo.diff.easy":"Легко","echo.diff.normal":"Норма","echo.diff.hard":"Сложно","echo.tutor.l1":"Движение · мышь / WASD / геймпад","echo.tutor.l2":"P · пауза","echo.tutor.l3":"Export · replay markdown в tabbar","echo.tutor.ok":"Понятно","echo.hangar.ships":"Корабли","echo.hangar.ups":"Модули","echo.hangar.upgrades":"Улучшения","echo.hangar.prompt":"buy: spread | ship gold | tokens show","echo.hangar.nope":"Не хватает токенов","echo.cheat.ok":"Всё открыто","echo.ship.scout":"Scout","echo.ship.gold":"Gold wing","echo.ship.void":"Void hull","echo.ship.mono":"Mono shuttle","echo.ship.neon":"Neon dart","echo.up.spread":"Spread","echo.up.rapid":"Rapid","echo.up.shield":"Shield","echo.up.speed":"Speed","echo.up.magnet":"Magnet","engine.pixel":"16×16","engine.pixelTitle":"16×16 easter egg","engine.pixelHint":"Клик · hi-res PNG 1024px","engine.pixelClear":"Clear","engine.pixelExport":"Art only","engine.pixelExportFrame":"FLOKE frame",
     "cmd.history":"Недавние","cmd.pinned":"Закреплённые","shortcuts.shell":"Floke shell","shortcuts.products":"Products (g p)","shortcuts.focusSearch":"Поиск /",
     "shell.help":"help · clear · ls · pwd · whoami · date · echo · open · grep · theme · locale · ambient · routes · graph · flint · play · pixel · cheat-code-echo · soundpack · version · neofetch · man · history · exit",
     "privacy.promise":"Вы прочитали promise — без cookie, только scroll.",
     "foot.col.apps":"Приложения","foot.col.intel":"Интеллект","foot.col.studio":"Студия","foot.col.help":"Помощь и legal",
     "cmd.cat.release":"Релиз",
     "graph.filter.all":"Все","graph.filter.app":"Apps","graph.filter.intel":"Intel","graph.filter.game":"Games","graph.filter.page":"Страницы",
-    "engine.teaser.fullscreen":"Fullscreen →","engine.modal.close":"Закрыть",
+    "engine.teaser.fullscreen":"Fullscreen →","engine.teaser.fullscreenExit":"Свернуть","engine.modal.close":"Закрыть",
     "spec.deep":"Спека pipeline →",
     "graph.node.engineTitle":"Echo",
     "graph.syncNote":"Синхронизация с картой сайта",
@@ -3931,20 +4157,28 @@ function initReleaseCountdown(){
 }
 
 let sfxCtx = null;
+let sfxMasterGain = null;
 function initFlokeSfx(){
   const AC = window.AudioContext || window.webkitAudioContext;
   if(!AC) return;
   const unlock = async () => {
     if(!sfxCtx) sfxCtx = new AC();
+    if(!sfxMasterGain){
+      sfxMasterGain = sfxCtx.createGain();
+      sfxMasterGain.connect(sfxCtx.destination);
+    }
+    sfxMasterGain.gain.value = typeof echoGetSfxVol === "function" ? echoGetSfxVol() : 0.85;
     if(sfxCtx.state === "suspended") await sfxCtx.resume();
   };
   document.addEventListener("pointerdown", unlock, { once: true, passive: true });
   window.flokeSfx = async (type) => {
     if(!sfxCtx) await unlock();
     if(!sfxCtx || sfxCtx.state !== "running") return;
+    if(sfxMasterGain) sfxMasterGain.gain.value = typeof echoGetSfxVol === "function" ? echoGetSfxVol() : 0.85;
+    const dest = sfxMasterGain || sfxCtx.destination;
     const o = sfxCtx.createOscillator();
     const g = sfxCtx.createGain();
-    o.connect(g); g.connect(sfxCtx.destination);
+    o.connect(g); g.connect(dest);
     const now = sfxCtx.currentTime;
     if(type === "click"){
       o.type = "triangle"; o.frequency.setValueAtTime(880, now); o.frequency.exponentialRampToValueAtTime(440, now + 0.06);
@@ -4003,7 +4237,7 @@ function initFlokeSfx(){
       notes.forEach((f, i) => {
         const o2 = sfxCtx.createOscillator();
         const g2 = sfxCtx.createGain();
-        o2.type = "sine"; o2.connect(g2); g2.connect(sfxCtx.destination);
+        o2.type = "sine"; o2.connect(g2); g2.connect(dest);
         const t0 = now + i * 0.22;
         o2.frequency.setValueAtTime(f, t0);
         g2.gain.setValueAtTime(0.0001, t0); g2.gain.exponentialRampToValueAtTime(0.018, t0 + 0.04);
@@ -4983,6 +5217,7 @@ function applyLocale(){
   if(cmdIn) cmdIn.placeholder = t("cmd.placeholder");
   renderShortcutsGrid();
   updateAmbientDock();
+  echoSyncFullscreenBtn?.();
   localStorage.setItem("floke-lang", locale);
 }
 
@@ -5721,7 +5956,7 @@ const echoKonami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","Arr
 let echoKonamiStep = 0;
 
 function echoDefaultMeta(){
-  return { tokens: 0, ship: "scout", upgrades: {}, unlockedShips: ["scout"], cheat: false, musicOn: true, musicTrack: 0 };
+  return { tokens: 0, ship: "scout", upgrades: {}, unlockedShips: ["scout"], cheat: false, musicOn: true, musicTrack: 0, musicVol: 0.85, sfxVol: 0.85 };
 }
 function echoLoadMeta(){
   try {
@@ -5924,15 +6159,85 @@ window.echoBossBeat = function(){
   window.flokeSfx?.("hit");
 };
 
-const ECHO_ADV_BIOME_MS = 45000;
+const ECHO_ADV_BIOME_MS = 90000;
 const ECHO_MUSIC_TRACKS = 10;
 const ECHO_MUSIC_MS = 120000;
+const ECHO_TRACK_NAMES = [
+  { en: "Void Lullaby", ru: "Колыбель пустоты" },
+  { en: "Forge Hum", ru: "Гул кузни" },
+  { en: "Nebula Drift", ru: "Дрейф туманности" },
+  { en: "Solar Wake", ru: "След солнца" },
+  { en: "Ice Relay", ru: "Ледяной ретранс" },
+  { en: "Rust Cycle", ru: "Цикл ржавчины" },
+  { en: "Aurora Step", ru: "Шаг aurora" },
+  { en: "Deep Ping", ru: "Глубинный ping" },
+  { en: "Bloom Echo", ru: "Echo bloom" },
+  { en: "Last Dock", ru: "Последний док" }
+];
 let echoMusicOn = true;
 let echoMusicTrack = 0;
 let echoMusicTimer = null;
 let echoMusicNodes = null;
 let echoMusicCtx = null;
+let echoMusicMasterGain = null;
 
+function echoTrackName(i){
+  const row = ECHO_TRACK_NAMES[i % ECHO_TRACK_NAMES.length];
+  return locale === "ru" ? row.ru : row.en;
+}
+function echoGetMusicVol(){
+  const m = echoLoadMeta();
+  return typeof m.musicVol === "number" ? m.musicVol : 0.85;
+}
+function echoGetSfxVol(){
+  const m = echoLoadMeta();
+  return typeof m.sfxVol === "number" ? m.sfxVol : 0.85;
+}
+function echoSyncAudioSliders(){
+  const mv = document.getElementById("echoMusicVol");
+  const sv = document.getElementById("echoSfxVol");
+  const mvv = document.getElementById("echoMusicVolVal");
+  const svv = document.getElementById("echoSfxVolVal");
+  const music = Math.round(echoGetMusicVol() * 100);
+  const sfx = Math.round(echoGetSfxVol() * 100);
+  if(mv) mv.value = String(music);
+  if(sv) sv.value = String(sfx);
+  if(mvv) mvv.textContent = String(music);
+  if(svv) svv.textContent = String(sfx);
+}
+function echoApplyMusicGain(){
+  if(!echoMusicMasterGain) return;
+  echoMusicMasterGain.gain.value = echoMusicOn ? echoGetMusicVol() : 0;
+}
+function echoEnsureMusicCtx(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!echoMusicCtx){
+    echoMusicCtx = new AC();
+    echoMusicMasterGain = echoMusicCtx.createGain();
+    echoMusicMasterGain.connect(echoMusicCtx.destination);
+  }
+  if(echoMusicCtx.state === "suspended") echoMusicCtx.resume();
+  echoApplyMusicGain();
+  return echoMusicCtx;
+}
+
+function echoResetCanvasLayout(){
+  const gc = document.getElementById("engineGameCanvas");
+  if(!gc) return;
+  gc.style.width = "";
+  gc.style.height = "";
+}
+function echoSyncFullscreenBtn(){
+  const btn = document.getElementById("engineFullscreenBtn");
+  const wrap = document.getElementById("engineTeaserWrap");
+  if(!btn || !wrap) return;
+  const fs = wrap.classList.contains("is-fullscreen");
+  const lbl = btn.querySelector(".echo-tool__label");
+  const txt = fs ? (t("engine.teaser.fullscreenExit") || "Exit") : (t("engine.teaser.fullscreen") || "Full");
+  if(lbl) lbl.textContent = txt;
+  btn.title = txt;
+}
 function echoShowSplash(){
   const overlay = document.getElementById("engineTeaserOverlay");
   const menu = document.getElementById("echoMenu");
@@ -5941,6 +6246,7 @@ function echoShowSplash(){
   overlay?.classList.remove("hidden");
   screen?.classList.add("is-idle");
   screen?.classList.remove("is-menu");
+  echoResetCanvasLayout();
   syncEchoDailyHint();
 }
 function echoHideSplash(){
@@ -5948,6 +6254,7 @@ function echoHideSplash(){
   document.getElementById("engineTeaserScreen")?.classList.remove("is-idle");
 }
 function echoOpenMenuFromSplash(){
+  try { echoEnsureMusicCtx(); } catch(_){}
   echoHideSplash();
   echoShowMenu();
 }
@@ -5957,9 +6264,9 @@ function echoSetPanel(id){
     if(on){ p.removeAttribute("hidden"); p.classList.add("is-active"); }
     else { p.setAttribute("hidden", ""); p.classList.remove("is-active"); }
   });
-  if(id === "hangar") echoRenderHangar();
+  if(id === "hangar"){ echoHangarTab = "ships"; echoRenderHangar(); }
   if(id === "saves") echoRenderSaves();
-  if(id === "music") echoRenderMusicList();
+  if(id === "music"){ echoSyncAudioSliders(); echoRenderMusicList(); }
 }
 function echoRefreshMenuMeta(){
   const el = document.getElementById("echoMenuMeta");
@@ -5977,13 +6284,16 @@ function echoShowMenu(){
   echoHideSplash();
   if(menu){ menu.hidden = false; echoSetPanel("main"); }
   screen?.classList.add("is-menu");
+  screen?.classList.remove("is-idle", "is-playing");
   scoreEl?.classList.remove("visible");
+  echoResetCanvasLayout();
   echoRefreshMenuMeta();
 }
 function echoHideMenu(){
   const menu = document.getElementById("echoMenu");
   document.getElementById("engineTeaserScreen")?.classList.remove("is-menu");
   if(menu) menu.hidden = true;
+  echoResetCanvasLayout();
 }
 function echoMaybeShowTutor(){
   if(localStorage.getItem(ECHO_TUTOR_KEY)) return;
@@ -5996,8 +6306,7 @@ function echoDrawHangarShip(canvas){
   const m = echoLoadMeta();
   const ship = echoShipDef(m.ship);
   const PX = 4;
-  ctx.fillStyle = "#06060c";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   const cx = canvas.width / 2, cy = canvas.height / 2 + 8;
   const hull = ship.hull || "#2a1030";
   const acc = ship.accent || "#c8a96e";
@@ -6009,33 +6318,43 @@ function echoDrawHangarShip(canvas){
   if((m.upgrades.rapid || 0) > 0) fill(cx - PX, cy + PX, PX * 2, PX, "#fa0");
   if((m.upgrades.shield || 0) > 0){ ctx.strokeStyle = "rgba(120,200,255,.6)"; ctx.strokeRect(cx - PX * 3, cy - PX * 3, PX * 6, PX * 6); }
   if((m.upgrades.speed || 0) > 0){ fill(cx - PX * 2, cy + PX * 2, PX, PX, acc); fill(cx + PX, cy + PX * 2, PX, PX, acc); }
-  if((m.upgrades.magnet || 0) > 0){ ctx.fillStyle = "#c8a96e"; ctx.fillText("◈", cx - 3, cy - PX * 4); }
+  if((m.upgrades.magnet || 0) > 0){ fill(cx - PX, cy - PX * 4, PX * 2, PX, "#c8a96e"); }
 }
+const ECHO_MOD_SVGS = {
+  spread: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle fill="currentColor" cx="6" cy="12" r="2"/><circle fill="currentColor" cx="12" cy="12" r="2"/><circle fill="currentColor" cx="18" cy="12" r="2"/></svg>',
+  rapid: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 2L4 14h7l-1 8 10-14h-7l0-6z"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 3l8 3v6c0 5-3.5 9-8 9s-8-4-8-9V6l8-3z"/></svg>',
+  speed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 12h12"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 6l6 6-6 6"/></svg>',
+  magnet: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 3v8a6 6 0 0012 0V3"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 3H3v5M18 3h3v5"/></svg>'
+};
 function echoRenderHangarModules(){
   const box = document.getElementById("echoHangarModules");
   if(!box) return;
   const m = echoLoadMeta();
-  const icons = { spread: "◆◆", rapid: "»»", shield: "▢", speed: ">>", magnet: "◈" };
   box.innerHTML = ECHO_UPGRADES.map(u => {
     const lv = m.upgrades[u.id] || 0;
-    return `<div class="echo-mod${lv ? " is-on" : ""}" title="${u.id}"><span>${icons[u.id] || u.id}</span><span class="echo-mod__lv">${lv}/${u.max}</span></div>`;
+    const label = t(u.nameKey) || u.id;
+    return `<div class="echo-mod${lv ? " is-on" : ""}" title="${label}">${ECHO_MOD_SVGS[u.id] || ""}<span class="echo-mod__lv">${lv}/${u.max}</span></div>`;
   }).join("");
 }
+let echoHangarTab = "ships";
 function echoRenderHangar(){
   echoDrawHangarShip(document.getElementById("echoHangarCanvas"));
   echoRenderHangarModules();
   const m = echoLoadMeta();
-  const shipsEl = document.getElementById("echoHangarShips");
-  const upsEl = document.getElementById("echoHangarUps");
-  if(shipsEl){
-    shipsEl.innerHTML = ECHO_SHIPS.map(s => {
+  const carousel = document.getElementById("echoHangarCarousel");
+  document.querySelectorAll("[data-hangar-tab]").forEach(btn => {
+    btn.classList.toggle("is-on", btn.dataset.hangarTab === echoHangarTab);
+  });
+  if(!carousel) return;
+  if(echoHangarTab === "ships"){
+    carousel.innerHTML = ECHO_SHIPS.map(s => {
       const owned = m.unlockedShips.includes(s.id) || m.cheat;
       const active = m.ship === s.id;
-      return `<button type="button" class="echo-pbtn${active ? " is-sel" : ""}" data-echo-ship="${s.id}" ${!owned && m.tokens < s.cost ? "" : ""}>${t(s.nameKey) || s.id}${owned ? "" : " ·" + s.cost + "T"}</button>`;
+      return `<button type="button" class="echo-pbtn${active ? " is-sel" : ""}" data-echo-ship="${s.id}">${t(s.nameKey) || s.id}${owned ? "" : " ·" + s.cost + "T"}</button>`;
     }).join("");
-  }
-  if(upsEl){
-    upsEl.innerHTML = ECHO_UPGRADES.map(u => {
+  } else {
+    carousel.innerHTML = ECHO_UPGRADES.map(u => {
       const lv = m.upgrades[u.id] || 0;
       const maxed = lv >= u.max;
       return `<button type="button" class="echo-pbtn${maxed ? " is-sel" : ""}" data-echo-up="${u.id}" ${maxed ? "disabled" : ""}>${t(u.nameKey) || u.id} ·${u.cost}T</button>`;
@@ -6107,64 +6426,99 @@ function echoRenderMusicList(){
   }
   if(!list) return;
   list.innerHTML = Array.from({ length: ECHO_MUSIC_TRACKS }, (_, i) => {
-    const n = String(i + 1).padStart(2, "0");
-    const now = i === echoMusicTrack && echoMusicOn;
-    return `<div class="echo-music-item${now ? " is-now" : ""}"><span>Vibe ${n}</span><span>~2:00</span></div>`;
+    const now = i === echoMusicTrack;
+    const name = echoTrackName(i);
+    return `<button type="button" class="echo-music-item${now ? " is-now" : ""}" data-echo-track="${i}"><span>${esc(name)}</span><span>~2:00</span></button>`;
   }).join("");
 }
+function echoSelectTrack(idx){
+  echoMusicTrack = idx;
+  const m = echoLoadMeta();
+  m.musicTrack = idx;
+  if(!echoMusicOn){
+    echoMusicOn = true;
+    m.musicOn = true;
+  }
+  echoSaveMeta(m);
+  echoEnsureMusicCtx();
+  echoApplyMusicGain();
+  echoPlayMusicTrack(idx);
+  echoRenderMusicList();
+}
+function echoSetMusicVol(v){
+  const m = echoLoadMeta();
+  m.musicVol = Math.max(0, Math.min(1, v));
+  echoSaveMeta(m);
+  echoApplyMusicGain();
+  echoSyncAudioSliders();
+}
+function echoSetSfxVol(v){
+  const m = echoLoadMeta();
+  m.sfxVol = Math.max(0, Math.min(1, v));
+  echoSaveMeta(m);
+  if(sfxMasterGain) sfxMasterGain.gain.value = m.sfxVol;
+  echoSyncAudioSliders();
+}
 function echoStopMusic(){
-  if(echoMusicTimer){ clearTimeout(echoMusicTimer); echoMusicTimer = null; }
+  if(echoMusicTimer){ clearInterval(echoMusicTimer); echoMusicTimer = null; }
   try { echoMusicNodes?.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch(_){} }); } catch(_){}
-  echoMusicNodes = null;
+  echoMusicNodes = [];
 }
 function echoPlayMusicTrack(trackIdx){
   echoStopMusic();
   if(!echoMusicOn) return;
-  const AC = window.AudioContext || window.webkitAudioContext;
-  if(!AC) return;
-  if(!echoMusicCtx) echoMusicCtx = new AC();
-  if(echoMusicCtx.state === "suspended") echoMusicCtx.resume();
-  const ctx = echoMusicCtx;
-  const scales = [[0,2,4,7,9],[0,3,5,7,10],[0,2,3,7,9],[0,4,7,11,14],[0,2,5,7,10],[0,3,7,10,14],[0,5,7,10,12],[0,2,4,9,11],[0,4,5,7,12],[0,2,7,9,14]];
-  const scale = scales[trackIdx % scales.length];
-  const root = 55 + (trackIdx % 5) * 7;
-  const nodes = [];
-  const dur = ECHO_MUSIC_MS / 1000;
-  const step = 0.55;
-  for(let t = 0; t < dur; t += step){
-    const n = scale[(Math.random() * scale.length) | 0];
-    const freq = root * Math.pow(2, n / 12) * (1 + (trackIdx % 3) * 0.03);
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = trackIdx % 2 ? "triangle" : "sine";
-    o.connect(g); g.connect(ctx.destination);
-    const t0 = ctx.currentTime + t;
-    o.frequency.setValueAtTime(freq, t0);
-    g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.012 + (trackIdx % 4) * 0.002, t0 + 0.08);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + step * 0.95);
-    o.start(t0); o.stop(t0 + step);
-    nodes.push(o, g);
-  }
-  echoMusicNodes = nodes;
+  const ctx = echoEnsureMusicCtx();
+  if(!ctx || !echoMusicMasterGain) return;
   echoMusicTrack = trackIdx;
   const mm = echoLoadMeta();
   mm.musicTrack = trackIdx;
   echoSaveMeta(mm);
   echoRenderMusicList();
-  echoMusicTimer = setTimeout(() => echoPlayMusicTrack((trackIdx + 1) % ECHO_MUSIC_TRACKS), ECHO_MUSIC_MS);
+  echoMusicNodes = [];
+  const scales = [[0,2,4,7,9],[0,3,5,7,10],[0,2,3,7,9],[0,4,7,11,14],[0,2,5,7,10],[0,3,7,10,14],[0,5,7,10,12],[0,2,4,9,11],[0,4,5,7,12],[0,2,7,9,14]];
+  const scale = scales[trackIdx % scales.length];
+  const root = 55 + (trackIdx % 5) * 7;
+  let steps = 0;
+  const playStep = () => {
+    if(!echoMusicOn || !echoMusicCtx) return;
+    if(steps++ > 240){
+      echoPlayMusicTrack((trackIdx + 1) % ECHO_MUSIC_TRACKS);
+      return;
+    }
+    const n = scale[(Math.random() * scale.length) | 0];
+    const freq = root * Math.pow(2, n / 12) * (1 + (trackIdx % 3) * 0.02);
+    const o = echoMusicCtx.createOscillator();
+    const g = echoMusicCtx.createGain();
+    o.type = trackIdx % 2 ? "triangle" : "sine";
+    o.connect(g);
+    g.connect(echoMusicMasterGain);
+    const t0 = echoMusicCtx.currentTime;
+    const peak = Math.max(0.006, echoGetMusicVol() * 0.26);
+    o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.001, t0);
+    g.gain.exponentialRampToValueAtTime(peak, t0 + 0.05);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.44);
+    o.start(t0);
+    o.stop(t0 + 0.46);
+    echoMusicNodes.push(o, g);
+  };
+  playStep();
+  echoMusicTimer = setInterval(playStep, 520);
 }
 function echoStartMusic(){
   const m = echoLoadMeta();
   echoMusicOn = m.musicOn !== false;
   echoMusicTrack = m.musicTrack || 0;
+  echoSyncAudioSliders();
   if(echoMusicOn) echoPlayMusicTrack(echoMusicTrack);
 }
 function echoToggleMusic(on){
+  echoEnsureMusicCtx();
   echoMusicOn = on;
   const m = echoLoadMeta();
   m.musicOn = on;
   echoSaveMeta(m);
+  echoApplyMusicGain();
   if(on) echoPlayMusicTrack(echoMusicTrack);
   else echoStopMusic();
   echoRenderMusicList();
@@ -6172,37 +6526,116 @@ function echoToggleMusic(on){
 function echoToggleFullscreen(on){
   const wrap = document.getElementById("engineTeaserWrap");
   const bd = document.getElementById("echoFsBackdrop");
-  if(on){
+  const active = wrap?.classList.contains("is-fullscreen");
+  const want = typeof on === "boolean" ? on : !active;
+  const enterFs = async () => {
     wrap?.classList.add("is-fullscreen");
     bd?.classList.add("open");
     bd?.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-  } else {
-    wrap?.classList.remove("is-fullscreen");
+    try {
+      if(wrap?.requestFullscreen) await wrap.requestFullscreen();
+      else if(wrap?.webkitRequestFullscreen) await wrap.webkitRequestFullscreen();
+      wrap?.classList.add("is-native-fs");
+    } catch(_){}
+  };
+  const exitFs = async () => {
+    try {
+      if(document.fullscreenElement) await document.exitFullscreen();
+      else if(document.webkitFullscreenElement && document.webkitExitFullscreen) await document.webkitExitFullscreen();
+    } catch(_){}
+    wrap?.classList.remove("is-fullscreen", "is-native-fs");
     bd?.classList.remove("open");
     bd?.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
-    if(echoGameStop){ echoGameStop(); echoGameStop = null; }
+  };
+  if(want) enterFs();
+  else exitFs();
+  echoResetCanvasLayout();
+  echoSyncFullscreenBtn();
+  window.dispatchEvent(new Event("resize"));
+}
+function echoOnFullscreenChange(){
+  const wrap = document.getElementById("engineTeaserWrap");
+  const bd = document.getElementById("echoFsBackdrop");
+  const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+  if(!fsEl && wrap?.classList.contains("is-fullscreen")){
+    wrap.classList.remove("is-fullscreen", "is-native-fs");
+    bd?.classList.remove("open");
+    bd?.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    echoSyncFullscreenBtn();
+    window.dispatchEvent(new Event("resize"));
+  } else if(fsEl === wrap){
+    wrap?.classList.add("is-native-fs");
+    echoSyncFullscreenBtn();
+    window.dispatchEvent(new Event("resize"));
   }
+}
+function echoNeedsTouchUi(){
+  return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 900;
+}
+function echoBindTouchControls(hostEl, keysRef, playerRef, pauseFn){
+  const touch = document.getElementById("echoTouch");
+  if(!touch || !echoNeedsTouchUi()) return () => {};
+  touch.classList.add("is-on");
+  hostEl.classList.add("is-playing");
+  const handlers = [];
+  touch.querySelectorAll("[data-touch]").forEach(btn => {
+    const k = btn.dataset.touch;
+    if(k === "pause"){
+      const fn = e => { e.preventDefault(); pauseFn(); };
+      btn.addEventListener("pointerdown", fn);
+      handlers.push([btn, "pointerdown", fn]);
+      return;
+    }
+    if(k === "fire"){
+      const down = e => { e.preventDefault(); playerRef.rapid = 45; btn.setPointerCapture?.(e.pointerId); };
+      btn.addEventListener("pointerdown", down);
+      handlers.push([btn, "pointerdown", down]);
+      return;
+    }
+    const down = e => { e.preventDefault(); keysRef[k] = true; btn.setPointerCapture?.(e.pointerId); };
+    const up = () => { keysRef[k] = false; };
+    btn.addEventListener("pointerdown", down);
+    btn.addEventListener("pointerup", up);
+    btn.addEventListener("pointercancel", up);
+    handlers.push([btn, "pointerdown", down], [btn, "pointerup", up], [btn, "pointercancel", up]);
+  });
+  return () => {
+    touch.classList.remove("is-on");
+    hostEl.classList.remove("is-playing");
+    handlers.forEach(([el, ev, fn]) => el.removeEventListener(ev, fn));
+  };
 }
 function echoBindMenu(){
   const menu = document.getElementById("echoMenu");
   if(!menu || menu._bound) return;
   menu._bound = true;
+  let splashTapAt = 0;
   const openFromSplash = e => {
     if(engineGameRunning) return;
     const overlay = document.getElementById("engineTeaserOverlay");
     const echoMenuEl = document.getElementById("echoMenu");
     if(!overlay || overlay.classList.contains("hidden")) return;
     if(echoMenuEl && !echoMenuEl.hidden) return;
+    if(e?.type === "pointerup" && e.pointerType === "mouse" && e.button !== 0) return;
+    const now = Date.now();
+    if(now - splashTapAt < 320) return;
+    splashTapAt = now;
     e?.preventDefault?.();
     e?.stopPropagation?.();
     echoOpenMenuFromSplash();
     echoMaybeShowTutor();
   };
-  document.getElementById("engineTeaserOverlay")?.addEventListener("click", openFromSplash);
-  document.getElementById("engineTeaserScreen")?.addEventListener("click", e => {
-    if(e.target.closest("#echoMenu,#echoTutor,.engine-teaser-score")) return;
+  const splashTap = (el, fn) => {
+    if(!el) return;
+    el.addEventListener("pointerup", fn);
+    el.style.touchAction = "manipulation";
+  };
+  splashTap(document.getElementById("engineTeaserOverlay"), openFromSplash);
+  splashTap(document.getElementById("engineTeaserScreen"), e => {
+    if(e.target.closest("#echoMenu,#echoTutor,.engine-teaser-score,.echo-touch")) return;
     openFromSplash(e);
   });
   menu.querySelectorAll("[data-echo-nav]").forEach(btn => {
@@ -6235,9 +6668,30 @@ function echoBindMenu(){
   document.getElementById("echoSaveContinue")?.addEventListener("click", () => echoLaunchGame("arcade", echoMenuDiff));
   document.getElementById("echoMusicToggle")?.addEventListener("click", () => {
     echoToggleMusic(!echoMusicOn);
-    const m = echoLoadMeta();
-    m.musicTrack = echoMusicTrack;
-    echoSaveMeta(m);
+  });
+  document.getElementById("echoMusicList")?.addEventListener("click", e => {
+    const btn = e.target.closest("[data-echo-track]");
+    if(!btn) return;
+    echoEnsureMusicCtx();
+    echoSelectTrack(+btn.dataset.echoTrack);
+    window.flokeSfx?.("click");
+  });
+  document.getElementById("echoMusicVol")?.addEventListener("input", e => {
+    echoSetMusicVol(+e.target.value / 100);
+    if(echoMusicOn && !echoMusicNodes?.length) echoPlayMusicTrack(echoMusicTrack);
+  });
+  document.getElementById("echoSfxVol")?.addEventListener("input", e => echoSetSfxVol(+e.target.value / 100));
+  document.querySelectorAll("[data-hangar-scroll]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.getElementById("echoHangarCarousel")?.scrollBy({ left: (+btn.dataset.hangarScroll || 1) * 116, behavior: "smooth" });
+    });
+  });
+  document.querySelectorAll("[data-hangar-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      echoHangarTab = btn.dataset.hangarTab || "ships";
+      echoRenderHangar();
+      window.flokeSfx?.("click");
+    });
   });
   document.getElementById("echoTutorDismiss")?.addEventListener("click", () => {
     localStorage.setItem(ECHO_TUTOR_KEY, "1");
@@ -6262,11 +6716,12 @@ function echoLaunchGame(mode, diff){
   if(engineGameRunning && echoGameStop){ echoGameStop(); echoGameStop = null; }
   echoHideMenu();
   screen.classList.remove("is-idle");
+  screen.classList.add("is-playing");
   const launch = () => {
-    try { echoStartMusic(); } catch(_){}
+    try { echoEnsureMusicCtx(); echoStartMusic(); } catch(_){}
     echoGameStop = startEchoGame(gc, screen, {
       scoreEl, mode, difficulty: diff,
-      onEnd: () => { echoStopMusic(); engineGameRunning = false; echoShowMenu(); }
+      onEnd: () => { echoStopMusic(); engineGameRunning = false; screen.classList.remove("is-playing"); echoShowMenu(); }
     });
   };
   requestAnimationFrame(() => requestAnimationFrame(launch));
@@ -6356,10 +6811,8 @@ function startEchoGame(canvas, hostEl, opts){
 
   function resizeGame(){
     const r = hostEl.getBoundingClientRect();
-    gW = canvas.width = Math.floor(r.width);
-    gH = canvas.height = Math.floor(r.height);
-    canvas.style.width = gW + "px";
-    canvas.style.height = gH + "px";
+    gW = canvas.width = Math.max(1, Math.floor(r.width));
+    gH = canvas.height = Math.max(1, Math.floor(r.height));
     gCtx.imageSmoothingEnabled = false;
     stars.length = 0;
     for(let i = 0; i < 70; i++) stars.push({ x: Math.random() * gW, y: Math.random() * gH, s: Math.random() > 0.75 ? 2 : 1, sp: 0.12 + Math.random() * 0.3 });
@@ -6432,6 +6885,9 @@ function startEchoGame(canvas, hostEl, opts){
   hostEl.addEventListener("touchmove", onTouch, { passive: false });
   window.addEventListener("keydown", onKey);
   window.addEventListener("keyup", onKey);
+  const onResize = () => { if(running) resizeGame(); };
+  window.addEventListener("resize", onResize);
+  let unbindTouch = echoBindTouchControls(hostEl, keys, player, () => { paused = !paused; });
   const clickStart = () => {
     if(!running){
       Object.assign(player, { shield: 0, spread: 0, rapid: 0, bomb: 0 });
@@ -6461,7 +6917,10 @@ function startEchoGame(canvas, hostEl, opts){
     hostEl.removeEventListener("click", clickStart);
     window.removeEventListener("keydown", onKey);
     window.removeEventListener("keyup", onKey);
+    window.removeEventListener("resize", onResize);
     window.removeEventListener("keydown", escMenu);
+    unbindTouch?.();
+    hostEl.classList.remove("is-playing");
   }
 
   function drawBg(){
@@ -6719,13 +7178,16 @@ function initEngineGame(){
     }, 1000);
   }
   screen._bound = true;
+  echoSyncFullscreenBtn();
   document.getElementById("engineFullscreenBtn")?.addEventListener("click", () => {
-    echoToggleFullscreen(true);
+    echoToggleFullscreen();
     window.flokeSfx?.("nav");
   });
   document.getElementById("echoFsBackdrop")?.addEventListener("click", () => echoToggleFullscreen(false));
+  document.addEventListener("fullscreenchange", echoOnFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", echoOnFullscreenChange);
   document.addEventListener("keydown", e => {
-    if(e.key === "Escape" && document.getElementById("engineTeaserWrap")?.classList.contains("is-fullscreen")){
+    if(e.key === "Escape" && document.getElementById("engineTeaserWrap")?.classList.contains("is-fullscreen") && !document.fullscreenElement){
       echoToggleFullscreen(false);
     }
   });
@@ -7869,8 +8331,6 @@ function initCompareSlider(){
     cc?.classList.toggle("is-active", v >= 45);
     cf?.classList.toggle("is-dim", v >= 55);
     cc?.classList.toggle("is-dim", v < 45);
-    cf.querySelector(".compare-card-icon").textContent = v < 50 ? "🔒" : "💾";
-    cc.querySelector(".compare-card-icon").textContent = v >= 50 ? "☁️" : "📤";
   };
   slider.addEventListener("input", sync);
   sync();
@@ -8381,12 +8841,26 @@ function initPWA(){
       if(b){ b.textContent = t("pwa.ready"); b.classList.add("ready"); }
     }).catch(() => {});
   }
-  let deferred;
   window.addEventListener("beforeinstallprompt", e => {
-    e.preventDefault(); deferred = e;
-    const btn = document.getElementById("footInstall");
-    if(btn){ btn.hidden = false; btn.onclick = () => { deferred.prompt(); btn.hidden = true; }; }
+    e.preventDefault();
+    window.flokeDeferredInstall = e;
+    const footBtn = document.getElementById("footInstall");
+    const echoBtn = document.getElementById("echoInstallBtn");
+    if(footBtn){ footBtn.hidden = false; footBtn.onclick = () => flokePromptInstall(); }
+    if(echoBtn){ echoBtn.hidden = false; echoBtn.onclick = () => flokePromptInstall(); }
   });
+  window.addEventListener("appinstalled", () => {
+    window.flokeDeferredInstall = null;
+    document.getElementById("echoInstallBtn")?.setAttribute("hidden", "");
+    document.getElementById("footInstall")?.setAttribute("hidden", "");
+    showFlokeToast("Echo", t("pwa.installed") || "Installed", 2600);
+  });
+}
+function flokePromptInstall(){
+  const d = window.flokeDeferredInstall;
+  if(!d) return;
+  d.prompt();
+  d.userChoice.finally(() => { window.flokeDeferredInstall = null; });
 }
 
 function initFlintMeter(){ /* removed from landing */ }
@@ -8471,15 +8945,21 @@ function initPixelGrid(){
   });
 }
 
-function openPixelEditor(showPortrait){
+function openPixelEditor(mode){
   const modal = document.getElementById("pixelEditorModal");
-  const grid = document.getElementById("pixelGrid");
-  const portraitBlock = document.getElementById("pixelPortraitBlock");
   const portraitPreview = document.getElementById("pixelPortraitPreview");
+  const head = document.getElementById("pixelEditorHead");
+  const sub = document.getElementById("pixelEditorSub");
+  const sideNote = document.getElementById("pixelEditorSideNote");
   if(!modal) return;
+  const portrait = mode === "portrait";
+  modal.classList.toggle("pixel-editor-modal--portrait", portrait);
+  modal.classList.toggle("pixel-editor-modal--pixel", !portrait);
+  if(head) head.textContent = portrait ? (t("engine.portraitStudio") || "8×8 pilot") : (t("engine.pixelTitle") || "16×16 studio");
+  if(sub) sub.textContent = portrait ? (t("engine.portraitHint") || "Generate · set active · export") : (t("engine.pixelHint") || "Click cells · export hi-res PNG");
+  if(sideNote) sideNote.textContent = portrait ? (t("engine.portraitSide") || "Pilot portrait used in Echo runs and replays.") : (t("engine.pixelSide") || "Pixel art easter egg — export with or without FLOKE frame.");
   initPixelGrid();
-  if(portraitBlock) portraitBlock.hidden = false;
-  if(portraitPreview){
+  if(portrait && portraitPreview){
     const draft = echoLoadPortraitDraft();
     const active = echoLoadPortrait();
     const px = draft?.pixels || active;
@@ -8506,8 +8986,8 @@ document.getElementById("graphBack").addEventListener("click",e=>{e.preventDefau
 });
 document.getElementById("errorHome")?.addEventListener("click", e => { e.preventDefault(); location.hash = ""; });
 document.getElementById("errorSearch")?.addEventListener("click", () => openCmdPalette());
-document.getElementById("enginePixelBtn")?.addEventListener("click", () => openPixelEditor(false));
-document.getElementById("enginePortraitBtn")?.addEventListener("click", () => openPixelEditor(true));
+document.getElementById("enginePixelBtn")?.addEventListener("click", () => openPixelEditor("pixel"));
+document.getElementById("enginePortraitBtn")?.addEventListener("click", () => openPixelEditor("portrait"));
 document.getElementById("newsBack").addEventListener("click",e=>{
   e.preventDefault();
   const h = location.hash || "";
