@@ -1,4 +1,4 @@
-const CACHE = "floke-v8";
+const CACHE = "floke-v14";
 const ASSETS = [
   "./index.html",
   "./manifest.webmanifest",

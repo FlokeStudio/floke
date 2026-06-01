@@ -1,4 +1,235 @@
 {
+  "FLOKE-Site-update-1--June-2026-06-01": {
+    "path": "FLOKE-Site-update-1--June-2026-06-01",
+    "url": "https://telegra.ph/FLOKE-Site-update-1--June-2026-06-01",
+    "title": "FLOKE Site update #1 · June 2026",
+    "description": "Echo\nThe first Floke Engine game is live on the site. Pixel space shooter, runs in the browser without install. Not a teaser, not a coming soon placeholder — an actual playable first title. The same pixel space backdrop you see in the screenshots is the game itself. Move, shoot, survive.\nThis is what Floke Engine means in practice: small games that ship, not decks about games that might ship someday.\nEaster eggs\nA few secrets are hidden around the site. Pixel editor — draw 16×16 art, export with or without…",
+    "author_name": "Floke Studio",
+    "author_url": "https://t.me/flokestudio",
+    "image_url": "https://i.postimg.cc/02d9zkPn/Gemini-Generated-Image-opxkr6opxkr6opxk.png",
+    "content": [
+      {
+        "tag": "figure",
+        "children": [
+          {
+            "tag": "img",
+            "attrs": {
+              "src": "https://i.postimg.cc/02d9zkPn/Gemini-Generated-Image-opxkr6opxkr6opxk.png"
+            }
+          },
+          {
+            "tag": "figcaption",
+            "children": [
+              "Floke Engine"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Echo"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "The first Floke Engine game is live on the site. Pixel space shooter, runs in the browser without install. Not a teaser, not a coming soon placeholder — an actual playable first title. The same pixel space backdrop you see in the screenshots is the game itself. Move, shoot, survive."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "This is what Floke Engine means in practice: small games that ship, not decks about games that might ship someday."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Easter eggs"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "A few secrets are hidden around the site. Pixel editor — draw 16×16 art, export with or without a FLOKE frame. Pilot portrait — 8×8, shows up in Echo runs. Something else too. We're not going to list them. Find them."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Themes"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Dark, light, paper, pink, CRT mode. Each one changes the whole feel of the site — not just colors, the grain, the glow, the contrast. Paper feels like reading on a warm afternoon. CRT feels like 1994. Pink is what it is."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Switch them in the nav. Pick your default."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Command Palette"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Hit ",
+          {
+            "tag": "code",
+            "children": [
+              "/"
+            ]
+          },
+          " or ",
+          {
+            "tag": "code",
+            "children": [
+              "Cmd+K"
+            ]
+          },
+          " anywhere on the site. Search products, jump to sections, switch themes, open pages. Keyboard-first navigation for people who prefer not to scroll."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Comments"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Leave feedback directly through GitHub — no separate account, no third-party form. It's there, at the bottom of the page. Say something if you want."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Product graph"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "An interactive map of the Floke ecosystem — products, engines, connections. Drag nodes. See how Glyph connects to Senza. See where Flint fits. It's not a diagram in a doc, it lives on the page."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "strong",
+            "children": [
+              "Origin Timeline"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "How Floke started. One developer, a few ideas, a decision to keep things local. It's a short read at the bottom of the About section."
+        ]
+      },
+      {
+        "tag": "hr"
+      },
+      {
+        "tag": "p",
+        "children": [
+          "Release #1 is out — full notes on Telegraph with everything Senza and Cultiva shipped this month. The site update is separate: it's not a product release, it's a place that got better overnight."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "More coming in July."
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          "→ ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "https://flokestudio.github.io/Floke/",
+              "target": "_blank"
+            },
+            "children": [
+              "flokestudio.github.io/Floke"
+            ]
+          },
+          " → ",
+          {
+            "tag": "a",
+            "attrs": {
+              "href": "/FLOKE-Release-1--Iyun-2026-05-31"
+            },
+            "children": [
+              "Full release #1 on Telegraph"
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "children": [
+          {
+            "tag": "br"
+          }
+        ]
+      }
+    ],
+    "views": 4
+  },
   "FLOKE-Release-1--Iyun-2026-05-31": {
     "path": "FLOKE-Release-1--Iyun-2026-05-31",
     "url": "https://telegra.ph/FLOKE-Release-1--Iyun-2026-05-31",
@@ -1271,6 +1502,6 @@
         ]
       }
     ],
-    "views": 18
+    "views": 63
   }
 }
