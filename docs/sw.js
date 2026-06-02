@@ -1,6 +1,7 @@
-const CACHE = "floke-v14";
+const CACHE = "floke-v15";
 const ASSETS = [
   "./index.html",
+  "./assets/glyph-search-2.3.js",
   "./manifest.webmanifest",
   "./assets/favicon.svg",
   "./assets/icons/floke-studio.svg",
