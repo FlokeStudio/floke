@@ -21,7 +21,24 @@ function parseSearchQuery(raw) {
 
 
 
-const CAT_PRIORITY = { page: 40, app: 32, release: 30, note: 28, action: 24, news: 20 };
+const CAT_PRIORITY = { page: 40, note: 36, app: 32, release: 30, action: 24, news: 20 };
+
+function chunkPlainText(text, maxLen = 480) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!t) return [];
+  if (t.length <= maxLen) return [t];
+  const out = [];
+  let rest = t;
+  while (rest.length > maxLen) {
+    let cut = rest.lastIndexOf('. ', maxLen);
+    if (cut < maxLen * 0.35) cut = rest.lastIndexOf(' ', maxLen);
+    if (cut < maxLen * 0.25) cut = maxLen;
+    out.push(rest.slice(0, cut).trim());
+    rest = rest.slice(cut).trim();
+  }
+  if (rest) out.push(rest);
+  return out;
+}
 
 function bigramOverlap(a, b) {
   if (a.length < 2 || b.length < 2) return 0;
@@ -135,5 +152,6 @@ function rankSearchItems(items, q, opts = {}) {
     scoreSearchItem,
     snippetForItem,
     rankSearchItems,
+    chunkPlainText,
   };
 })();

@@ -1,4 +1,4 @@
-const CACHE = "floke-v15";
+const CACHE = "floke-v16";
 const ASSETS = [
   "./index.html",
   "./assets/glyph-search-2.3.js",

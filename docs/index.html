@@ -3301,7 +3301,7 @@ const STR = {
     "graph.node.glyph":"Glyph2.3-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Open →",
     "graph.title.ru":"Граф",
-    "cmd.hint":"Search","cmd.placeholder":"Search pages, apps, news…","hero.cmd":"⌘K Explore →",
+    "cmd.hint":"Search","cmd.placeholder":"Search any text on this site…","hero.cmd":"⌘K Explore →",
     "cmd.glyphBadge":"Glyph 2.3-On",
     "cmd.foot":"Powered by <strong>Glyph 2.3-On</strong> — online site search. Glyph2.3-O runs offline in apps.",
     "cmd.keys":"↑↓ · ↵ · esc","cmd.empty":"No matches — try another query.",
@@ -3357,7 +3357,7 @@ const STR = {
     "shell.help":"help · clear · ls · pwd · whoami · date · echo · open · grep releases · theme · locale · ambient · routes · graph · flint · play · pixel · cheat-code-echo · soundpack · version · neofetch · man · history · exit",
     "privacy.promise":"You've read the promise — no cookie, just scroll.","foot.copied":"Link copied",
     "foot.col.apps":"Apps","foot.col.intel":"Intelligence","foot.col.studio":"Studio","foot.col.help":"Help & legal",
-    "cmd.cat.page":"Page","cmd.cat.app":"App","cmd.cat.action":"Action","cmd.cat.news":"News","cmd.cat.release":"Release",
+    "cmd.cat.page":"Page","cmd.cat.note":"On page","cmd.cat.app":"App","cmd.cat.action":"Action","cmd.cat.news":"News","cmd.cat.release":"Release",
     "cmd.theme":"Toggle theme","cmd.graph":"Open graph view",
     "shortcuts.title":"Keyboard shortcuts","shortcuts.lead":"VS Code-style navigation for the landing — search, graph, theme, and more.",
     "shortcuts.foot":"Press ? or Esc to close.",
@@ -3579,7 +3579,7 @@ const STR = {
     "graph.node.senza":"Senza","graph.node.cultiva":"Cultiva","graph.node.blip":"BLIP","graph.node.flint":"Flint",
     "graph.node.glyph":"Glyph2.3-O","graph.node.mnemo":"Mnemo","graph.node.engine":"Floke Engine",
     "graph.tip.open":"Открыть →",
-    "cmd.hint":"Поиск","cmd.placeholder":"Страницы, приложения, новости…","hero.cmd":"⌘K Обзор →",
+    "cmd.hint":"Поиск","cmd.placeholder":"Поиск по любому тексту на сайте…","hero.cmd":"⌘K Обзор →",
     "cmd.glyphBadge":"Glyph 2.3-On",
     "cmd.foot":"На базе <strong>Glyph 2.3-On</strong> — онлайн-поиск по сайту. Glyph2.3-O работает офлайн в приложениях.",
     "cmd.keys":"↑↓ · ↵ · esc","cmd.empty":"Ничего не найдено — попробуйте другой запрос.",
@@ -3608,7 +3608,7 @@ const STR = {
     "waitlist.flint.desc":"Локальные режимы агента почти готовы. Email остаётся на вашей машине.",
     "waitlist.save":"Сохранить локально","waitlist.tg":"Уведомить в Telegram →","waitlist.close":"Закрыть",
     "waitlist.ok":"Сохранено локально. Следите за запуском в Telegram.",
-    "cmd.cat.page":"Страница","cmd.cat.app":"Приложение","cmd.cat.action":"Действие","cmd.cat.news":"Новость",
+    "cmd.cat.page":"Страница","cmd.cat.note":"На странице","cmd.cat.app":"Приложение","cmd.cat.action":"Действие","cmd.cat.news":"Новость",
     "cmd.theme":"Сменить тему","cmd.graph":"Открыть Graph",
     "shortcuts.title":"Горячие клавиши","shortcuts.lead":"Навигация в стиле VS Code — поиск, граф, тема и другое.",
     "shortcuts.foot":"Нажмите ? или Esc, чтобы закрыть.",
@@ -7787,7 +7787,101 @@ function cmdKeysFor(slug){
   return [slug, L.name, L.tagline, L.category, L.pitch].filter(Boolean);
 }
 
+const SITE_SEARCH_REGIONS = [
+  { sel: "#mainView", hash: "", labelKey: "hero.tag" },
+  { sel: "#glyph", hash: "#glyph", labelKey: "nav.glyph" },
+  { sel: "#products", hash: "#products", labelKey: "nav.products" },
+  { sel: "#release-rhythm", hash: "#releases", labelKey: "rhythm.label" },
+  { sel: "#releases", hash: "#releases", labelKey: "nav.releases" },
+  { sel: "#origin", hash: "#about", labelKey: "origin.label" },
+  { sel: ".ecosystem-finale", hash: "#products", labelKey: "finale.label" },
+  { sel: "#engine-preview", hash: "#engine", labelKey: "nav.engine" },
+  { sel: ".manifesto", hash: "", labelKey: "hero.tag" },
+  { sel: "#enginePage", hash: "#engine", labelKey: "nav.engine" },
+  { sel: "#aboutPage", hash: "#about", labelKey: "nav.about" },
+  { sel: "#graphPage", hash: "#graph", labelKey: "nav.graph" },
+  { sel: "#comparePage", hash: "#compare", labelKey: "nav.compare" },
+  { sel: "#privacyPage", hash: "#privacy", labelKey: "nav.privacy" },
+  { sel: "#supportPage", hash: "#support", labelKey: "nav.support" },
+  { sel: "#feedbackPage", hash: "#feedback", labelKey: "nav.feedback" },
+  { sel: "#glyphSpecPage", hash: "#glyph/spec", labelKey: "spec.h1" },
+  { sel: "#flintPage", hash: "#flint", labelKey: "nav.flint" },
+  { sel: "#storePage", hash: "#products", labelKey: "store.about" },
+  { sel: "#newsPage", hash: "#news", labelKey: "nav.news" }
+];
+
+let siteTextChunks = [];
+
+function extractRegionText(root){
+  if(!root) return "";
+  const skip = new Set(["SCRIPT","STYLE","NOSCRIPT","SVG"]);
+  const parts = [];
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p = node.parentElement;
+      if(!p || skip.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+      if(p.closest("#cmdPalette, #flokeShell, .cmd-palette, [hidden]")) return NodeFilter.FILTER_REJECT;
+      const s = node.textContent.replace(/\s+/g, " ").trim();
+      return s ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+  while(walk.nextNode()) parts.push(walk.currentNode.textContent.replace(/\s+/g, " ").trim());
+  return parts.join(" ").replace(/\s+/g, " ").trim();
+}
+
+function chunkSiteText(text, maxLen){
+  if(window.GlyphS?.chunkPlainText) return window.GlyphS.chunkPlainText(text, maxLen);
+  if(text.length <= maxLen) return [text];
+  const out = [];
+  let rest = text;
+  while(rest.length > maxLen){
+    let cut = rest.lastIndexOf(". ", maxLen);
+    if(cut < maxLen * 0.35) cut = rest.lastIndexOf(" ", maxLen);
+    if(cut < maxLen * 0.25) cut = maxLen;
+    out.push(rest.slice(0, cut).trim());
+    rest = rest.slice(cut).trim();
+  }
+  if(rest) out.push(rest);
+  return out;
+}
+
+function rebuildSiteTextChunks(){
+  const chunks = [];
+  SITE_SEARCH_REGIONS.forEach(reg => {
+    const el = document.querySelector(reg.sel);
+    const text = extractRegionText(el);
+    if(!text || text.length < 24) return;
+    const label = t(reg.labelKey) || reg.labelKey;
+    const parts = chunkSiteText(text, 480);
+    parts.forEach((body, i) => {
+      const title = parts.length > 1 ? `${label} · ${i + 1}/${parts.length}` : label;
+      chunks.push({
+        cat: "note",
+        title: () => title,
+        sub: reg.hash || "· " + label,
+        hash: reg.hash || "",
+        keys: [],
+        body: () => body
+      });
+    });
+  });
+  glyphCapsData().forEach(cap => {
+    const body = [cap.code, cap.title, cap.lead, cap.detail].filter(Boolean).join(" ");
+    if(body.length < 20) return;
+    chunks.push({
+      cat: "note",
+      title: () => `${cap.code} — ${cap.title}`,
+      sub: "#glyph",
+      hash: "#glyph",
+      keys: [cap.code.toLowerCase()],
+      body: () => body
+    });
+  });
+  siteTextChunks = chunks;
+}
+
 function buildCmdItems(){
+  rebuildSiteTextChunks();
   const items = [
     { cat: "page", title: () => t("nav.products"), sub: "#products", hash: "#products", keys: ["products", "apps", "projects", "senza", "cultiva"], body: () => pageSearchBody(["sec.products","sec.intelligenceHint"]) },
     { cat: "page", title: () => t("nav.glyph"), sub: "#glyph", hash: "#glyph", keys: ["glyph", "metadata", "intelligence", "obsidian", "glyph-so", "glyph-mio", "vault", "search", "summary", "2.3-o", "offline"], body: () => releaseSearchCache.glyph + " " + projectSearchBody("glyph") + " glyph-sO glyph-miO Obsidian full-text summary" },
@@ -7841,7 +7935,7 @@ function buildCmdItems(){
       body: () => path.replace(/-/g, " ")
     });
   });
-  return items;
+  return items.concat(siteTextChunks);
 }
 
 function cmdTokens(q){
@@ -7876,7 +7970,7 @@ function scoreCmdItem(it, tokens, filters){
   const blob = title + " " + sub + " " + keys + " " + body;
   const phrase = tokens.join(" ");
   if(!tokens.length){
-    const pri = { page: 40, app: 32, release: 30, action: 24, news: 20 };
+    const pri = { page: 40, note: 36, app: 32, release: 30, action: 24, news: 20 };
     return pri[it.cat] ?? 10;
   }
   let score = 0;
@@ -7924,7 +8018,7 @@ function renderCmdList(q){
     .map(it => ({ it, score: scoreCmdItem(it, tokens, filters) }))
     .filter(x => x.score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 12);
+    .slice(0, q.trim() ? 20 : 12);
   if(!q.trim()){
     const hist = JSON.parse(localStorage.getItem("floke-search-history") || "[]");
     const pinItems = SEARCH_PINS.map(p => ({
