@@ -1,19 +1,31 @@
 # Floke
 
-Independent software studio — offline-first desktop tools.
+Independent software studio — **Glyph** offline-first intelligence.
 
 **Site:** [flokestudio.github.io/Floke](https://flokestudio.github.io/Floke/)  
 **Repo:** [github.com/FlokeStudio/Floke](https://github.com/FlokeStudio/Floke)
 
-## Products
+## Glyph 2.7
 
-| App | Version line | Repository |
-|-----|--------------|------------|
-| Cultiva | 1.1.0 · Cypress | [FlokeStudio/Cultiva](https://github.com/FlokeStudio/Cultiva) |
-| BLIP | 1.1.x · Beacon | [FlokeStudio/BLIP](https://github.com/FlokeStudio/BLIP) |
-| Senza | 1.1.0 · Legato | [FlokeStudio/Senza](https://github.com/FlokeStudio/Senza) |
+| Component | Role | Links |
+|-----------|------|-------|
+| **glyph-s** | Universal search engine | [Site](https://flokestudio.github.io/glyph-s/) · [GitHub](https://github.com/FlokeStudio/glyph-s) |
+| **glyph-sO** | Obsidian full-text search | [Site](https://flokestudio.github.io/glyph-sO/) · [GitHub](https://github.com/FlokeStudio/glyph-sO) |
+| **glyph-mi** | Metadata intelligence core | [Site](https://krwg.github.io/glyph-mi/) · [GitHub](https://github.com/krwg/glyph-mi) |
+| **glyph-miO** | Obsidian summaries & tags | [Site](https://flokestudio.github.io/glyph-miO/) · [GitHub](https://github.com/FlokeStudio/glyph-miO) |
 
-Pages are built from **`docs/index.html`**. See [`docs/assets/README.md`](docs/assets/README.md) for media paths.
+### For Obsidian users
+
+Install **glyph-sO** and **glyph-miO** from GitHub Releases into `.obsidian/plugins/`.
+
+### What’s new in 2.7
+
+- Search profiles (`legacy` / `balanced` / `max-quality`) and extended query grammar
+- Modular plugin architecture (`services/` + vendored `glyph-s` engine)
+- Universal MI core with `analyzeUniversal()` and product modules (Senza, Cultiva foundation)
+- GitHub Pages sites and expanded documentation for each repo
+
+Pages are built from **`docs/index.html`**.
 
 ## License
 
