@@ -5,7 +5,7 @@ Independent software studio — **Glyph** offline-first intelligence.
 **Site:** [flokestudio.github.io/Floke](https://flokestudio.github.io/Floke/)  
 **Repo:** [github.com/FlokeStudio/Floke](https://github.com/FlokeStudio/Floke)
 
-## Glyph 2.7 (current line: 2.7.1 on `main`)
+## Glyph 2.7 (current line: 2.7.2 on `main`)
 
 | Component | Role | Links |
 |-----------|------|-------|
@@ -22,6 +22,11 @@ Independent software studio — **Glyph** offline-first intelligence.
 ### For Obsidian users
 
 Install **glyph-sO** and **glyph-miO** from GitHub (`main` or Releases) into `.obsidian/plugins/`.
+
+### What’s new in 2.7.2
+
+- **glyph-s / sO:** full-text fast-path includes note body (paragraph-only hits work); snippet `<mark>` offsets restored in UI; dead ranking copy removed from sO `main.js`
+- **glyph-miO:** `replace-latest` no longer stacks extra `---` separators on each summary replace
 
 ### What’s new in 2.7.1
 
