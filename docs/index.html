@@ -152,7 +152,7 @@
       <article class="card">
         <span class="tag obsidian">Obsidian</span>
         <h3>glyph-sO</h3>
-        <p>Full-text vault search with keyboard navigation, snippet previews, layout fixes, and search profiles: legacy, balanced, max-quality.</p>
+        <p>Full-text vault search with Fast / Standard / Deep profiles, layout-fix hints, optional search diagnostics, and vendored glyph-s engine with version guard.</p>
         <div class="card-links">
           <a href="https://flokestudio.github.io/glyph-sO/">Site</a>
           <a href="https://github.com/FlokeStudio/glyph-sO">GitHub</a>
@@ -161,7 +161,7 @@
       <article class="card">
         <span class="tag">Core MI</span>
         <h3>glyph-mi</h3>
-        <p>Universal metadata intelligence with module routing — Senza adapter active, Cultiva foundation scaffold. JS and Python APIs.</p>
+        <p>Universal metadata intelligence with module routing — Senza, Cultiva foundation, and a real <code>notes</code> module for text (title/heading/body) toward glyph-miO convergence.</p>
         <div class="card-links">
           <a href="https://krwg.github.io/glyph-mi/">Site</a>
           <a href="https://github.com/krwg/glyph-mi">GitHub</a>
@@ -170,7 +170,7 @@
       <article class="card">
         <span class="tag obsidian">Obsidian</span>
         <h3>glyph-miO</h3>
-        <p>Summarize notes and suggest tags on the active note. Weighted metadata scoring, summary lifecycle modes, optional Ollama.</p>
+        <p>Summarize notes and suggest tags with relevance scores, Ollama status, summary modes including none/off, configurable timeout, and RU/EN UI strings.</p>
         <div class="card-links">
           <a href="https://flokestudio.github.io/glyph-miO/">Site</a>
           <a href="https://github.com/FlokeStudio/glyph-miO">GitHub</a>
@@ -181,11 +181,23 @@
 
   <section class="section" id="whats-new">
     <h2>What’s new in 2.7</h2>
-    <p class="sub">A coordinated release across the entire Glyph stack — modular architecture, smarter ranking, richer queries.</p>
+    <p class="sub">Coordinated stack: modular architecture, smarter ranking, richer queries — and 2.7.1 polish across engines and Obsidian plugins (no release tags required to pull from <code>main</code>).</p>
     <div class="grid">
       <article class="card">
         <h3>Search profiles</h3>
-        <p><code>legacy</code>, <code>balanced</code>, and <code>max-quality</code> tune fuzzy matching and candidate limits without rebuilding indexes.</p>
+        <p>User-facing Fast / Standard / Deep (values <code>legacy</code> / <code>balanced</code> / <code>max-quality</code>). Engine profiles live in glyph-s; sO shows diagnostics and layout-fix hints.</p>
+      </article>
+      <article class="card">
+        <h3>Engine hygiene</h3>
+        <p>glyph-s ships vitest ranking tests, JSDoc contracts, and <code>npm run vendor:sync</code> so sO/miO vendors stay stamped with the engine version.</p>
+      </article>
+      <article class="card">
+        <h3>Notes module</h3>
+        <p>glyph-mi adds a real <code>notes</code> module plus <code>hints.fallbackReason</code> and API compatibility docs — the path for miO to share confidence/sources.</p>
+      </article>
+      <article class="card">
+        <h3>Obsidian UX</h3>
+        <p>sO: vendor version guard, diagnostics footer, tag:/path: suggestions. miO: safer caches, summary none/off, Ollama timeout setting, tag explainability, RU labels.</p>
       </article>
       <article class="card">
         <h3>Query grammar</h3>
