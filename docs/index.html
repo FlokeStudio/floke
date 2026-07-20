@@ -111,6 +111,7 @@
     </div>
     <div class="nav-links">
       <a href="#family">Glyph family</a>
+      <a href="#roadmap">Roadmap</a>
       <a href="#whats-new">2.7</a>
       <a href="https://github.com/FlokeStudio">GitHub</a>
     </div>
@@ -179,10 +180,46 @@
     </div>
   </section>
 
+  <section class="section section--alt" id="roadmap">
+    <h2>Technical roadmap</h2>
+    <p class="sub">Week 1 ships what users feel immediately; month 2 is engine depth. Full detail in each repo’s <code>ROADMAP.md</code>.</p>
+    <div class="grid">
+      <article class="card">
+        <span class="tag">Week 1</span>
+        <h3>Obsidian UX</h3>
+        <p><strong>glyph-sO 2.7.3</strong> — persistent <code>index-cache.json</code> (mtime invalidation). <strong>glyph-miO</strong> — theme-safe CSS variables.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Week 2</span>
+        <h3>Search + panel</h3>
+        <p>sO: highlight match in open note. miO: right sidebar <code>ItemView</code> instead of Modal-only.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Week 3</span>
+        <h3>Distribution</h3>
+        <p><code>@floke/glyph-mi</code> on npm. glyph-s: expanded vitest matrix.</p>
+      </article>
+      <article class="card">
+        <span class="tag">Month 2</span>
+        <h3>Engine depth</h3>
+        <p>TypeScript + benchmark for glyph-s; ONNX for glyph-mi; miO frontmatter tags + batch vault analysis.</p>
+      </article>
+    </div>
+    <div class="highlight" style="margin-top:24px">
+      <h3>One-line priority</h3>
+      <p>Obsidian plugins need a <strong>persistent index</strong> and a <strong>sidebar panel</strong> first — everything else compounds over time.</p>
+      <p style="margin-top:12px"><a href="https://github.com/FlokeStudio/glyph-s/blob/main/ROADMAP.md">glyph-s</a> · <a href="https://github.com/FlokeStudio/glyph-sO/blob/main/ROADMAP.md">glyph-sO</a> · <a href="https://github.com/FlokeStudio/glyph-miO/blob/main/ROADMAP.md">glyph-miO</a> · <a href="https://github.com/krwg/glyph-mi/blob/main/ROADMAP.md">glyph-mi</a></p>
+    </div>
+  </section>
+
   <section class="section" id="whats-new">
     <h2>What’s new in 2.7</h2>
     <p class="sub">Coordinated stack: modular architecture, smarter ranking, richer queries — and 2.7.2 correctness fixes on <code>main</code> (full-text body search, snippet highlights, summary separators; no release tags required).</p>
     <div class="grid">
+      <article class="card">
+        <h3>2.7.3 Obsidian speed</h3>
+        <p>Persistent vault index in sO; theme-safe miO CSS. Roadmap published across all Glyph repos.</p>
+      </article>
       <article class="card">
         <h3>2.7.2 correctness</h3>
         <p>Body included in search fast-path; snippet match highlights restored; miO replace-latest no longer stacks extra <code>---</code> rules.</p>
