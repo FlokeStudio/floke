@@ -112,7 +112,7 @@
     <div class="nav-links">
       <a href="#family">Glyph family</a>
       <a href="#roadmap">Roadmap</a>
-      <a href="#whats-new">2.7</a>
+      <a href="#whats-new">2.8</a>
       <a href="https://github.com/FlokeStudio">GitHub</a>
     </div>
   </nav>
@@ -121,7 +121,7 @@
     <div class="hero-logo">
       <img src="assets/glyph-transparent.png" alt="Glyph">
       <p class="studio">Floke Studio</p>
-      <p class="glyph-name">Glyph 2.7</p>
+      <p class="glyph-name">Glyph 2.8</p>
     </div>
     <h1>Search and metadata intelligence<br>that stays on your machine.</h1>
     <p class="lead">Glyph is an offline-first family of engines and Obsidian plugins — full-text vault search, note summaries, tag suggestions, and a universal metadata core for future integrations.</p>
@@ -182,27 +182,27 @@
 
   <section class="section section--alt" id="roadmap">
     <h2>Technical roadmap</h2>
-    <p class="sub">Week 1 ships what users feel immediately; month 2 is engine depth. Full detail in each repo’s <code>ROADMAP.md</code>.</p>
+    <p class="sub">Week 1–3 items shipped in <strong>2.8</strong>. Next: ONNX embeddings, npm publish. Detail in each repo’s <code>ROADMAP.md</code>.</p>
     <div class="grid">
       <article class="card">
-        <span class="tag">Week 1</span>
+        <span class="tag">Shipped 2.8</span>
         <h3>Obsidian UX</h3>
-        <p><strong>glyph-sO 2.7.3</strong> — persistent <code>index-cache.json</code> (mtime invalidation). <strong>glyph-miO</strong> — theme-safe CSS variables.</p>
+        <p>sO persistent index + editor highlight + folder groups. miO sidebar panel + frontmatter tags + vault batch.</p>
       </article>
       <article class="card">
-        <span class="tag">Week 2</span>
-        <h3>Search + panel</h3>
-        <p>sO: highlight match in open note. miO: right sidebar <code>ItemView</code> instead of Modal-only.</p>
+        <span class="tag">Shipped 2.8</span>
+        <h3>Engine + core</h3>
+        <p>glyph-s: 33 vitest tests, benchmark, tsconfig, eslint. glyph-mi: <code>@floke/glyph-mi</code> prep, KNN IPC.</p>
       </article>
       <article class="card">
-        <span class="tag">Week 3</span>
-        <h3>Distribution</h3>
-        <p><code>@floke/glyph-mi</code> on npm. glyph-s: expanded vitest matrix.</p>
+        <span class="tag">Next</span>
+        <h3>Month 2</h3>
+        <p>ONNX models for glyph-mi; optional semantic embeddings in glyph-s; npm publish.</p>
       </article>
       <article class="card">
-        <span class="tag">Month 2</span>
-        <h3>Engine depth</h3>
-        <p>TypeScript + benchmark for glyph-s; ONNX for glyph-mi; miO frontmatter tags + batch vault analysis.</p>
+        <span class="tag">Docs</span>
+        <h3>Roadmaps</h3>
+        <p>Comment-free source, green eslint/vitest across all four repos.</p>
       </article>
     </div>
     <div class="highlight" style="margin-top:24px">
@@ -213,7 +213,18 @@
   </section>
 
   <section class="section" id="whats-new">
-    <h2>What’s new in 2.7</h2>
+    <h2>What’s new in 2.8</h2>
+    <p class="sub">Full roadmap on <code>main</code> — tests, lint, persistent search, sidebar MI.</p>
+    <div class="grid">
+      <article class="card"><h3>glyph-s 2.8</h3><p>33 vitest tests, benchmark, tsconfig, eslint, comment-free engine.</p></article>
+      <article class="card"><h3>glyph-sO 2.8</h3><p>Persistent index, editor highlight, folder groups, hover preview.</p></article>
+      <article class="card"><h3>glyph-miO 2.8</h3><p>Sidebar panel, frontmatter tags, vault batch, summary rollback.</p></article>
+      <article class="card"><h3>glyph-mi 2.8</h3><p>@floke/glyph-mi npm prep, KNN IPC module.</p></article>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="whats-new-27">
+    <h2>Earlier: 2.7</h2>
     <p class="sub">Coordinated stack: modular architecture, smarter ranking, richer queries — and 2.7.2 correctness fixes on <code>main</code> (full-text body search, snippet highlights, summary separators; no release tags required).</p>
     <div class="grid">
       <article class="card">

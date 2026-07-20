@@ -5,46 +5,33 @@ Independent software studio — **Glyph** offline-first intelligence.
 **Site:** [flokestudio.github.io/Floke](https://flokestudio.github.io/Floke/)  
 **Repo:** [github.com/FlokeStudio/Floke](https://github.com/FlokeStudio/Floke)
 
-## Glyph 2.7 (current line: 2.7.3 Obsidian · 2.7.2 engine on `main`)
+## Glyph 2.8 (current line on `main`)
 
 | Component | Role | Links |
 |-----------|------|-------|
-| **glyph-s** | Universal search engine (tests, profiles, `vendor:sync`) | [Site](https://flokestudio.github.io/glyph-s/) · [GitHub](https://github.com/FlokeStudio/glyph-s) · [Roadmap](https://github.com/FlokeStudio/glyph-s/blob/main/ROADMAP.md) |
+| **glyph-s** | Search engine — tests, benchmark, tsconfig, vendor sync | [Site](https://flokestudio.github.io/glyph-s/) · [GitHub](https://github.com/FlokeStudio/glyph-s) · [Roadmap](https://github.com/FlokeStudio/glyph-s/blob/main/ROADMAP.md) |
 | **glyph-sO** | Obsidian full-text search + persistent index | [Site](https://flokestudio.github.io/glyph-sO/) · [GitHub](https://github.com/FlokeStudio/glyph-sO) · [Roadmap](https://github.com/FlokeStudio/glyph-sO/blob/main/ROADMAP.md) |
-| **glyph-mi** | Metadata intelligence core (`notes` module + Senza/Cultiva) | [Site](https://krwg.github.io/glyph-mi/) · [GitHub](https://github.com/krwg/glyph-mi) · [Roadmap](https://github.com/krwg/glyph-mi/blob/main/ROADMAP.md) |
-| **glyph-miO** | Obsidian summaries & tags (explainability, Ollama UX, RU/EN) | [Site](https://flokestudio.github.io/glyph-miO/) · [GitHub](https://github.com/FlokeStudio/glyph-miO) · [Roadmap](https://github.com/FlokeStudio/glyph-miO/blob/main/ROADMAP.md) |
+| **glyph-mi** | Metadata core — `@floke/glyph-mi` npm prep, KNN IPC | [Site](https://krwg.github.io/glyph-mi/) · [GitHub](https://github.com/krwg/glyph-mi) · [Roadmap](https://github.com/krwg/glyph-mi/blob/main/ROADMAP.md) |
+| **glyph-miO** | Obsidian MI — sidebar, frontmatter tags, vault batch | [Site](https://flokestudio.github.io/glyph-miO/) · [GitHub](https://github.com/FlokeStudio/glyph-miO) · [Roadmap](https://github.com/FlokeStudio/glyph-miO/blob/main/ROADMAP.md) |
 
-### Technical roadmap
+### Shipped in 2.8
 
-Week-by-week priorities and the full audit live in each repo’s **`ROADMAP.md`**. Landing: [#roadmap](https://flokestudio.github.io/Floke/#roadmap).
+- **glyph-s 2.8.0** — vitest matrix (33 tests), benchmark script, `tsconfig.json`, eslint, embeddings stub, comment-free lib
+- **glyph-sO 2.8.0** — editor highlight on open, folder grouping, hover preview, search stats, persistent index
+- **glyph-miO 2.8.0** — right sidebar panel, YAML frontmatter tags, vault batch analyze, summary history/rollback, vault cache
+- **glyph-mi 2.8.0** — `@floke/glyph-mi` package layout, KNN IPC module, expanded tests
 
-**Week 1 (shipped on main):** sO persistent `index-cache.json`; miO theme-safe CSS.
+Landing: [#roadmap](https://flokestudio.github.io/Floke/#roadmap) · [#whats-new](https://flokestudio.github.io/Floke/#whats-new)
 
-**Next:** sO in-note highlight · miO sidebar panel · `@floke/glyph-mi` on npm · glyph-s TypeScript + benchmark.
+### Architecture
 
-### Architecture note
+- **glyph-sO** / **glyph-miO** vendor **glyph-s** via `npm run vendor:sync` → `vendor/VERSION.json`
+- **glyph-miO** local `services/*` + optional path toward **glyph-mi** `notes` contract
 
-- **glyph-sO** vendors **glyph-s** (`vendor/engine.js` via `npm run vendor:sync` / `bundle:obsidian`) and stamps `vendor/VERSION.json`.
-- **glyph-miO** still runs local `services/metadata.js` + `services/summary.js` for offline MI; **glyph-mi** now ships a real **`notes`** module so miO can converge on the shared confidence/sources contract (adapter stub in place).
-
-### For Obsidian users
-
-Install **glyph-sO** and **glyph-miO** from GitHub (`main` or Releases) into `.obsidian/plugins/`.
-
-### What’s new in 2.7.2
-
-- **glyph-s / sO:** full-text fast-path includes note body (paragraph-only hits work); snippet `<mark>` offsets restored in UI; dead ranking copy removed from sO `main.js`
-- **glyph-miO:** `replace-latest` no longer stacks extra `---` separators on each summary replace
-
-### What’s new in 2.7.1
-
-- Search: vitest ranking coverage, extracted profiles, automated vendor sync
-- sO: vendor version guard, diagnostics footer, layout-fix hint, Fast/Standard/Deep labels
-- mi: `notes` module, `hints.fallbackReason`, API compatibility CHANGELOG
-- miO: safer cache keys, summary `none`/`off`, Ollama timeout setting, tag scores, RU UI
+Install **glyph-sO** and **glyph-miO** from GitHub `main` into `.obsidian/plugins/`.
 
 Pages are built from **`docs/index.html`**.
 
 ## License
 
-[GPL-3.0](LICENSE) · **Floke Studio** · sole author **krwg** `<shevotsukov@icloud.com>`
+[GPL-3.0](LICENSE) · **Floke Studio**
