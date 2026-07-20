@@ -9,24 +9,25 @@ Independent software studio — **Glyph** offline-first intelligence.
 
 | Component | Role | Links |
 |-----------|------|-------|
-| **glyph-s** | Search engine — tests, benchmark, tsconfig, vendor sync | [Site](https://flokestudio.github.io/glyph-s/) · [GitHub](https://github.com/FlokeStudio/glyph-s) · [Roadmap](https://github.com/FlokeStudio/glyph-s/blob/main/ROADMAP.md) |
-| **glyph-sO** | Obsidian full-text search + persistent index | [Site](https://flokestudio.github.io/glyph-sO/) · [GitHub](https://github.com/FlokeStudio/glyph-sO) · [Roadmap](https://github.com/FlokeStudio/glyph-sO/blob/main/ROADMAP.md) |
-| **glyph-mi** | Metadata core — `@floke/glyph-mi` npm prep, KNN IPC | [Site](https://krwg.github.io/glyph-mi/) · [GitHub](https://github.com/krwg/glyph-mi) · [Roadmap](https://github.com/krwg/glyph-mi/blob/main/ROADMAP.md) |
-| **glyph-miO** | Obsidian MI — sidebar, frontmatter tags, vault batch | [Site](https://flokestudio.github.io/glyph-miO/) · [GitHub](https://github.com/FlokeStudio/glyph-miO) · [Roadmap](https://github.com/FlokeStudio/glyph-miO/blob/main/ROADMAP.md) |
+| **glyph-s** | Search engine — tests, benchmark, tsconfig, vendor sync, `.d.ts`, embeddings hook | [Site](https://flokestudio.github.io/glyph-s/) · [GitHub](https://github.com/FlokeStudio/glyph-s) |
+| **glyph-sO** | Obsidian full-text search — persistent index, pinned queries | [Site](https://flokestudio.github.io/glyph-sO/) · [GitHub](https://github.com/FlokeStudio/glyph-sO) |
+| **glyph-mi** | Metadata core — `@floke/glyph-mi` npm prep, KNN IPC, ONNX train script | [Site](https://krwg.github.io/glyph-mi/) · [GitHub](https://github.com/krwg/glyph-mi) |
+| **glyph-miO** | Obsidian MI — sidebar, frontmatter tags, vault batch, notes vendor | [Site](https://flokestudio.github.io/glyph-miO/) · [GitHub](https://github.com/FlokeStudio/glyph-miO) |
 
 ### Shipped in 2.8
 
-- **glyph-s 2.8.0** — vitest matrix (33 tests), benchmark script, `tsconfig.json`, eslint, embeddings stub, comment-free lib
-- **glyph-sO 2.8.0** — editor highlight on open, folder grouping, hover preview, search stats, persistent index
-- **glyph-miO 2.8.0** — right sidebar panel, YAML frontmatter tags, vault batch analyze, summary history/rollback, vault cache
-- **glyph-mi 2.8.0** — `@floke/glyph-mi` package layout, KNN IPC module, expanded tests
+- **glyph-s 2.8.0** — vitest matrix (33 tests), benchmark script, `tsconfig.json`, eslint, embeddings hook + `.d.ts`
+- **glyph-sO 2.8.0** — editor highlight on open, folder grouping, hover preview, search stats, pinned queries, persistent index
+- **glyph-miO 2.8.0** — right sidebar panel, YAML frontmatter tags, vault batch analyze, glyph-mi notes vendor
+- **glyph-mi 2.8.0** — `@floke/glyph-mi` package layout, KNN IPC module, ONNX train/export script
+- **Cultiva 2.3.5** — vendored glyph-s 2.8.0, compact Glyph/Floke banner, main-process KNN IPC scaffold
 
-Landing: [#roadmap](https://flokestudio.github.io/Floke/#roadmap) · [#whats-new](https://flokestudio.github.io/Floke/#whats-new)
+Landing: [#whats-new](https://flokestudio.github.io/Floke/#whats-new)
 
 ### Architecture
 
 - **glyph-sO** / **glyph-miO** vendor **glyph-s** via `npm run vendor:sync` → `vendor/VERSION.json`
-- **glyph-miO** local `services/*` + optional path toward **glyph-mi** `notes` contract
+- **glyph-miO** prefers **glyph-mi** `notes` via `vendor/glyph-mi-notes.cjs` with local fallback
 
 Install **glyph-sO** and **glyph-miO** from GitHub `main` into `.obsidian/plugins/`.
 
